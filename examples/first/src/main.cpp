@@ -6,9 +6,9 @@
 
 #include <iostream>
 
-#include <gameengine/game.h>
-#include <gameengine/event.h>
-#include <gameengine/entity.h>
+#include <simpleengine/game.h>
+#include <simpleengine/event.h>
+#include <simpleengine/entity.h>
 
 class PlayerEntity : public simpleengine::Entity {
 private:
