@@ -1,2 +1,2 @@
 # Add examples as a subdirectory
-add_subdirectory(first)
+add_subdirectory(snake)
