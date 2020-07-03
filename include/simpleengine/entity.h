@@ -9,43 +9,48 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <stack>
+#include <vector>
+#include <memory>
 
 namespace simpleengine {
     class Component;
     class Game;
     class Event;
-    class Entity {
+
+    class Entity : std::enable_shared_from_this<Entity> {
         friend class Game;
         friend class Event;
     public:
         Entity() = default;
         virtual ~Entity() = default;
+        Entity(const Entity& entity) = delete;
 
         virtual void Move(const float& delta_time, const float& x, const float& y) {};
         virtual void Update(const float& delta_time) = 0;
         virtual void Render(sf::RenderTarget* target) = 0;
-        virtual void Destroying() {}; // Called when the entity is about to be destroyed.
 
-        void DestroyEntity() {
-            destroying = true;
-        }
+        // Called when the entity is about to be destroyed.
+        // Make sure to call this in your extending Entity.
+        virtual void Destroying();
 
-        const bool& IsGettingDestroyed() const {
-            return destroying;
-        }
+        void DestroyLater(); // In most cases, this will be ran next EntityEvent::Update()
+        const bool& IsGettingDestroyed() const;
 
         // If your event does not extend from EntityEvent, you will need to execute this yourself inside Event::Update.
         void UpdateComponents(const float& delta_time);
 
-        void AddComponent(Component* component);
+        void AddComponent(std::unique_ptr<Component> component);
+
+        std::shared_ptr<Entity> GetShared() {
+            return shared_from_this();
+        }
     private:
         // This is ran from class `Game` and `Event`. It runs the `UpdateComponents` method and then the `Update` method.
         void UpdateEntity(const float& delta_time) {
             UpdateComponents(delta_time);
         }
 
-        std::vector<Component*> components;
+        std::vector<std::unique_ptr<Component>> components;
         bool destroying = false;
     };
 }

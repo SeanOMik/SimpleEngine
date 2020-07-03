@@ -9,17 +9,24 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <memory>
+
 namespace simpleengine {
     class Entity;
     class Component {
     public:
-        explicit Component(Entity* owning_entity = nullptr) : owning_entity(owning_entity) {}
-        virtual ~Component() = default;
+        explicit Component(Entity& owning_entity);
+        //virtual ~Component() = default;
+
+        //virtual void Destroying(); // Called when the Component is about to be destroyed.
+        void DestroyLater(); // In most cases, this will be ran next Entity::Update.
+        const bool& IsGettingDestroyed() const;
 
         virtual void Update(const float& delta_time) = 0;
         virtual void Render(sf::RenderTarget* target) {}; // Most components won't need to be rendered.
     protected:
-        Entity* owning_entity;
+        Entity& owning_entity;
+        bool destroying = false;
     };
 }
 

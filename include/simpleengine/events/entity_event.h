@@ -13,12 +13,8 @@
 namespace simpleengine {
     class EntityEvent : public Event {
     public:
-        explicit EntityEvent(sf::RenderWindow* window, Entity* entity) : simpleengine::Event(window), entity(entity) {
+        explicit EntityEvent(sf::RenderWindow* window, std::unique_ptr<Entity> entity) : simpleengine::Event(window), entity(std::move(entity)) {
 
-        }
-
-        ~EntityEvent() override {
-            delete entity;
         }
 
         void CheckForQuit() override {
@@ -29,13 +25,17 @@ namespace simpleengine {
 
         void Update(const float& delta_time) override {
             entity->Update(delta_time);
+
+            if (entity->IsGettingDestroyed()) {
+                entity->DestroyLater();
+            }
         }
 
         void Render(sf::RenderTarget* target) override {
             entity->Render(target);
         }
     private:
-        Entity* entity;
+        std::unique_ptr<Entity> entity;
     };
 }
 

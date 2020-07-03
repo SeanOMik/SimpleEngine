@@ -14,7 +14,7 @@
 
 class SnakeMovementComponent : public simpleengine::Component {
 public:
-    explicit SnakeMovementComponent(simpleengine::Entity* owning_entity, float movement_speed) : simpleengine::Component(owning_entity), movement_speed(movement_speed) {
+    explicit SnakeMovementComponent(simpleengine::Entity& owning_entity, float movement_speed) : simpleengine::Component(owning_entity), movement_speed(movement_speed) {
 
     }
 
@@ -39,7 +39,7 @@ public:
             movement_direction.y = 1;
         }
 
-        owning_entity->Move(delta_time, movement_direction.x, movement_direction.y);
+        owning_entity.Move(delta_time, movement_direction.x, movement_direction.y);
     }
 private:
     float movement_speed;
@@ -57,7 +57,7 @@ public:
         shape = sf::RectangleShape(sf::Vector2f(15, 15));
         shape.setFillColor(sf::Color::White);
 
-        this->AddComponent(new SnakeMovementComponent(this, movement_speed));
+        this->AddComponent(std::make_unique<SnakeMovementComponent>(*this, movement_speed));
         loc = sf::Vector2f(0, 0);
     }
 
@@ -69,11 +69,11 @@ public:
         UpdateComponents(delta_time);
 
         if (loc.x >= window_size.x) {
-            DestroyEntity();
+            DestroyLater();
         }
 
         if (loc.y >= window_size.y) {
-            DestroyEntity();
+            DestroyLater();
         }
     }
 
@@ -84,7 +84,7 @@ public:
 
 int main(int argc, char *argv[]) {
     simpleengine::Game game(500, 500, "First Example");
-    game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), new SnakePlayerEntity(game.GetWindow()->getSize())));
+    game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), std::make_unique<SnakePlayerEntity>(game.GetWindow()->getSize())));
 
     return game.Run();
 }

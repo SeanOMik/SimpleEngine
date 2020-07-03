@@ -12,6 +12,8 @@
 #include <SFML/Audio.hpp>
 
 #include <stack>
+#include "entity.h"
+
 
 namespace simpleengine {
     class Event;

@@ -16,7 +16,7 @@ namespace simpleengine {
 
     class MovementComponent : public Component {
     public:
-        explicit MovementComponent(Entity* owning_entity, float movement_speed);
+        MovementComponent(Entity& owning_entity, float movement_speed);
 
         void Update(const float &delta_time) override;
     private:

@@ -5,27 +5,29 @@
 //
 
 #include "components/movement/movement_component.h"
+
+#include <utility>
 #include "entity.h"
 
-simpleengine::MovementComponent::MovementComponent(simpleengine::Entity *owning_entity, float movement_speed) :
+simpleengine::MovementComponent::MovementComponent(Entity& owning_entity, float movement_speed) :
     Component(owning_entity), movement_speed(movement_speed) {
 
 }
 
 void simpleengine::MovementComponent::Update(const float &delta_time) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        owning_entity->Move(delta_time, -1, 0);
+        owning_entity.Move(delta_time, -1, 0);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        owning_entity->Move(delta_time, 0, -1);
+        owning_entity.Move(delta_time, 0, -1);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        owning_entity->Move(delta_time, 1, 0);
+        owning_entity.Move(delta_time, 1, 0);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        owning_entity->Move(delta_time, 0, 1);
+        owning_entity.Move(delta_time, 0, 1);
     }
 }
