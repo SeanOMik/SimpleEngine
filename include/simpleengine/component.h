@@ -17,7 +17,7 @@ namespace simpleengine {
         virtual ~Component() = default;
 
         virtual void Update(const float& delta_time) = 0;
-        virtual void Render(sf::RenderTarget* target = nullptr) {}; // Most components won't need to be rendered.
+        virtual void Render(sf::RenderTarget* target) {}; // Most components won't need to be rendered.
     protected:
         Entity* owning_entity;
     };

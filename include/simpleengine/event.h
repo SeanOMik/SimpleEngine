@@ -23,7 +23,7 @@ namespace simpleengine {
         virtual void CheckForQuit() = 0; // Ran every Update to check if we're gonna quit.
         virtual void Quiting() {} // Ran when a State is about to be destroyed.
         virtual void Update(const float& delta_time) = 0;
-        virtual void Render(sf::RenderTarget* target = nullptr) = 0;
+        virtual void Render(sf::RenderTarget* target) = 0;
     protected:
         sf::RenderWindow* window;
         bool quit = false;

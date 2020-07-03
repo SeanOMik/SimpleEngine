@@ -77,33 +77,10 @@ public:
         }
     }
 
-    void Render(sf::RenderTarget* target = nullptr) override {
+    void Render(sf::RenderTarget* target) override {
         target->draw(shape);
     }
 };
-
-/*class PlayerEvent : public simpleengine::Event {
-private:
-    SnakePlayerEntity snake_player;
-public:
-    explicit PlayerEvent(sf::RenderWindow* window) : simpleengine::Event(window),
-        snake_player(SnakePlayerEntity(window->getSize())) {
-    }
-
-    void CheckForQuit() override {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-            quit = true;
-        }
-    }
-
-    void Update(const float& delta_time) override {
-        snake_player.Update(delta_time);
-    }
-
-    void Render(sf::RenderTarget* target = nullptr) override {
-        snake_player.Render(target);
-    }
-};*/
 
 int main(int argc, char *argv[]) {
     simpleengine::Game game(500, 500, "First Example");

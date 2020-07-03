@@ -31,7 +31,7 @@ namespace simpleengine {
             entity->Update(delta_time);
         }
 
-        void Render(sf::RenderTarget* target = nullptr) override {
+        void Render(sf::RenderTarget* target) override {
             entity->Render(target);
         }
     private:

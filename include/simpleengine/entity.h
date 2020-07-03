@@ -24,7 +24,7 @@ namespace simpleengine {
 
         virtual void Move(const float& delta_time, const float& x, const float& y) {};
         virtual void Update(const float& delta_time) = 0;
-        virtual void Render(sf::RenderTarget* target = nullptr) = 0;
+        virtual void Render(sf::RenderTarget* target) = 0;
         virtual void Destroying() {}; // Called when the entity is about to be destroyed.
 
         void DestroyEntity() {
