@@ -46,12 +46,7 @@ namespace simpleengine {
         std::shared_ptr<Entity> GetShared() {
             return shared_from_this();
         }
-    private:
-        // This is ran from class `Game` and `Event`. It runs the `UpdateComponents` method and then the `Update` method.
-        void UpdateEntity(const float& delta_time) {
-            UpdateComponents(delta_time);
-        }
-
+    protected:
         std::vector<std::unique_ptr<Component>> components;
         bool destroying = false;
     };

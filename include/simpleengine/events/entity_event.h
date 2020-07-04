@@ -18,13 +18,12 @@ namespace simpleengine {
         }
 
         void CheckForQuit() override {
-            /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                quit = true;
-            }*/
+
         }
 
         void Update(const float& delta_time) override {
             entity->Update(delta_time);
+            entity->UpdateComponents(delta_time);
 
             if (entity->IsGettingDestroyed()) {
                 quit = true;
