@@ -25,7 +25,9 @@ namespace simpleengine {
         virtual ~Entity() = default;
         Entity(const Entity& entity) = delete;
 
-        virtual void Move(const float& delta_time, const float& x, const float& y) {};
+        virtual void Move(const float& delta_time, const float& dir_x, const float& dir_y) {};
+        virtual void Move(const float& delta_time, const sf::Vector2f& offset) {};
+        virtual void Move(const sf::Vector2f& offset) {};
         virtual void Update(const float& delta_time) = 0;
         virtual void Render(sf::RenderTarget* target) = 0;
 
