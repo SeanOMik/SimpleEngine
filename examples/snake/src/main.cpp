@@ -73,9 +73,6 @@ public:
     }
 
     void Move(const float& delta_time, const float& x, const float& y) override {
-        /*float move_x = shape.getSize().x * x;
-        float move_y = shape.getSize().y * y;*/
-
         shape.move(x, y);
     }
 
@@ -88,13 +85,7 @@ public:
     }
 
     void Update(const float& delta_time) override {
-        /*UpdateComponents(delta_time);
 
-        if (shape.getPosition().x - shape.getSize().x < 0 || shape.getPosition().x + shape.getSize().x > window_size.x) {
-            DestroyLater();
-        } else if (shape.getPosition().y - shape.getSize().y < 0 || shape.getPosition().y + shape.getSize().y > window_size.y) {
-            DestroyLater();
-        }*/
     }
 
     void Render(sf::RenderTarget* target) override {
@@ -103,7 +94,7 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-    simpleengine::Game game(500, 500, "First Example");
+    simpleengine::Game game(500, 500, "SimpleEngine - Snake Example");
     game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), std::make_unique<SnakePlayerEntity>(game.GetWindow()->getSize())));
 
     return game.Run();
