@@ -18,16 +18,13 @@ namespace simpleengine {
         }
 
         void CheckForQuit() override {
-
+            if (entity->IsGettingDestroyed()) {
+                quit = true;
+            }
         }
 
         void Update(const float& delta_time) override {
             entity->Update(delta_time);
-            entity->UpdateComponents(delta_time);
-
-            if (entity->IsGettingDestroyed()) {
-                quit = true;
-            }
         }
 
         void Render(sf::RenderTarget* target) override {

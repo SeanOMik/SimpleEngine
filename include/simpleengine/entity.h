@@ -28,19 +28,19 @@ namespace simpleengine {
         virtual void Move(const float& delta_time, const float& dir_x, const float& dir_y) {};
         virtual void Move(const float& delta_time, const sf::Vector2f& offset) {};
         virtual void Move(const sf::Vector2f& offset) {};
-        virtual void Update(const float& delta_time) = 0;
+
         virtual void Render(sf::RenderTarget* target) = 0;
+        virtual void Update(const float& delta_time) {
+            UpdateComponents(delta_time);
+        };
 
         // Called when the entity is about to be destroyed.
         // Make sure to call this in your extending Entity.
         virtual void Destroying();
-
         void DestroyLater(); // In most cases, this will be ran next EntityEvent::Update()
         const bool& IsGettingDestroyed() const;
 
-        // If your event does not extend from EntityEvent, you will need to execute this yourself inside Event::Update.
         void UpdateComponents(const float& delta_time);
-
         void AddComponent(std::unique_ptr<Component> component);
 
         std::shared_ptr<Entity> GetShared() {

@@ -84,10 +84,6 @@ public:
         shape.move(offset);
     }
 
-    void Update(const float& delta_time) override {
-
-    }
-
     void Render(sf::RenderTarget* target) override {
         target->draw(shape);
     }
