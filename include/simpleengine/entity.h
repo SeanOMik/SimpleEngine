@@ -43,10 +43,6 @@ namespace simpleengine {
 
         void UpdateComponents(const float& delta_time);
         void AddComponent(std::unique_ptr<Component> component);
-
-        std::shared_ptr<Entity> GetShared() {
-            return shared_from_this();
-        }
     protected:
         std::vector<std::unique_ptr<Component>> components;
         bool destroying = false;
