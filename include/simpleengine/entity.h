@@ -17,7 +17,8 @@ namespace simpleengine {
     class Game;
     class Event;
 
-    class Entity : std::enable_shared_from_this<Entity> {
+    // @TODO Create a Destructible class that replaces Entity::Destroying, Entity::DestroyLater, and Entity::IsGettingDestroyed.
+    class Entity {
         friend class Game;
         friend class Event;
     public:
