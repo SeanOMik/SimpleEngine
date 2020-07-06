@@ -36,6 +36,7 @@ namespace simpleengine {
         sf::IntRect start_rect;
         sf::IntRect current_rect;
         sf::IntRect end_rect;
+        sf::Vector2f start_scale;
 
         bool horizontally_flipped = false;
         bool vertically_flipped = false;

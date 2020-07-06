@@ -19,18 +19,20 @@ class PlayerEntity : public simpleengine::Entity {
 private:
     sf::Sprite sprite;
     sf::Texture texture;
-    float movement_speed = 150;
+    float movement_speed = 130;
     sf::Vector2u window_size;
 
     std::unique_ptr<simpleengine::SideScrollerMovementAnimationComponent> move_anim_component;
 public:
     explicit PlayerEntity(sf::Vector2u window_size) : window_size(window_size) {
         texture.loadFromFile("player_sheet.png");
+        texture.setSmooth(true);
         sprite.setTexture(texture);
+        sprite.setScale(.7, .7);
 
         move_anim_component = std::make_unique<simpleengine::SideScrollerMovementAnimationComponent>(*this, sprite,
                 texture, movement_speed, 5, 1.1);
-        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 9, 0, 8,
+        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 8, 0, 8,
                 9, 8, 128, 128);
         move_anim_component->SetAnimation(simpleengine::MovementAnimationType::IDLE_LEFT, 20, 0, 0,
                 6, 0, 128, 128);

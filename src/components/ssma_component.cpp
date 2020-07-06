@@ -6,6 +6,8 @@
 
 #include "components/ssma_component.h"
 
+#include <iostream>
+
 simpleengine::SideScrollerMovementAnimationComponent::SideScrollerMovementAnimationComponent(simpleengine::Entity &owning_entity,
                                                                                              sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
         : Component(owning_entity), anim_component(owning_entity, sprite, texture_sheet),
@@ -73,9 +75,6 @@ void simpleengine::SideScrollerMovementAnimationComponent::Update(const float& d
                 anim.Update(delta_time);
             } else {
                 Animation& anim = anim_component.GetAnimation("IDLE_LEFT");
-                if (!anim.IsHorizontallyFlipped()) {
-                    anim.FlipHorizontally();
-                }
                 anim.Update(delta_time);
             }
         } else {
@@ -89,9 +88,6 @@ void simpleengine::SideScrollerMovementAnimationComponent::Update(const float& d
                 anim.Update(delta_time);
             } else {
                 Animation& anim = anim_component.GetAnimation("IDLE_RIGHT");
-                if (!anim.IsHorizontallyFlipped()) {
-                    anim.FlipHorizontally();
-                }
                 anim.Update(delta_time);
             }
         }
