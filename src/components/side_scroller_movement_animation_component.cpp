@@ -4,29 +4,29 @@
 // Email: seanomik@gmail.com
 //
 
-#include "components/movement_animation_component.h"
+#include "components/side_scroller_movement_animation_component.h"
 
-simpleengine::MovementAnimationComponent::MovementAnimationComponent(simpleengine::Entity &owning_entity,
-        sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
+simpleengine::SideScrollerMovementAnimationComponent::SideScrollerMovementAnimationComponent(simpleengine::Entity &owning_entity,
+                                                                                             sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
         : Component(owning_entity), anim_component(owning_entity, sprite, texture_sheet),
         move_component(owning_entity, max_velocity, acceleration, deceleration) {
 }
 
-void simpleengine::MovementAnimationComponent::SetAnimation(const simpleengine::MovementAnimationType &type,
-        simpleengine::Animation animation) {
+void simpleengine::SideScrollerMovementAnimationComponent::SetAnimation(const simpleengine::MovementAnimationType &type,
+                                                                        simpleengine::Animation animation) {
 
     anim_component.AddAnimation(MovementAnimationTypeToStr(type), animation);
 }
 
-void simpleengine::MovementAnimationComponent::SetAnimation(const simpleengine::MovementAnimationType &type,
-        float speed, int start_frame_x, int start_frame_y, int frame_ct_x, int frame_ct_y, int width, int height) {
+void simpleengine::SideScrollerMovementAnimationComponent::SetAnimation(const simpleengine::MovementAnimationType &type,
+                                                                        float speed, int start_frame_x, int start_frame_y, int frame_ct_x, int frame_ct_y, int width, int height) {
 
     anim_component.AddAnimation(MovementAnimationTypeToStr(type), speed, start_frame_x, start_frame_y,
             frame_ct_x, frame_ct_y, width, height);
 }
 
 
-void simpleengine::MovementAnimationComponent::Update(const float& delta_time) {
+void simpleengine::SideScrollerMovementAnimationComponent::Update(const float& delta_time) {
     move_component.Update(delta_time);
 
     if (move_component.GetVelocity().x > 0) { // Moving right
@@ -98,7 +98,7 @@ void simpleengine::MovementAnimationComponent::Update(const float& delta_time) {
     }
 }
 
-std::string simpleengine::MovementAnimationComponent::MovementAnimationTypeToStr(
+std::string simpleengine::SideScrollerMovementAnimationComponent::MovementAnimationTypeToStr(
         const simpleengine::MovementAnimationType &type) {
 
     switch (type) {
@@ -115,10 +115,10 @@ std::string simpleengine::MovementAnimationComponent::MovementAnimationTypeToStr
     }
 }
 
-simpleengine::AnimationComponent simpleengine::MovementAnimationComponent::GetAnimationComponent() {
+simpleengine::AnimationComponent simpleengine::SideScrollerMovementAnimationComponent::GetAnimationComponent() {
     return anim_component;
 }
 
-simpleengine::MovementComponent simpleengine::MovementAnimationComponent::GetMovementComponent() {
+simpleengine::MovementComponent simpleengine::SideScrollerMovementAnimationComponent::GetMovementComponent() {
     return move_component;
 }

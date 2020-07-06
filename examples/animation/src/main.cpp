@@ -8,7 +8,7 @@
 #include <simpleengine/event.h>
 #include <simpleengine/entity.h>
 #include <simpleengine/components/movement/movement_component.h>
-#include <simpleengine/components/movement_animation_component.h>
+#include <simpleengine/components/side_scroller_movement_animation_component.h>
 #include <simpleengine/events/entity_event.h>
 #include <simpleengine/animation.h>
 
@@ -22,7 +22,7 @@ private:
     float movement_speed = 95;
     sf::Vector2u window_size;
 
-    std::unique_ptr<simpleengine::MovementAnimationComponent> move_anim_component;
+    std::unique_ptr<simpleengine::SideScrollerMovementAnimationComponent> move_anim_component;
 public:
     explicit PlayerEntity(sf::Vector2u window_size) : window_size(window_size) {
         AddComponent(std::make_unique<simpleengine::MovementComponent>(*this, movement_speed));
@@ -30,9 +30,12 @@ public:
         texture.loadFromFile("player_sheet.png");
         sprite.setTexture(texture);
 
-        move_anim_component = std::make_unique<simpleengine::MovementAnimationComponent>(*this, sprite, texture, movement_speed, 5, 1.1);
-        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 9, 0, 8, 9, 8, 128, 128);
-        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::IDLE_LEFT, 20, 0, 0, 6, 0, 128, 128);
+        move_anim_component = std::make_unique<simpleengine::SideScrollerMovementAnimationComponent>(*this, sprite,
+                texture, movement_speed, 5, 1.1);
+        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 9, 0, 8,
+                9, 8, 128, 128);
+        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::IDLE_LEFT, 20, 0, 0,
+                6, 0, 128, 128);
         AddComponent(std::move(move_anim_component));
     }
 

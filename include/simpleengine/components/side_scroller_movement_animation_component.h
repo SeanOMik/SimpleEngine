@@ -4,8 +4,8 @@
 // Email: seanomik@gmail.com
 //
 
-#ifndef SIMPLEENGINE_MOVEMENT_ANIMATION_COMPONENT_H
-#define SIMPLEENGINE_MOVEMENT_ANIMATION_COMPONENT_H
+#ifndef SIMPLEENGINE_SIDE_SCROLLER_MOVEMENT_ANIMATION_COMPONENT_H
+#define SIMPLEENGINE_SIDE_SCROLLER_MOVEMENT_ANIMATION_COMPONENT_H
 
 #include "../component.h"
 #include "animation_component.h"
@@ -24,10 +24,11 @@ namespace simpleengine {
         IDLE_RIGHT
     };
 
-    class MovementAnimationComponent : public Component {
+    // Use this for side scrollers!
+    class SideScrollerMovementAnimationComponent : public Component {
     public:
-        MovementAnimationComponent(Entity& owning_entity, sf::Sprite &sprite, sf::Texture &texture_sheet,
-                float max_velocity, float acceleration, float deceleration);
+        SideScrollerMovementAnimationComponent(Entity& owning_entity, sf::Sprite &sprite, sf::Texture &texture_sheet,
+                                               float max_velocity, float acceleration, float deceleration);
 
         void SetAnimation(const MovementAnimationType& type, simpleengine::Animation animation);
         void SetAnimation(const MovementAnimationType& type, float speed, int start_frame_x, int start_frame_y, int frame_ct_x, int frame_ct_y,
@@ -46,4 +47,4 @@ namespace simpleengine {
 }
 
 
-#endif //SIMPLEENGINE_MOVEMENT_ANIMATION_COMPONENT_H
+#endif //SIMPLEENGINE_SIDE_SCROLLER_MOVEMENT_ANIMATION_COMPONENT_H
