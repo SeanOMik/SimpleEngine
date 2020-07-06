@@ -8,7 +8,7 @@
 #include <simpleengine/event.h>
 #include <simpleengine/entity.h>
 #include <simpleengine/components/movement/movement_component.h>
-#include <simpleengine/components/side_scroller_movement_animation_component.h>
+#include <simpleengine/components/ssma_component.h>
 #include <simpleengine/events/entity_event.h>
 #include <simpleengine/animation.h>
 

@@ -4,8 +4,8 @@
 // Email: seanomik@gmail.com
 //
 
-#ifndef SIMPLEENGINE_SIDE_SCROLLER_MOVEMENT_ANIMATION_COMPONENT_H
-#define SIMPLEENGINE_SIDE_SCROLLER_MOVEMENT_ANIMATION_COMPONENT_H
+#ifndef SIMPLEENGINE_SSMA_COMPONENT_H
+#define SIMPLEENGINE_SSMA_COMPONENT_H
 
 #include "../component.h"
 #include "animation_component.h"
@@ -47,4 +47,4 @@ namespace simpleengine {
 }
 
 
-#endif //SIMPLEENGINE_SIDE_SCROLLER_MOVEMENT_ANIMATION_COMPONENT_H
+#endif //SIMPLEENGINE_SSMA_COMPONENT_H

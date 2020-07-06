@@ -4,7 +4,7 @@
 // Email: seanomik@gmail.com
 //
 
-#include "components/side_scroller_movement_animation_component.h"
+#include "components/ssma_component.h"
 
 simpleengine::SideScrollerMovementAnimationComponent::SideScrollerMovementAnimationComponent(simpleengine::Entity &owning_entity,
                                                                                              sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
