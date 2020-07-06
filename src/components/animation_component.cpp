@@ -12,7 +12,7 @@ simpleengine::AnimationComponent::AnimationComponent(Entity& owning_entity, sf::
 
 }
 
-void simpleengine::AnimationComponent::Update(const float &delta_time) {
+void simpleengine::AnimationComponent::Update(const float& delta_time) {
 
 }
 
@@ -26,7 +26,7 @@ void simpleengine::AnimationComponent::AddAnimation(const std::string& animation
     animations.emplace(animation_name, animation);
 }
 
-void simpleengine::AnimationComponent::UpdateAnimation(const std::string &animation_name, const float &delta_time) {
+void simpleengine::AnimationComponent::UpdateAnimation(const std::string &animation_name, const float& delta_time) {
     auto anim = animations.find(animation_name);
     if (anim != animations.end()) {
         anim->second.Update(delta_time);
@@ -45,4 +45,55 @@ sf::Texture &simpleengine::AnimationComponent::GetTextureSheet() const {
 
 const std::map<std::string, simpleengine::Animation> &simpleengine::AnimationComponent::GetAnimations() const {
     return animations;
+}
+
+/*void simpleengine::AnimationComponent::FlipAnimationHorizontally(const std::string &animation_name) {
+    auto anim = animations.find(animation_name);
+    if (anim != animations.end()) {
+        anim->second.FlipHorizontally();
+    } else {
+        throw std::runtime_error("Animation, \"" + animation_name + "\", was not found!");
+    }
+}
+
+void simpleengine::AnimationComponent::FlipAnimationVertically(const std::string &animation_name) {
+    auto anim = animations.find(animation_name);
+    if (anim != animations.end()) {
+        anim->second.FlipVertically();
+    } else {
+        throw std::runtime_error("Animation, \"" + animation_name + "\", was not found!");
+    }
+}
+
+void simpleengine::AnimationComponent::IsAnimationFlippedHorizontally(const std::string &animation_name) {
+    auto anim = animations.find(animation_name);
+    if (anim != animations.end()) {
+        return anim->second.IsHorizontallyFlipped();
+    } else {
+        throw std::runtime_error("Animation, \"" + animation_name + "\", was not found!");
+    }
+}
+
+void simpleengine::AnimationComponent::IsAnimationFlippedVertically(const std::string &animation_name) {
+    auto anim = animations.find(animation_name);
+    if (anim != animations.end()) {
+        return anim->second.IsHorizontallyFlipped();
+    } else {
+        throw std::runtime_error("Animation, \"" + animation_name + "\", was not found!");
+    }
+}*/
+
+simpleengine::Animation& simpleengine::AnimationComponent::GetAnimation(const std::string &animation_name) {
+    auto anim = animations.find(animation_name);
+    if (anim != animations.end()) {
+        return anim->second;
+    } else {
+        throw std::runtime_error("Animation, \"" + animation_name + "\", was not found!");
+    }
+}
+
+
+bool simpleengine::AnimationComponent::HasAnimation(const std::string &animation_name) {
+    auto anim = animations.find(animation_name);
+    return anim != animations.end();
 }

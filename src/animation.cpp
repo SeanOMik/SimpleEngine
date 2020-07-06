@@ -17,9 +17,11 @@ simpleengine::Animation::Animation(sf::Sprite &sprite, sf::Texture &texture_shee
     this->sprite.setTexture(texture_sheet, true);
     this->sprite.setTextureRect(start_rect);
     this->current_rect = start_rect;
+
+    sprite.setOrigin({ static_cast<float>(sprite.getLocalBounds().width * .5), 0 });
 }
 
-void simpleengine::Animation::Update(const float &delta_time) {
+void simpleengine::Animation::Update(const float& delta_time) {
     // Update timer
     timer += 100 * delta_time;
     if (timer >= speed) {
@@ -40,4 +42,32 @@ void simpleengine::Animation::Update(const float &delta_time) {
 void simpleengine::Animation::Reset() {
     timer = 0;
     current_rect = start_rect;
+}
+
+void simpleengine::Animation::FlipHorizontally() {
+    if (!horizontally_flipped) {
+        sprite.setScale(-1, 1);
+        horizontally_flipped = true;
+    } else {
+        sprite.setScale(1, 1);
+        horizontally_flipped = false;
+    }
+}
+
+void simpleengine::Animation::FlipVertically() {
+    if (!vertically_flipped) {
+        sprite.setScale(1, -1);
+        vertically_flipped = true;
+    } else {
+        sprite.setScale(1, 1);
+        vertically_flipped = false;
+    }
+}
+
+bool simpleengine::Animation::IsHorizontallyFlipped() const {
+    return horizontally_flipped;
+}
+
+bool simpleengine::Animation::IsVerticallyFlipped() const {
+    return vertically_flipped;
 }

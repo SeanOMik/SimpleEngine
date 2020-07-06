@@ -25,12 +25,20 @@ namespace simpleengine {
     public:
         explicit AnimationComponent(Entity& owning_entity, sf::Sprite& sprite, sf::Texture& texture_sheet);
 
-        void Update(const float &delta_time) override;
+        void Update(const float& delta_time) override;
 
         void AddAnimation(const std::string& animation_name, float speed, int start_frame_x, int start_frame_y, int frame_ct_x,
             int frame_ct_y, int width, int height);
         void AddAnimation(const std::string& animation_name, simpleengine::Animation animation);
+        bool HasAnimation(const std::string& animation_name);
+
+        // Animation class specific
         void UpdateAnimation(const std::string& animation_name, const float& delta_time);
+        Animation& GetAnimation(const std::string& animation_name);
+        /*void FlipAnimationHorizontally(const std::string& animation_name);
+        void FlipAnimationVertically(const std::string& animation_name);
+        bool IsAnimationFlippedHorizontally(const std::string& animation_name);
+        bool IsAnimationFlippedVertically(const std::string& animation_name);*/
 
         sf::Sprite &GetSprite() const;
         sf::Texture &GetTextureSheet() const;

@@ -15,7 +15,7 @@ simpleengine::MovementComponent::MovementComponent(Entity& owning_entity, float 
 
 }
 
-void simpleengine::MovementComponent::Move(const float &delta_time, const float& dir_x, const float& dir_y) {
+void simpleengine::MovementComponent::Move(const float& delta_time, const float& dir_x, const float& dir_y) {
     // Acceleration
     velocity.x += acceleration * dir_x;
     // Limit the horizontal velocity
@@ -46,7 +46,7 @@ void simpleengine::MovementComponent::Move(const float &delta_time, const float&
     owning_entity.Move(velocity * delta_time);
 }
 
-void simpleengine::MovementComponent::Update(const float &delta_time) {
+void simpleengine::MovementComponent::Update(const float& delta_time) {
     sf::Vector2f direction;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         direction.x = -1;
@@ -127,6 +127,7 @@ void simpleengine::MovementComponent::Update(const float &delta_time) {
     }
 
     if (direction.x != 0 || direction.y != 0) {
+        last_direction = direction;
         Move(delta_time, direction.x, direction.y);
         no_movement = false;
     }
@@ -134,4 +135,12 @@ void simpleengine::MovementComponent::Update(const float &delta_time) {
     if (no_movement) {
         velocity = sf::Vector2f();
     }
+}
+
+const sf::Vector2f &simpleengine::MovementComponent::GetVelocity() const {
+    return velocity;
+}
+
+const sf::Vector2f &simpleengine::MovementComponent::GetLastDirection() const {
+    return last_direction;
 }
