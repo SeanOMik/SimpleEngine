@@ -23,7 +23,7 @@ public:
 
     }
 
-    void Update(const float &delta_time) override {
+    void Update(const float& delta_time) override {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             movement_direction.x = -movement_speed;
             movement_direction.y = 0;
