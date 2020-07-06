@@ -8,7 +8,7 @@
 #include <simpleengine/event.h>
 #include <simpleengine/entity.h>
 #include <simpleengine/components/movement/movement_component.h>
-#include <simpleengine/components/animation_component.h>
+#include <simpleengine/components/movement_animation_component.h>
 #include <simpleengine/events/entity_event.h>
 #include <simpleengine/animation.h>
 
@@ -22,7 +22,7 @@ private:
     float movement_speed = 95;
     sf::Vector2u window_size;
 
-    std::unique_ptr<simpleengine::AnimationComponent> anim_component;
+    std::unique_ptr<simpleengine::MovementAnimationComponent> move_anim_component;
 public:
     explicit PlayerEntity(sf::Vector2u window_size) : window_size(window_size) {
         AddComponent(std::make_unique<simpleengine::MovementComponent>(*this, movement_speed));
@@ -30,9 +30,10 @@ public:
         texture.loadFromFile("player_sheet.png");
         sprite.setTexture(texture);
 
-        anim_component = std::make_unique<simpleengine::AnimationComponent>(*this, sprite, texture);
-        anim_component->AddAnimation("IDLE_LEFT", 20, 0, 0, 6, 0, 128, 128);
-        anim_component->AddAnimation("WALK_LEFT_NO_SWORD", 9, 0, 8, 9, 8, 128, 128);
+        move_anim_component = std::make_unique<simpleengine::MovementAnimationComponent>(*this, sprite, texture, movement_speed, 5, 1.1);
+        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 9, 0, 8, 9, 8, 128, 128);
+        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::IDLE_LEFT, 20, 0, 0, 6, 0, 128, 128);
+        AddComponent(std::move(move_anim_component));
     }
 
     ~PlayerEntity() override {
@@ -55,9 +56,6 @@ public:
 
     void Update(const float& delta_time) override {
         Entity::Update(delta_time);
-
-        //anim_component->PlayAnimation("IDLE_LEFT", delta_time);
-        anim_component->PlayAnimation("WALK_LEFT_NO_SWORD", delta_time);
     }
 
     void Render(sf::RenderTarget* target) override {
@@ -66,7 +64,7 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-    simpleengine::Game game(500, 500, "SimpleEngine - Animation Example");
+    simpleengine::Game game(700, 700, "SimpleEngine - Animation Example");
     game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), std::make_unique<PlayerEntity>(game.GetWindow()->getSize())));
 
     return game.Run();
