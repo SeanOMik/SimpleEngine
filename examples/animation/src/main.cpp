@@ -10,6 +10,7 @@
 #include <simpleengine/components/movement/movement_component.h>
 #include <simpleengine/components/ssma_component.h>
 #include <simpleengine/events/entity_event.h>
+#include <simpleengine/components/hitbox_component.h>
 #include <simpleengine/animation.h>
 
 #include <chrono>
@@ -22,7 +23,6 @@ private:
     float movement_speed = 130;
     sf::Vector2u window_size;
 
-    std::unique_ptr<simpleengine::SideScrollerMovementAnimationComponent> move_anim_component;
 public:
     explicit PlayerEntity(sf::Vector2u window_size) : window_size(window_size) {
         texture.loadFromFile("player_sheet.png");
@@ -30,13 +30,17 @@ public:
         sprite.setTexture(texture);
         sprite.setScale(.7, .7);
 
-        move_anim_component = std::make_unique<simpleengine::SideScrollerMovementAnimationComponent>(*this, sprite,
+        auto move_anim_component = std::make_unique<simpleengine::SideScrollerMovementAnimationComponent>(*this, sprite,
                 texture, movement_speed, 5, 1.1);
         move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 8, 0, 8,
                 9, 8, 128, 128);
         move_anim_component->SetAnimation(simpleengine::MovementAnimationType::IDLE_LEFT, 20, 0, 0,
                 6, 0, 128, 128);
         AddComponent(std::move(move_anim_component));
+
+        AddComponent(std::make_unique<simpleengine::HitboxComponent>(*this, sprite,
+                0, 0,
+                sprite.getGlobalBounds().width, sprite.getGlobalBounds().height));
     }
 
     ~PlayerEntity() override {
@@ -62,6 +66,8 @@ public:
     }
 
     void Render(sf::RenderTarget* target) override {
+        Entity::Render(target);
+
         target->draw(sprite);
     }
 };
