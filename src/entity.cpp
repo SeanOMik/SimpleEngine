@@ -7,6 +7,14 @@
 #include "entity.h"
 #include "component.h"
 
+void simpleengine::Entity::Render(sf::RenderTarget *target) {
+    RenderComponents(target);
+}
+
+void simpleengine::Entity::Update(const float &delta_time) {
+    UpdateComponents(delta_time);
+}
+
 void simpleengine::Entity::UpdateComponents(const float& delta_time) {
     for (std::unique_ptr<Component>& component : components) {
         component->Update(delta_time);
@@ -14,6 +22,12 @@ void simpleengine::Entity::UpdateComponents(const float& delta_time) {
         if (component->IsGettingDestroyed()) {
             components.erase(std::remove(components.begin(), components.end(), component));
         }
+    }
+}
+
+void simpleengine::Entity::RenderComponents(sf::RenderTarget* target) {
+    for (std::unique_ptr<Component>& component : components) {
+        component->Render(target);
     }
 }
 
