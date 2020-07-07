@@ -35,10 +35,6 @@ namespace simpleengine {
         // Animation class specific
         void UpdateAnimation(const std::string& animation_name, const float& delta_time);
         Animation& GetAnimation(const std::string& animation_name);
-        /*void FlipAnimationHorizontally(const std::string& animation_name);
-        void FlipAnimationVertically(const std::string& animation_name);
-        bool IsAnimationFlippedHorizontally(const std::string& animation_name);
-        bool IsAnimationFlippedVertically(const std::string& animation_name);*/
 
         sf::Sprite &GetSprite() const;
         sf::Texture &GetTextureSheet() const;

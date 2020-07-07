@@ -23,9 +23,6 @@ namespace simpleengine {
 
         bool IsHorizontallyFlipped() const;
         bool IsVerticallyFlipped() const;
-
-        /*void Play();
-        void Pause();*/
     private:
         sf::Sprite &sprite;
         sf::Texture &texture_sheet;
