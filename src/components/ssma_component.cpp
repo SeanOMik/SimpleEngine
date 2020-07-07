@@ -9,19 +9,19 @@
 #include <iostream>
 
 simpleengine::SideScrollerMovementAnimationComponent::SideScrollerMovementAnimationComponent(simpleengine::Entity &owning_entity,
-                                                                                             sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
+        sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
         : Component(owning_entity), anim_component(owning_entity, sprite, texture_sheet),
         move_component(owning_entity, max_velocity, acceleration, deceleration) {
 }
 
 void simpleengine::SideScrollerMovementAnimationComponent::SetAnimation(const simpleengine::MovementAnimationType &type,
-                                                                        simpleengine::Animation animation) {
+        simpleengine::Animation animation) {
 
     anim_component.AddAnimation(MovementAnimationTypeToStr(type), animation);
 }
 
 void simpleengine::SideScrollerMovementAnimationComponent::SetAnimation(const simpleengine::MovementAnimationType &type,
-                                                                        float speed, int start_frame_x, int start_frame_y, int frame_ct_x, int frame_ct_y, int width, int height) {
+        float speed, int start_frame_x, int start_frame_y, int frame_ct_x, int frame_ct_y, int width, int height) {
 
     anim_component.AddAnimation(MovementAnimationTypeToStr(type), speed, start_frame_x, start_frame_y,
             frame_ct_x, frame_ct_y, width, height);
