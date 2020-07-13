@@ -43,7 +43,7 @@ void simpleengine::MovementComponent::Move(const float& delta_time, const float&
         velocity.y *= max_velocity / abs;
     }
 
-    owning_entity.Move(velocity * delta_time);
+    owning_entity.Move(delta_time, velocity);
 }
 
 void simpleengine::MovementComponent::Update(const float& delta_time) {
