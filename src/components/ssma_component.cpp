@@ -111,10 +111,10 @@ std::string simpleengine::SideScrollerMovementAnimationComponent::MovementAnimat
     }
 }
 
-simpleengine::AnimationComponent simpleengine::SideScrollerMovementAnimationComponent::GetAnimationComponent() {
+simpleengine::AnimationComponent& simpleengine::SideScrollerMovementAnimationComponent::GetAnimationComponent() {
     return anim_component;
 }
 
-simpleengine::MovementComponent simpleengine::SideScrollerMovementAnimationComponent::GetMovementComponent() {
+simpleengine::MovementComponent& simpleengine::SideScrollerMovementAnimationComponent::GetMovementComponent() {
     return move_component;
 }

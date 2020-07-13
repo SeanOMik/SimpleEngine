@@ -24,7 +24,7 @@ simpleengine::HitboxComponent::HitboxComponent(Entity& owning_entity, sf::Sprite
     }
 }
 
-sf::RectangleShape &simpleengine::HitboxComponent::GetHitbox() const {
+sf::RectangleShape &simpleengine::HitboxComponent::GetHitbox() {
     return hitbox;
 }
 

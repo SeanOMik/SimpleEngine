@@ -36,8 +36,8 @@ namespace simpleengine {
 
         void Update(const float& delta_time) override;
 
-        simpleengine::AnimationComponent GetAnimationComponent();
-        simpleengine::MovementComponent GetMovementComponent();
+        simpleengine::AnimationComponent& GetAnimationComponent();
+        simpleengine::MovementComponent& GetMovementComponent();
     private:
         std::string MovementAnimationTypeToStr(const MovementAnimationType& type);
 
