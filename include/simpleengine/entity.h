@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <memory>
+#include <assert.h>
 
 namespace simpleengine {
     class Component;
@@ -41,7 +42,7 @@ namespace simpleengine {
 
         template<typename T>
         bool HasComponent() {
-            for (std::unique_ptr<Component>& comp : components) {
+            for (std::shared_ptr<Component>& comp : components) {
                 if (dynamic_cast<T*>(comp.get())) {
                     return true;
                 }
@@ -52,12 +53,20 @@ namespace simpleengine {
 
         void UpdateComponents(const float& delta_time);
         void RenderComponents(sf::RenderTarget* target);
-        void AddComponent(std::unique_ptr<Component> component);
+
+        template<typename T>
+        void AddComponent(std::shared_ptr<T> component) {
+            static_assert(std::is_base_of_v<Component, T>, "Component class must derive from simpleengine::Component");
+
+            // Only allow one type of the same component.
+            assert(!HasComponent<T>());
+            components.push_back(component);
+        }
 
         sf::Sprite& GetSprite();
     protected:
         sf::Sprite& sprite;
-        std::vector<std::unique_ptr<Component>> components;
+        std::vector<std::shared_ptr<Component>> components;
         bool destroying = false;
     };
 }
