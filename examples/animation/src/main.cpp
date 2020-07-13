@@ -24,7 +24,7 @@ private:
     sf::Vector2u window_size;
 
 public:
-    explicit PlayerEntity(sf::Vector2u window_size) : window_size(window_size) {
+    explicit PlayerEntity(sf::Vector2u window_size) : Entity(sprite), window_size(window_size) {
         texture.loadFromFile("player_sheet.png");
         texture.setSmooth(true);
         sprite.setTexture(texture);
@@ -39,26 +39,14 @@ public:
         AddComponent(std::move(move_anim_component));
 
         AddComponent(std::make_unique<simpleengine::HitboxComponent>(*this, sprite,
-                0, 0,
-                sprite.getGlobalBounds().width, sprite.getGlobalBounds().height));
+                20, 12,
+                sprite.getGlobalBounds().width - 40, sprite.getGlobalBounds().height - 15));
     }
 
     ~PlayerEntity() override {
         std::cout << "Destroying" << std::endl;
 
         simpleengine::Entity::~Entity();
-    }
-
-    void Move(const float& delta_time, const float& x, const float& y) override {
-        sprite.move(x, y);
-    }
-
-    void Move(const float& delta_time, const sf::Vector2f& offset) override {
-        sprite.move(offset * delta_time);
-    }
-
-    void Move(const sf::Vector2f& offset) override {
-        sprite.move(offset);
     }
 
     void Update(const float& delta_time) override {
