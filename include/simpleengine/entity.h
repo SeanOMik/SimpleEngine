@@ -22,13 +22,13 @@ namespace simpleengine {
         friend class Game;
         friend class Event;
     public:
-        Entity() = default;
+        explicit Entity(sf::Sprite& sprite);
         virtual ~Entity() = default;
         Entity(const Entity& entity) = delete;
 
-        virtual void Move(const float& delta_time, const float& dir_x, const float& dir_y) {};
-        virtual void Move(const float& delta_time, const sf::Vector2f& offset) {};
-        virtual void Move(const sf::Vector2f& offset) {};
+        virtual void Move(const float& delta_time, const float& dir_x, const float& dir_y);
+        virtual void Move(const float& delta_time, const sf::Vector2f& offset);
+        virtual void Move(const sf::Vector2f& offset);
 
         virtual void Render(sf::RenderTarget* target);
         virtual void Update(const float& delta_time);
@@ -54,6 +54,7 @@ namespace simpleengine {
         void RenderComponents(sf::RenderTarget* target);
         void AddComponent(std::unique_ptr<Component> component);
     protected:
+        sf::Sprite& sprite;
         std::vector<std::unique_ptr<Component>> components;
         bool destroying = false;
     };

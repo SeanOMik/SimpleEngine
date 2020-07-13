@@ -7,6 +7,22 @@
 #include "entity.h"
 #include "component.h"
 
+simpleengine::Entity::Entity(sf::Sprite &sprite) : sprite(sprite) {
+
+}
+
+void simpleengine::Entity::Move(const float &delta_time, const float &dir_x, const float &dir_y) {
+    sprite.setPosition(dir_x * delta_time, dir_y * delta_time);
+}
+
+void simpleengine::Entity::Move(const float &delta_time, const sf::Vector2f &offset) {
+    sprite.move(offset * delta_time);
+}
+
+void simpleengine::Entity::Move(const sf::Vector2f &offset) {
+    sprite.move(offset);
+}
+
 void simpleengine::Entity::Render(sf::RenderTarget *target) {
     RenderComponents(target);
 }
