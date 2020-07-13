@@ -23,6 +23,8 @@ namespace simpleengine {
         HitboxComponent(Entity& owning_entity, sf::Sprite& sprite, float sprite_offset_x, float sprite_offset_y,
                 float width, float height);
 
+        sf::RectangleShape& GetHitbox() const;
+
         bool DoesIntersect(const sf::FloatRect& rect);
 
         void Update(const float &delta_time) override;

@@ -8,8 +8,6 @@
 #include "components/ssma_component.h"
 #include "entity.h"
 
-#include <iostream>
-
 simpleengine::HitboxComponent::HitboxComponent(Entity& owning_entity, sf::Sprite &sprite, float sprite_offset_x, float sprite_offset_y,
         float width, float height) : Component(owning_entity), sprite(sprite), offset_x(sprite_offset_x), offset_y(sprite_offset_y) {
 
@@ -24,6 +22,10 @@ simpleengine::HitboxComponent::HitboxComponent(Entity& owning_entity, sf::Sprite
     if (owning_entity.HasComponent<simpleengine::SideScrollerMovementAnimationComponent>()) {
         offset_x += sprite.getGlobalBounds().width * -0.5f;
     }
+}
+
+sf::RectangleShape &simpleengine::HitboxComponent::GetHitbox() const {
+    return hitbox;
 }
 
 bool simpleengine::HitboxComponent::DoesIntersect(const sf::FloatRect &rect) {
