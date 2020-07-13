@@ -64,3 +64,7 @@ void simpleengine::Entity::DestroyLater() {
 const bool &simpleengine::Entity::IsGettingDestroyed() const {
     return destroying;
 }
+
+sf::Sprite &simpleengine::Entity::GetSprite() {
+    return sprite;
+}

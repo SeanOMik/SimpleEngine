@@ -53,6 +53,8 @@ namespace simpleengine {
         void UpdateComponents(const float& delta_time);
         void RenderComponents(sf::RenderTarget* target);
         void AddComponent(std::unique_ptr<Component> component);
+
+        sf::Sprite& GetSprite();
     protected:
         sf::Sprite& sprite;
         std::vector<std::unique_ptr<Component>> components;
