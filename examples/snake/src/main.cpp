@@ -44,7 +44,7 @@ public:
             movement_direction.y = movement_speed;
         }
 
-        int duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - last_movement).count();
+        long long duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - last_movement).count();
 
         if (duration >= 115 && (movement_direction.x != 0 || movement_direction.y != 0)) {
             owning_entity.Move(delta_time, movement_direction.x, movement_direction.y);
@@ -58,12 +58,15 @@ private:
     sf::RectangleShape shape;
     float movement_speed = 15;
     sf::Vector2u window_size;
+
+    std::shared_ptr<SnakeMovementComponent> movement_component;
 public:
-    explicit SnakePlayerEntity(sf::Vector2u window_size) : window_size(window_size) {
+    explicit SnakePlayerEntity(sf::Vector2u window_size) : Entity(shape), window_size(window_size) {
         shape = sf::RectangleShape(sf::Vector2f(15, 15));
         shape.setFillColor(sf::Color::White);
-
-        AddComponent(std::make_unique<SnakeMovementComponent>(*this, movement_speed));
+    
+        movement_component = std::make_shared<SnakeMovementComponent>(*this, movement_speed);
+        AddComponent(movement_component);
     }
 
     ~SnakePlayerEntity() override {

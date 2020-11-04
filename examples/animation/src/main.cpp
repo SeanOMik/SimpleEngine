@@ -31,10 +31,10 @@ public:
         texture.loadFromFile("player_sheet.png");
         texture.setSmooth(true);
         sprite.setTexture(texture);
-        sprite.setScale(.7, .7);
+        sprite.setScale(0.7f, 0.7f);
 
         move_anim_component = std::make_shared<simpleengine::SideScrollerMovementAnimationComponent>(*this, sprite,
-            texture, movement_speed, 5, 1.1);
+            texture, movement_speed, 5.f, 1.1f);
         move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 8, 0, 9,
             9, 9, 128, 128);
         move_anim_component->SetAnimation(simpleengine::MovementAnimationType::IDLE_LEFT, 20, 0, 0,
@@ -43,7 +43,7 @@ public:
         AddComponent(move_anim_component);
 
         hitbox_component = std::make_shared<simpleengine::HitboxComponent>(*this, sprite,
-            20, 12, sprite.getGlobalBounds().width - 40, sprite.getGlobalBounds().height - 15);
+            20.f, 12.f, sprite.getGlobalBounds().width - 40.f, sprite.getGlobalBounds().height - 15.f);
         AddComponent(hitbox_component);
     }
 

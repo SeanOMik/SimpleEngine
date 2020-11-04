@@ -10,7 +10,7 @@ set(SFML_BUILD_GRAPHICS ON)
 set(SFML_BUILD_WINDOW ON)
 set(SFML_BUILD_SYSTEM ON)
 
-find_package(SFML REQUIRED COMPONENTS system main window graphics audio)
+find_package(SFML 2 COMPONENTS system main window graphics audio REQUIRED)
 
 # Link sources
 file(GLOB_RECURSE source_list src/*.cpp)
@@ -20,7 +20,8 @@ add_library(simpleengine STATIC ${source_list})
 target_include_directories(simpleengine PUBLIC include PRIVATE include/simpleengine)
 
 # Link dependencies
-target_link_libraries(simpleengine PUBLIC sfml-system sfml-main sfml-window OpenGL sfml-network sfml-graphics Freetype OpenAL Vorbis FLAC sfml-audio)
+target_link_libraries(simpleengine PUBLIC sfml-system sfml-main sfml-window sfml-network sfml-graphics sfml-audio OpenGL Freetype OpenAL Vorbis FLAC)
+#target_link_libraries(simpleengine PUBLIC FLAC OpenAL OpenGL Vorbis)
 
 # Add examples as a target if the user has them enabled
 if (BUILD_EXAMPLES)

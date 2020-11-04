@@ -23,7 +23,7 @@ namespace simpleengine {
         friend class Game;
         friend class Event;
     public:
-        explicit Entity(sf::Sprite& sprite);
+        explicit Entity(sf::Transformable& transformable);
         virtual ~Entity() = default;
         Entity(const Entity& entity) = delete;
 
@@ -35,7 +35,7 @@ namespace simpleengine {
         virtual void Update(const float& delta_time);
 
         // Called when the entity is about to be destroyed.
-        // Make sure to call this in your extending Entity.
+        // Make sure to implment this in your extending Entity.
         virtual void Destroying();
         void DestroyLater(); // In most cases, this will be ran next EntityEvent::Update()
         const bool& IsGettingDestroyed() const;
@@ -63,9 +63,11 @@ namespace simpleengine {
             components.push_back(component);
         }
 
-        sf::Sprite& GetSprite();
+        inline sf::Transformable& GetTransformable() {
+            return transformable;
+        }
     protected:
-        sf::Sprite& sprite;
+        sf::Transformable& transformable;
         std::vector<std::shared_ptr<Component>> components;
         bool destroying = false;
     };
