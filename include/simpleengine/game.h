@@ -14,13 +14,13 @@
 #include <stack>
 #include "entity.h"
 
-
 namespace simpleengine {
     class Event;
 
     class Game {
     public:
         Game(int w, int h, const std::string& window_name);
+        Game(const sf::Vector2u& window_size, const std::string& window_name);
         virtual ~Game();
 
         void UpdateSFMLEvents();
@@ -38,7 +38,8 @@ namespace simpleengine {
         sf::Clock delta_time_clock; // Delta time clock
         float delta_time; // Delta time
 
-        std::stack<Event*> events;
+        //std::stack<Event*> events;
+        std::vector<Event*> events;
     };
 }
 

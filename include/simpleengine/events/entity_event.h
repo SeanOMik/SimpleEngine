@@ -13,7 +13,7 @@
 namespace simpleengine {
     class EntityEvent : public Event {
     public:
-        explicit EntityEvent(sf::RenderWindow* window, std::unique_ptr<Entity> entity) : simpleengine::Event(window), entity(std::move(entity)) {
+        explicit EntityEvent(sf::RenderWindow* window, std::shared_ptr<Entity> entity) : simpleengine::Event(window), entity(entity) {
 
         }
 
@@ -30,8 +30,12 @@ namespace simpleengine {
         void Render(sf::RenderTarget* target) override {
             entity->Render(target);
         }
+
+        std::shared_ptr<Entity> GetEntity() {
+            return entity;
+        }
     private:
-        std::unique_ptr<Entity> entity;
+        std::shared_ptr<Entity> entity;
     };
 }
 

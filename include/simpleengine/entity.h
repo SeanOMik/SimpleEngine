@@ -9,6 +9,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <stdexcept>
+#include <vcruntime_typeinfo.h>
 #include <vector>
 #include <memory>
 #include <assert.h>
@@ -41,14 +43,25 @@ namespace simpleengine {
         const bool& IsGettingDestroyed() const;
 
         template<typename T>
-        bool HasComponent() {
-            for (std::shared_ptr<Component>& comp : components) {
+        bool HasComponent() const {
+            for (std::shared_ptr<Component> comp : components) {
                 if (dynamic_cast<T*>(comp.get())) {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        template<typename T>
+        std::shared_ptr<T> GetComponent() const {
+            for (std::shared_ptr<Component> comp : components) {
+                if (dynamic_cast<T*>(comp.get())) {
+                    return dynamic_pointer_cast<T>(comp);
+                }
+            }
+
+            return nullptr;
         }
 
         void UpdateComponents(const float& delta_time);

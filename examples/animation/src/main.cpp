@@ -10,7 +10,7 @@
 #include <simpleengine/components/movement/movement_component.h>
 #include <simpleengine/components/ssma_component.h>
 #include <simpleengine/events/entity_event.h>
-#include <simpleengine/components/hitbox_component.h>
+#include <simpleengine/components/collision_component.h>
 #include <simpleengine/animation.h>
 
 #include <chrono>
@@ -24,7 +24,7 @@ private:
     sf::Vector2u window_size;
 
     // Components:
-    std::shared_ptr<simpleengine::HitboxComponent> hitbox_component;
+    std::shared_ptr<simpleengine::CollisionComponent> hitbox_component;
     std::shared_ptr<simpleengine::SideScrollerMovementAnimationComponent> move_anim_component;
 public:
     explicit PlayerEntity(sf::Vector2u window_size) : Entity(sprite), window_size(window_size) {
@@ -42,8 +42,8 @@ public:
         AddComponent(std::move(move_anim_component));
         AddComponent(move_anim_component);
 
-        hitbox_component = std::make_shared<simpleengine::HitboxComponent>(*this, sprite,
-            20.f, 12.f, sprite.getGlobalBounds().width - 40.f, sprite.getGlobalBounds().height - 15.f);
+        hitbox_component = std::make_shared<simpleengine::CollisionComponent>(*this, sprite,
+                                                                              20.f, 12.f, sprite.getGlobalBounds().width - 40.f, sprite.getGlobalBounds().height - 15.f);
         AddComponent(hitbox_component);
     }
 
