@@ -10,13 +10,23 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <ios>
+
 #include <simpleengine/game.h>
+
 #include <simpleengine/event.h>
+#include <simpleengine/async_event.h>
+
 #include <simpleengine/entity.h>
+
+// Simple engine components
 #include <simpleengine/components/collision_component.h>
 #include <simpleengine/components/movement/movement_component.h>
+
+// Simpleengine events
 #include <simpleengine/events/entity_event.h>
 #include <simpleengine/events/collision_handler.h>
+
+// Simple engine utils
 #include <simpleengine/random.h>
 
 #include <chrono>
