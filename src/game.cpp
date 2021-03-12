@@ -8,6 +8,7 @@
 #include "entity.h"
 #include "event.h"
 
+#include <SFML/Window/Event.hpp>
 #include <iostream>
 
 simpleengine::Game::Game(int w, int h, const std::string& window_name) {
@@ -40,6 +41,31 @@ void simpleengine::Game::UpdateSFMLEvents() {
         switch (event.type) {
             case sf::Event::Closed:
                 window->close();
+                break;
+            case sf::Event::Resized:
+            case sf::Event::LostFocus:
+            case sf::Event::GainedFocus:
+            case sf::Event::TextEntered:
+            case sf::Event::KeyPressed:
+            case sf::Event::KeyReleased:
+            case sf::Event::MouseWheelMoved:
+            case sf::Event::MouseWheelScrolled:
+            case sf::Event::MouseButtonPressed:
+            case sf::Event::MouseButtonReleased:
+            case sf::Event::MouseMoved:
+            case sf::Event::MouseEntered:
+            case sf::Event::MouseLeft:
+            case sf::Event::JoystickButtonPressed:
+            case sf::Event::JoystickButtonReleased:
+            case sf::Event::JoystickMoved:
+            case sf::Event::JoystickConnected:
+            case sf::Event::JoystickDisconnected:
+            case sf::Event::TouchBegan:
+            case sf::Event::TouchMoved:
+            case sf::Event::TouchEnded:
+            case sf::Event::SensorChanged:
+            case sf::Event::Count:
+                break;
         }
     }
 }
