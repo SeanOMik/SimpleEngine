@@ -1,3 +1,9 @@
+//
+// Created by SeanOMik on 3/1/2021.
+// Github: https://github.com/SeanOMik
+// Email: seanomik@gmail.com
+//
+
 #include "events/collision_handler.h"
 #include "components/collision_component.h"
 
