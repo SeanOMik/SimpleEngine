@@ -49,11 +49,3 @@ void simpleengine::Entity::RenderComponents(sf::RenderTarget* target) {
         component->Render(target);
     }
 }
-
-void simpleengine::Entity::Destroy() {
-    destroying = true;
-}
-
-const bool& simpleengine::Entity::IsDestroying() const {
-    return destroying;
-}

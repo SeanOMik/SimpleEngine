@@ -7,6 +7,8 @@
 #ifndef SIMPLEENGINE_ENTITY_H
 #define SIMPLEENGINE_ENTITY_H
 
+#include "destructable.h"
+
 #include <SFML/Graphics.hpp>
 
 #include <stdexcept>
@@ -20,8 +22,7 @@ namespace simpleengine {
     class Game;
     class Event;
 
-    // @TODO Create a Destructible class that replaces Entity::Destroying, Entity::DestroyLater, and Entity::IsGettingDestroyed.
-    class Entity {
+    class Entity : public simpleengine::Destructable {
         friend class Game;
         friend class Event;
     public:
@@ -35,9 +36,6 @@ namespace simpleengine {
 
         virtual void Render(sf::RenderTarget* target);
         virtual void Update(const float& delta_time);
-
-        virtual void Destroy();
-        const bool& IsDestroying() const;
 
         template<typename T>
         bool HasComponent() const {

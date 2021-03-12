@@ -51,7 +51,7 @@ void simpleengine::Game::Update() {
     for (std::vector<Event*>::iterator it = events.begin(); it != events.end(); ) {
         (*it)->Update(delta_time);
 
-        if ((*it)->IsQuitting()) {
+        if ((*it)->IsDestroying()) {
             delete (*it);
             it = events.erase(it);
         } else {

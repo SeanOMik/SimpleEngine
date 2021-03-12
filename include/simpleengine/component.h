@@ -7,19 +7,20 @@
 #ifndef SIMPLEENGINE_COMPONENT_H
 #define SIMPLEENGINE_COMPONENT_H
 
+#include "destructable.h"
+
 #include <SFML/Graphics.hpp>
 
 #include <memory>
 
 namespace simpleengine {
     class Entity;
-    class Component {
+    class Component : public simpleengine::Destructable {
     public:
-        explicit Component(Entity& owning_entity);
-        virtual ~Component() = default;
+        explicit Component(Entity& owning_entity) : owning_entity(owning_entity) {
 
-        virtual void Destroy(); // In most cases, this will be ran next Entity::Update.
-        const bool& IsDestroying() const;
+        }
+        virtual ~Component() = default;
 
         virtual void Update(const float& delta_time) = 0;
         virtual void Render(sf::RenderTarget* target) {}; // Most components won't need to be rendered.
