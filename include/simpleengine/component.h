@@ -16,11 +16,10 @@ namespace simpleengine {
     class Component {
     public:
         explicit Component(Entity& owning_entity);
-        //virtual ~Component() = default;
+        virtual ~Component() = default;
 
-        //virtual void Destroying(); // Called when the Component is about to be destroyed.
-        void DestroyLater(); // In most cases, this will be ran next Entity::Update.
-        const bool& IsGettingDestroyed() const;
+        virtual void Destroy(); // In most cases, this will be ran next Entity::Update.
+        const bool& IsDestroying() const;
 
         virtual void Update(const float& delta_time) = 0;
         virtual void Render(sf::RenderTarget* target) {}; // Most components won't need to be rendered.

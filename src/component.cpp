@@ -10,10 +10,10 @@ simpleengine::Component::Component(Entity& owning_entity) : owning_entity(owning
 
 }
 
-void simpleengine::Component::DestroyLater() {
+void simpleengine::Component::Destroy() {
     destroying = true;
 }
 
-const bool &simpleengine::Component::IsGettingDestroyed() const {
+const bool& simpleengine::Component::IsDestroying() const {
     return destroying;
 }

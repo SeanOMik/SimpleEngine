@@ -18,7 +18,6 @@ namespace simpleengine {
         }
 
         void Update(const float& delta_time) override;
-        void CheckForQuit() override { }
         void Render(sf::RenderTarget* target) override { }
     private:
         std::vector<std::shared_ptr<Entity>> entities;

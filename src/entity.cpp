@@ -32,11 +32,14 @@ void simpleengine::Entity::Update(const float &delta_time) {
 }
 
 void simpleengine::Entity::UpdateComponents(const float& delta_time) {
-    for (std::shared_ptr<Component>& component : components) {
-        component->Update(delta_time);
+    // Update each component and if they are being destroyed, destroy them.
+    for (std::vector<std::shared_ptr<Component>>::iterator it = components.begin(); it != components.end(); ) {
+        (*it)->Update(delta_time);
 
-        if (component->IsGettingDestroyed()) {
-            components.erase(std::remove(components.begin(), components.end(), component));
+        if ((*it)->IsDestroying()) {
+            it = components.erase(it);
+        } else {
+            ++it;
         }
     }
 }
@@ -47,16 +50,10 @@ void simpleengine::Entity::RenderComponents(sf::RenderTarget* target) {
     }
 }
 
-void simpleengine::Entity::Destroying() {
-    for (std::shared_ptr<Component>& component : components) {
-        component->DestroyLater();
-    }
-}
-
-void simpleengine::Entity::DestroyLater() {
+void simpleengine::Entity::Destroy() {
     destroying = true;
 }
 
-const bool &simpleengine::Entity::IsGettingDestroyed() const {
+const bool& simpleengine::Entity::IsDestroying() const {
     return destroying;
 }

@@ -45,17 +45,11 @@ namespace simpleengine {
                 update_thread.join();
             }
         };
-
-        const bool& WantsToQuit() {
-            return quit;
-        }
-
-        // Abstract methods
-        virtual void CheckForQuit() = 0; // Ran every Update to check if we're gonna quit.
-        virtual void Quiting() {} // Ran when a State is about to be destroyed.
         
         virtual void AsyncUpdate(const float delta_time) = 0;
 
+        // DO NOT OVERRIDE THIS FUNCTION
+        // Notify the update thread to trigger the async update.
         virtual void Update(const float& delta_time) final {
             std::unique_lock<std::mutex> unique_lock(mutex);
             tick_delta_time = delta_time;

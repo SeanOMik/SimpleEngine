@@ -36,11 +36,8 @@ namespace simpleengine {
         virtual void Render(sf::RenderTarget* target);
         virtual void Update(const float& delta_time);
 
-        // Called when the entity is about to be destroyed.
-        // Make sure to implment this in your extending Entity.
-        virtual void Destroying();
-        void DestroyLater(); // In most cases, this will be ran next EntityEvent::Update()
-        const bool& IsGettingDestroyed() const;
+        virtual void Destroy();
+        const bool& IsDestroying() const;
 
         template<typename T>
         bool HasComponent() const {
