@@ -40,7 +40,7 @@ namespace simpleengine {
         template<typename T>
         bool HasComponent() const {
             for (std::shared_ptr<Component> comp : components) {
-                if (dynamic_cast<T*>(comp.get())) {
+                if (std::dynamic_pointer_cast<T>(comp)) {
                     return true;
                 }
             }
@@ -51,8 +51,8 @@ namespace simpleengine {
         template<typename T>
         std::shared_ptr<T> GetComponent() const {
             for (std::shared_ptr<Component> comp : components) {
-                if (dynamic_cast<T*>(comp.get())) {
-                    return dynamic_pointer_cast<T>(comp);
+                if (std::shared_ptr<T> dyn_comp = std::dynamic_pointer_cast<T>(comp); dyn_comp) {
+                    return dyn_comp;
                 }
             }
 

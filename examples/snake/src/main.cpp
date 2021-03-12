@@ -248,8 +248,7 @@ public:
     }
 
     void OnCollide(std::shared_ptr<Entity> entity) {
-        std::shared_ptr<SnakeFoodEntity> shared = dynamic_pointer_cast<SnakeFoodEntity>(entity);
-        if (shared) {
+        if (std::shared_ptr<SnakeFoodEntity> shared = std::dynamic_pointer_cast<SnakeFoodEntity>(entity); shared) {
             shared->Relocate();
 
             BodyPiece piece{ sf::RectangleShape(sf::Vector2f(15, 15)), sf::Vector2i(0, 0) };
