@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <functional>
 #include <ios>
 
 #include <simpleengine/game.h>
@@ -41,9 +42,45 @@ private:
     std::chrono::high_resolution_clock::time_point last_movement;
     sf::Vector2u window_size;
     const sf::Vector2f& entity_pos;
+
+    simpleengine::Game& game;
 public:
-    explicit SnakeMovementComponent(simpleengine::Entity& owning_entity, float movement_speed, const sf::Vector2u& window_size)
-        : simpleengine::Component(owning_entity), movement_speed(movement_speed), window_size(window_size), entity_pos(owning_entity.GetTransformable().getPosition()) {
+    explicit SnakeMovementComponent(simpleengine::Entity& owning_entity, float movement_speed, const sf::Vector2u& window_size, simpleengine::Game& game)
+        : simpleengine::Component(owning_entity), movement_speed(movement_speed), window_size(window_size),
+            entity_pos(owning_entity.GetTransformable().getPosition()), game(game) {
+
+        game.AddEventCallback<sf::Event::EventType::KeyPressed>(std::function([this](sf::Event::KeyEvent event) {
+            this->OnKeyPress(event);
+        }));
+    }
+
+    void OnKeyPress(sf::Event::KeyEvent event) {
+        sf::Keyboard::Key key = event.code;
+
+        switch (key) {
+            case sf::Keyboard::W:
+                movement_direction.x = 0;
+                movement_direction.y = -15;
+                break;
+            case sf::Keyboard::A:
+                movement_direction.x = -15;
+                movement_direction.y = 0;
+                break;
+            case sf::Keyboard::S:
+                movement_direction.x = 0;
+                movement_direction.y = 15;
+                break;
+            case sf::Keyboard::D:
+                movement_direction.x = 15;
+                movement_direction.y = 0;
+                break;
+            case sf::Keyboard::Space:
+                movement_direction.x = 0;
+                movement_direction.y = 0;
+                break;
+            default:
+                break;
+        }
     }
 
     const sf::Vector2i& GetDirection() {
@@ -51,32 +88,6 @@ public:
     }
 
     void Update(const float& delta_time) override {
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            movement_direction.x = -15;
-            movement_direction.y = 0;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            movement_direction.x = 0;
-            movement_direction.y = -15;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            movement_direction.x = 15;
-            movement_direction.y = 0;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            movement_direction.x = 0;
-            movement_direction.y = 15;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            movement_direction.x = 0;
-            movement_direction.y = 0;
-        }
-
         long long duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - last_movement).count();
 
         // Only move every 115 ticks.
@@ -118,7 +129,7 @@ private:
 public:
     explicit SnakeFoodEntity(sf::Vector2u window_size, std::shared_ptr<SnakePlayerEntity> snake_player)
             : Entity(shape), window_size(window_size), snake_player(snake_player) {
-        //shape = sf::RectangleShape(sf::Vector2f(15, 15));
+        
         shape.setSize(sf::Vector2f(15, 15));
         shape.setPosition(45, 45);
         shape.setFillColor(sf::Color::Red);
@@ -173,11 +184,12 @@ private:
 
     bool alive = true;
 public:
-    explicit SnakePlayerEntity(sf::Vector2u window_size, sf::Text& score_text) : Entity(head), window_size(window_size), score_text(score_text) {
+    explicit SnakePlayerEntity(sf::Vector2u window_size, sf::Text& score_text, simpleengine::Game& game) :
+            Entity(head), window_size(window_size), score_text(score_text) {
         head = sf::RectangleShape(sf::Vector2f(15, 15));
         head.setFillColor(sf::Color(220, 220, 220));
     
-        movement_component = std::make_shared<SnakeMovementComponent>(*this, movement_speed, window_size);
+        movement_component = std::make_shared<SnakeMovementComponent>(*this, movement_speed, window_size, game);
         AddComponent(movement_component);
 
         collision_component = std::make_shared<simpleengine::CollisionComponent>(*this, head, 0, 0, 15, 15);
@@ -283,7 +295,7 @@ int main(int argc, char *argv[]) {
     score_text.setFillColor(sf::Color::Green);
     score_text.setPosition(window_size.x - 50, 0);
 
-    auto snake_player = std::make_shared<SnakePlayerEntity>(window_size, score_text);
+    auto snake_player = std::make_shared<SnakePlayerEntity>(window_size, score_text, std::ref(game));
     auto snake_food = std::make_shared<SnakeFoodEntity>(window_size, snake_player);
     game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), snake_food));
     game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), snake_player));

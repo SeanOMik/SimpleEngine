@@ -8,7 +8,6 @@
 #include "entity.h"
 #include "event.h"
 
-#include <SFML/Window/Event.hpp>
 #include <iostream>
 
 simpleengine::Game::Game(int w, int h, const std::string& window_name) {
@@ -40,30 +39,75 @@ void simpleengine::Game::UpdateSFMLEvents() {
     while (window->pollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed:
+                close_event.Trigger();
                 window->close();
                 break;
             case sf::Event::Resized:
+                resized_event.Trigger(event.size);
+                break;
             case sf::Event::LostFocus:
+                lost_focus_event.Trigger();
+                break;
             case sf::Event::GainedFocus:
+                gained_focus_event.Trigger();
+                break;
             case sf::Event::TextEntered:
+                text_entered_event.Trigger(event.text);
+                break;
             case sf::Event::KeyPressed:
+                key_pressed_event.Trigger(event.key);
+                break;
             case sf::Event::KeyReleased:
+                key_released_event.Trigger(event.key);
+                break;
             case sf::Event::MouseWheelMoved:
+                mouse_wheel_moved_event.Trigger(event.mouseWheel);
+                break;
             case sf::Event::MouseWheelScrolled:
+                mouse_wheel_scrolled_event.Trigger(event.mouseWheelScroll);
+                break;
             case sf::Event::MouseButtonPressed:
+                mouse_button_pressed_event.Trigger(event.mouseButton);
+                break;
             case sf::Event::MouseButtonReleased:
+                mouse_button_released_event.Trigger(event.mouseButton);
+                break;
             case sf::Event::MouseMoved:
+                mouse_move_event.Trigger(event.mouseMove);
+                break;
             case sf::Event::MouseEntered:
+                mouse_entered_event.Trigger();
+                break;
             case sf::Event::MouseLeft:
+                mouse_left_event.Trigger();
+                break;
             case sf::Event::JoystickButtonPressed:
+                joy_btn_pressed_event.Trigger(event.joystickButton);
+                break;
             case sf::Event::JoystickButtonReleased:
+                joy_btn_released_event.Trigger(event.joystickButton);
+                break;
             case sf::Event::JoystickMoved:
+                joy_moved_event.Trigger(event.joystickMove);
+                break;
             case sf::Event::JoystickConnected:
+                joy_connected_event.Trigger(event.joystickConnect);
+                break;
             case sf::Event::JoystickDisconnected:
+                joy_disconnected_event.Trigger(event.joystickConnect);
+                break;
             case sf::Event::TouchBegan:
+                touch_began_event.Trigger(event.touch);
+                break;
             case sf::Event::TouchMoved:
+                touch_moved_event.Trigger(event.touch);
+                break;
             case sf::Event::TouchEnded:
+                touch_ended_event.Trigger(event.touch);
+                break;
             case sf::Event::SensorChanged:
+                sensor_event.Trigger(event.sensor);
+                break;
             case sf::Event::Count:
                 break;
         }
