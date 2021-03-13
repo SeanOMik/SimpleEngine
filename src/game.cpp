@@ -22,11 +22,6 @@ simpleengine::Game::Game(const sf::Vector2u& window_size, const std::string& win
 simpleengine::Game::~Game() {
     delete window;
 
-    /* while(!events.empty()) {
-        delete events.top();
-        events.pop();
-    } */
-
     std::vector<Event*>::iterator it = events.begin();
     while (it != events.end()) {
         delete (*it);
