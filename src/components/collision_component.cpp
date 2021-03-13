@@ -9,7 +9,6 @@
 #include "entity.h"
 
 #include <SFML/Graphics/Rect.hpp>
-#include <iostream>
 #include <ostream>
 
 simpleengine::CollisionComponent::CollisionComponent(Entity& owning_entity, sf::Transformable &transformable, float offset_x, float offset_y,

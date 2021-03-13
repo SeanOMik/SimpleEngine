@@ -12,7 +12,6 @@
 #include <functional>
 #include <future>
 #include <thread>
-#include <iostream>
 
 namespace simpleengine {
     class AsyncEvent : public simpleengine::Event {

@@ -8,7 +8,6 @@
 #include "entity.h"
 
 #include <algorithm>
-#include <iostream>
 
 simpleengine::MovementComponent::MovementComponent(Entity& owning_entity, float max_velocity, float acceleration, float deceleration) :
     Component(owning_entity), max_velocity(max_velocity), acceleration(acceleration), deceleration(deceleration) {

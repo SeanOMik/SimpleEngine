@@ -6,8 +6,6 @@
 
 #include "components/ssma_component.h"
 
-#include <iostream>
-
 simpleengine::SideScrollerMovementAnimationComponent::SideScrollerMovementAnimationComponent(simpleengine::Entity &owning_entity,
         sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
         : Component(owning_entity), anim_component(owning_entity, sprite, texture_sheet),

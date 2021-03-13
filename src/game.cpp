@@ -8,8 +8,6 @@
 #include "entity.h"
 #include "event.h"
 
-#include <iostream>
-
 simpleengine::Game::Game(int w, int h, const std::string& window_name) {
     // Create a render window
     window = new sf::RenderWindow(sf::VideoMode(w, h), window_name);
