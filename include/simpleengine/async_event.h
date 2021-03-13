@@ -56,7 +56,7 @@ namespace simpleengine {
             cond_var.notify_all();
         }
 
-        virtual void Render(sf::RenderTarget* target) = 0;
+        virtual void Render(sf::RenderTarget* target) { };
     protected:
         std::mutex mutex;
         std::condition_variable cond_var;

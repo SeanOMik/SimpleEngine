@@ -154,8 +154,11 @@ public:
         target->draw(shape);
     }
 
+    // Find a new location for the snake food.
     void Relocate() {
-        sf::Vector2f pos(simpleengine::random::RandomInt(0, window_size.x), simpleengine::random::RandomInt(0, window_size.y));
+        simpleengine::Random<int> random;
+        sf::Vector2f pos(random.NextInRange(0, window_size.x), random.NextInRange(0, window_size.y));
+
         // Make sure its on the 15 pixel grid.
         pos.x -= (int) pos.x % 15;
         pos.y -= (int) pos.y % 15;
@@ -293,7 +296,7 @@ int main(int argc, char *argv[]) {
     score_text.setString("0");
     score_text.setCharacterSize(24);
     score_text.setFillColor(sf::Color::Green);
-    score_text.setPosition(window_size.x - 50, 0);
+    score_text.setPosition(window_size.x - 50, 5);
 
     auto snake_player = std::make_shared<SnakePlayerEntity>(window_size, score_text, std::ref(game));
     auto snake_food = std::make_shared<SnakeFoodEntity>(window_size, snake_player);

@@ -20,11 +20,6 @@
 namespace simpleengine {
     class Event;
 
-    /* template<typename F>
-    auto Deduce(F f) -> std::void_t<decltype(std::function{f})>{
-        std::function{f};
-    } */
-
     class Game {
     public:
         Game(int w, int h, const std::string& window_name);
