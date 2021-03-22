@@ -6,12 +6,22 @@
 
 #include "components/movement/movement_component.h"
 #include "entity.h"
+#include "game.h"
 
+#include <SFML/Window/Keyboard.hpp>
 #include <algorithm>
 
-simpleengine::MovementComponent::MovementComponent(Entity& owning_entity, float max_velocity, float acceleration, float deceleration) :
+#include <iostream>
+
+simpleengine::MovementComponent::MovementComponent(Entity& owning_entity, Game& game, float max_velocity, float acceleration, float deceleration) :
     Component(owning_entity), max_velocity(max_velocity), acceleration(acceleration), deceleration(deceleration) {
 
+    game.AddEventCallback<sf::Event::EventType::KeyPressed>(std::function([this](sf::Event::KeyEvent event) {
+        this->OnKeyPress(event);
+    }));
+    game.AddEventCallback<sf::Event::EventType::KeyReleased>(std::function([this](sf::Event::KeyEvent event) {
+        this->OnKeyRelease(event);
+    }));
 }
 
 void simpleengine::MovementComponent::Move(const float& delta_time, const float& dir_x, const float& dir_y) {
@@ -45,85 +55,104 @@ void simpleengine::MovementComponent::Move(const float& delta_time, const float&
     owning_entity.Move(delta_time, velocity);
 }
 
+void simpleengine::MovementComponent::OnKeyPress(sf::Event::KeyEvent event) {
+    sf::Keyboard::Key key = event.code;
+
+    switch(key) {
+        case sf::Keyboard::W:
+            direction.y = -1;
+            break;
+        case sf::Keyboard::A:
+            direction.x = -1;
+            break;
+        case sf::Keyboard::S:
+            direction.y = 1;
+            break;
+        case sf::Keyboard::D:
+            direction.x = 1;
+            break;
+        default:
+            break;
+    }
+}
+
+void simpleengine::MovementComponent::OnKeyRelease(sf::Event::KeyEvent event) {
+    sf::Keyboard::Key key = event.code;
+
+    switch(key) {
+        case sf::Keyboard::W:
+            direction.y = (!sf::Keyboard::isKeyPressed(sf::Keyboard::S)) ? 0 : 1;
+            break;
+        case sf::Keyboard::A:
+            direction.x = (!sf::Keyboard::isKeyPressed(sf::Keyboard::D)) ? 0 : 1;
+            break;
+        case sf::Keyboard::S:
+            direction.y = (!sf::Keyboard::isKeyPressed(sf::Keyboard::W)) ? 0 : -1;
+            break;
+        case sf::Keyboard::D:
+            direction.x = (!sf::Keyboard::isKeyPressed(sf::Keyboard::A)) ? 0 : -1;
+            break;
+        default:
+            break;
+    }
+}
+
 void simpleengine::MovementComponent::Update(const float& delta_time) {
-    sf::Vector2f direction;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        direction.x = -1;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        direction.y = -1;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        direction.x = 1;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        direction.y = 1;
-    }
-
-    //std::cout << "Speed: " << velocity.x << ", " << velocity.y << std::endl;
-
     // If we're not moving from deceleration or player input, then reset velocity.
     bool no_movement = true;
 
-    if (direction.y != 0 || direction.x == 0) {
+    if (velocity.y > 0) {
+        if (velocity.y > max_velocity) {
+            velocity.y = max_velocity;
+        }
+
+        velocity.y -= deceleration;
+        if (velocity.y < 0) {
+            velocity.y = 0;
+        }
+
+        owning_entity.Move(velocity * delta_time);
+        no_movement = false;
+    } else if (velocity.y < 0) {
+        if (velocity.y < -max_velocity) {
+            velocity.y = -max_velocity;
+        }
+
+        velocity.y += deceleration;
         if (velocity.y > 0) {
-            if (velocity.y > max_velocity) {
-                velocity.y = max_velocity;
-            }
-
-            velocity.y -= deceleration;
-            if (velocity.y < 0) {
-                velocity.y = 0;
-            }
-
-            owning_entity.Move(velocity * delta_time);
-            no_movement = false;
-        } else if (velocity.y < 0) {
-            if (velocity.y < -max_velocity) {
-                velocity.y = -max_velocity;
-            }
-
-            velocity.y += deceleration;
-            if (velocity.y > 0) {
-                velocity.y = 0;
-            }
-
-            owning_entity.Move(velocity * delta_time);
-            no_movement = false;
+            velocity.y = 0;
         }
+
+        owning_entity.Move(velocity * delta_time);
+        no_movement = false;
     }
 
-    if (direction.x != 0 || direction.y == 0) {
+    if (velocity.x > 0) {
+        if (velocity.x > max_velocity) {
+            velocity.x = max_velocity;
+        }
+
+        velocity.x -= deceleration;
+        if (velocity.x < 0) {
+            velocity.x = 0;
+        }
+
+        owning_entity.Move(velocity * delta_time);
+        no_movement = false;
+    } else if (velocity.x < 0) {
+        if (velocity.x < -max_velocity) {
+            velocity.x = -max_velocity;
+        }
+
+        velocity.x += deceleration;
         if (velocity.x > 0) {
-            if (velocity.x > max_velocity) {
-                velocity.x = max_velocity;
-            }
-
-            velocity.x -= deceleration;
-            if (velocity.x < 0) {
-                velocity.x = 0;
-            }
-
-            owning_entity.Move(velocity * delta_time);
-            no_movement = false;
-        } else if (velocity.x < 0) {
-            if (velocity.x < -max_velocity) {
-                velocity.x = -max_velocity;
-            }
-
-            velocity.x += deceleration;
-            if (velocity.x > 0) {
-                velocity.x = 0;
-            }
-
-            owning_entity.Move(velocity * delta_time);
-            no_movement = false;
-
+            velocity.x = 0;
         }
+
+        owning_entity.Move(velocity * delta_time);
+        no_movement = false;
     }
+    
 
     if (direction.x != 0 || direction.y != 0) {
         last_direction = direction;

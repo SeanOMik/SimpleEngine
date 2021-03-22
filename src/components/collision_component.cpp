@@ -12,7 +12,7 @@
 #include <ostream>
 
 simpleengine::CollisionComponent::CollisionComponent(Entity& owning_entity, sf::Transformable &transformable, float offset_x, float offset_y,
-        float width, float height) : simpleengine::CollisionComponent::CollisionComponent(owning_entity, transformable, hitbox, offset_x, offset_y) {
+        float width, float height) : simpleengine::CollisionComponent::CollisionComponent(owning_entity, transformable, sf::RectangleShape(), offset_x, offset_y) {
 
     hitbox.setPosition(transformable.getPosition().x + offset_x, transformable.getPosition().y + offset_y);
     hitbox.setSize(sf::Vector2f(width, height));
@@ -30,8 +30,8 @@ simpleengine::CollisionComponent::CollisionComponent(Entity& owning_entity, sf::
 
     // SSMA Component set's the sprites texture offset so we need to set
     // the offset to the origin if the entity has the SSMA component.
-    if (owning_entity.HasComponent<simpleengine::SideScrollerMovementAnimationComponent>()) {
-        offset_x += dynamic_cast<sf::RectangleShape&>(transformable).getGlobalBounds().width * -0.5f;
+    if (auto ssma_comp = owning_entity.GetComponent<simpleengine::SideScrollerMovementAnimationComponent>(); ssma_comp) {
+        offset_x += ssma_comp->GetAnimationComponent().GetSprite().getGlobalBounds().width * -0.5f;
     }
 }
 

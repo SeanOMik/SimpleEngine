@@ -6,10 +6,10 @@
 
 #include "components/ssma_component.h"
 
-simpleengine::SideScrollerMovementAnimationComponent::SideScrollerMovementAnimationComponent(simpleengine::Entity &owning_entity,
-        sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
+simpleengine::SideScrollerMovementAnimationComponent::SideScrollerMovementAnimationComponent(simpleengine::Entity &owning_entity, 
+        Game& game, sf::Sprite &sprite, sf::Texture &texture_sheet, float max_velocity, float acceleration, float deceleration)
         : Component(owning_entity), anim_component(owning_entity, sprite, texture_sheet),
-        move_component(owning_entity, max_velocity, acceleration, deceleration) {
+        move_component(owning_entity, game, max_velocity, acceleration, deceleration) {
 }
 
 void simpleengine::SideScrollerMovementAnimationComponent::SetAnimation(const simpleengine::MovementAnimationType &type,
@@ -62,7 +62,7 @@ void simpleengine::SideScrollerMovementAnimationComponent::Update(const float& d
             anim.Update(delta_time);
         }
     } else {
-        // If the user never set a IDLE_RIGHT animation, then we need to flip the IDLE_LEFT one.
+        // If the user never set an IDLE_RIGHT animation, then we need to flip the IDLE_LEFT one.
         if (move_component.GetLastDirection().x > 0) { // Facing right
             if (anim_component.HasAnimation("IDLE_RIGHT")) {
                 Animation& anim = anim_component.GetAnimation("IDLE_RIGHT");
@@ -75,9 +75,21 @@ void simpleengine::SideScrollerMovementAnimationComponent::Update(const float& d
                 Animation& anim = anim_component.GetAnimation("IDLE_LEFT");
                 anim.Update(delta_time);
             }
+        } else if (move_component.GetLastDirection().x < 0) { // Facing left
+            if (anim_component.HasAnimation("IDLE_LEFT")) {
+                Animation& anim = anim_component.GetAnimation("IDLE_LEFT");
+                if (anim.IsHorizontallyFlipped()) {
+                    anim.FlipHorizontally();
+                }
+
+                anim.Update(delta_time);
+            } else {
+                Animation& anim = anim_component.GetAnimation("IDLE_RIGHT");
+                anim.Update(delta_time);
+            }
         } else {
-            // If the user never set a IDLE_LEFT animation, then we need to flip the IDLE_RIGHT one.
-            if (anim_component.HasAnimation("IDLE_LEFT")) { // Facing left
+            // If the user never set an IDLE_LEFT animation, then we need to flip the IDLE_RIGHT one.
+            if (anim_component.HasAnimation("IDLE_LEFT")) {
                 Animation& anim = anim_component.GetAnimation("IDLE_LEFT");
                 if (anim.IsHorizontallyFlipped()) {
                     anim.FlipHorizontally();

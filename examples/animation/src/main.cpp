@@ -20,30 +20,28 @@ class PlayerEntity : public simpleengine::Entity {
 private:
     sf::Sprite sprite;
     sf::Texture texture;
-    float movement_speed = 130;
+    float movement_speed = 50;
     sf::Vector2u window_size;
 
-    // Components:
+    // Components
     std::shared_ptr<simpleengine::CollisionComponent> hitbox_component;
     std::shared_ptr<simpleengine::SideScrollerMovementAnimationComponent> move_anim_component;
 public:
-    explicit PlayerEntity(sf::Vector2u window_size) : Entity(sprite), window_size(window_size) {
+    explicit PlayerEntity(sf::Vector2u window_size, simpleengine::Game& game) : Entity(sprite), window_size(window_size) {
         texture.loadFromFile("player_sheet.png");
         texture.setSmooth(true);
         sprite.setTexture(texture);
-        sprite.setScale(0.7f, 0.7f);
+        sprite.setScale(0.5, 0.5);
+        sprite.setPosition(100, 100);
 
-        move_anim_component = std::make_shared<simpleengine::SideScrollerMovementAnimationComponent>(*this, sprite,
-            texture, movement_speed, 5.f, 1.1f);
-        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 8, 0, 9,
-            9, 9, 128, 128);
-        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::IDLE_LEFT, 20, 0, 0,
-            6, 0, 128, 128);
-        AddComponent(std::move(move_anim_component));
+        move_anim_component = std::make_shared<simpleengine::SideScrollerMovementAnimationComponent>(*this, game, sprite,
+            texture, movement_speed, 6, 3);
+        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::WALK_LEFT, 8, 0, 9, 9, 9, 128, 128);
+        move_anim_component->SetAnimation(simpleengine::MovementAnimationType::IDLE_LEFT, 20, 0, 0, 6, 0, 128, 128);
         AddComponent(move_anim_component);
 
-        hitbox_component = std::make_shared<simpleengine::CollisionComponent>(*this, sprite,
-                                                                              20.f, 12.f, sprite.getGlobalBounds().width - 40.f, sprite.getGlobalBounds().height - 15.f);
+        hitbox_component = std::make_shared<simpleengine::CollisionComponent>(*this, sprite, -13, 12,
+            sprite.getGlobalBounds().width - 35.f, sprite.getGlobalBounds().height - 15.f);
         AddComponent(hitbox_component);
     }
 
@@ -66,7 +64,7 @@ public:
 
 int main(int argc, char *argv[]) {
     simpleengine::Game game(700, 700, "SimpleEngine - Animation Example");
-    game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), std::make_unique<PlayerEntity>(game.GetWindow()->getSize())));
+    game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), std::make_unique<PlayerEntity>(game.GetWindow()->getSize(), game)));
 
     return game.Run();
 }

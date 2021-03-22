@@ -27,7 +27,7 @@ namespace simpleengine {
     // Use this for side scrollers!
     class SideScrollerMovementAnimationComponent : public Component {
     public:
-        SideScrollerMovementAnimationComponent(Entity& owning_entity, sf::Sprite &sprite, sf::Texture &texture_sheet,
+        SideScrollerMovementAnimationComponent(Entity& owning_entity, Game& game, sf::Sprite &sprite, sf::Texture &texture_sheet,
                                                float max_velocity, float acceleration, float deceleration);
 
         void SetAnimation(const MovementAnimationType& type, simpleengine::Animation animation);
