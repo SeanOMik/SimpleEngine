@@ -70,7 +70,7 @@ void simpleengine::CollisionComponent::Update(const float &delta_time) {
 }
 
 void simpleengine::CollisionComponent::Render(sf::RenderTarget *target) {
-    target->draw(hitbox);
+    //target->draw(hitbox);
 }
 
 void simpleengine::CollisionComponent::SetOnCollide(std::function<void(std::shared_ptr<Entity>)> func) {
