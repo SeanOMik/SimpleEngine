@@ -20,6 +20,10 @@ namespace simpleengine {
 
             }
 
+            RandomLifetimeParticleProperty(float min, float max) : RandomLifetimeParticleProperty(Rangef(min, max)) {
+
+            }
+
             void OnParticleSpawn(simpleengine::particle::Particle& particle) override {
                 simpleengine::Random<float> rand;
                 particle.lifetime_ms = rand.NextInRange(range.min, range.max);

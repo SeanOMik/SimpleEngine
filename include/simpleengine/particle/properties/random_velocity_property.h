@@ -20,6 +20,11 @@ namespace simpleengine {
 
             }
 
+            RandomVelocityParticleProperty(float min_x, float max_x, float min_y, float max_y)
+                : RandomVelocityParticleProperty(Range2f(min_x, max_x, min_y, max_y)) {
+
+            }
+
             void OnParticleSpawn(simpleengine::particle::Particle& particle) override {
                 simpleengine::Random<float> rand;
                 sf::Vector2f velocity;

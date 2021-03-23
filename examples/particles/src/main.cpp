@@ -29,27 +29,27 @@ namespace se = simpleengine;
 
 class ParticleEmitter : public se::particle::ParticleEmitter {
 private:
-    using super = se::particle::ParticleEmitter;
+    using Super = se::particle::ParticleEmitter;
 
     sf::Sprite sprite;
     sf::Texture texture;
 
-    super::ParticlePropertyVector properties = {
+    Super::ParticlePropertyVector properties = {
         std::make_shared<se::particle::RandomVelocityParticleProperty>(se::Range2f(-1.5f, 1.5f, -1.5f, 1.5f)),
         std::make_shared<se::particle::RandomLifetimeParticleProperty>(se::Rangef(1'500, 9'500))
     };
 public:
-    ParticleEmitter() : super(texture, sf::Vector2f(350, 350), 0.4, 5, 1500, se::Range2f(-15, 15, -15, -15), se::particle::ParticleAttributes{0, sf::Vector2f(), 5, sf::Vector2f(2, 2)}, properties) {
+    ParticleEmitter() : Super(texture, sf::Vector2f(350, 350), 0.7, 5, 1500, se::Range2f(-50, 50, -50, 50), se::particle::ParticleAttributes{0, sf::Vector2f(), 5, sf::Vector2f(2, 2)}, properties) {
         texture.loadFromFile("particle.png"); // The particle I tested with was 5x5 pixels
         texture.setSmooth(true);
     }
 
     void Update(const float& delta_time) override {
-        super::Update(delta_time);
+        Super::Update(delta_time);
     }
 
     void Render(sf::RenderTarget* target) override {
-        super::Render(target);
+        Super::Render(target);
     }
 };
 
