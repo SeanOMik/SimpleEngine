@@ -21,7 +21,6 @@ namespace simpleengine {
         virtual void Render(sf::RenderTarget* target) = 0;
     protected:
         sf::RenderWindow* window;
-        bool quit = false;
     };
 }
 

@@ -9,6 +9,7 @@
 
 #include "../event.h"
 #include "particle_property.h"
+#include "particle_emitter_property.h"
 #include "particle.h"
 #include "../random.h"
 #include "../range_2.h"
@@ -19,7 +20,6 @@
 #include <SFML/System/Clock.hpp>
 
 #include <SFML/System/Vector2.hpp>
-#include <iostream>
 
 namespace simpleengine {
     namespace particle {
@@ -32,12 +32,15 @@ namespace simpleengine {
 
         class ParticleEmitter : public simpleengine::Event {
         protected:
-            using ParticlePropertyPtr = std::shared_ptr<simpleengine::particle::ParticleProperty>;
+            using ParticlePropertyPtr = std::unique_ptr<simpleengine::particle::ParticleProperty>;
             using ParticlePropertyVector = std::vector<ParticlePropertyPtr>;
-        public:
-            ParticleEmitter(sf::Texture& texture, sf::Vector2f position, double emit_variance, uint32_t emit_count, uint32_t particle_count, Range2f particle_range, ParticleAttributes attributes, ParticlePropertyVector& properties);
 
-            void SetProperties(ParticlePropertyVector& properties);
+            using EmitterPropertyPtr = std::unique_ptr<simpleengine::particle::ParticleEmitterProperty>;
+            using EmitterPropertyVector = std::vector<EmitterPropertyPtr>;
+        public:
+            ParticleEmitter(sf::Texture& texture, sf::Vector2f position, double emit_variance, uint32_t emit_count, uint32_t particle_count, Range2f particle_range, ParticleAttributes attributes, ParticlePropertyVector& particle_properties, EmitterPropertyVector& emitter_properties);
+
+            void SetProperties(ParticlePropertyVector particle_properties);
 
             virtual void Update(const float& delta_time) override;
             virtual void Render(sf::RenderTarget* target) override;
@@ -49,7 +52,8 @@ namespace simpleengine {
             uint32_t particle_count;
             Range2f particle_range;
             ParticleAttributes attributes;
-            ParticlePropertyVector& properties;
+            ParticlePropertyVector& particle_properties;
+            EmitterPropertyVector& emitter_properties;
 
             std::vector<simpleengine::particle::Particle> particles;
             sf::Clock time;

@@ -8,14 +8,14 @@
 #define SIMPLEENGINE_PARTICLE_PROPERTY_H
 
 #include "../event.h"
-
-#include <SFML/Graphics/RenderStates.hpp>
+#include <algorithm>
 
 namespace simpleengine {
     namespace particle {
         class Particle;
         class ParticleProperty {
         public:
+            virtual std::unique_ptr<ParticleProperty> Clone() const = 0;
             virtual void OnParticleSpawn(simpleengine::particle::Particle& particle) = 0;
             virtual void Update(simpleengine::particle::Particle& particle) = 0;
         };

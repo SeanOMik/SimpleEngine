@@ -11,8 +11,6 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <algorithm>
 
-#include <iostream>
-
 simpleengine::MovementComponent::MovementComponent(Entity& owning_entity, Game& game, float max_velocity, float acceleration, float deceleration) :
     Component(owning_entity), max_velocity(max_velocity), acceleration(acceleration), deceleration(deceleration) {
 

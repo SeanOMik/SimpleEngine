@@ -12,11 +12,14 @@
 #include "../../random.h"
 #include "../particle.h"
 
+#include <random>
+#include <iostream>
+
 namespace simpleengine {
     namespace particle {
         class RandomVelocityParticleProperty : public ParticleProperty {
         public:
-            RandomVelocityParticleProperty(simpleengine::Range2f range) : range(range) {
+            RandomVelocityParticleProperty(const simpleengine::Range2f& range) : range(range) {
 
             }
 
@@ -25,11 +28,19 @@ namespace simpleengine {
 
             }
 
+            RandomVelocityParticleProperty(const RandomVelocityParticleProperty& other) {
+                this->range = other.range;
+            }
+
+            std::unique_ptr<ParticleProperty> Clone() const override {
+                return std::make_unique<RandomVelocityParticleProperty>(range);
+            }
+
             void OnParticleSpawn(simpleengine::particle::Particle& particle) override {
-                simpleengine::Random<float> rand;
+                simpleengine::Random<float, std::random_device, std::mt19937_64> rand;
                 sf::Vector2f velocity;
-                velocity.x = rand.NextInRange(range.min_x, range.max_x);
-                velocity.y = rand.NextInRange(range.min_y, range.max_y);
+                velocity.x = rand.NextInRange<std::uniform_real_distribution<float>>(range.min_x, range.max_x);
+                velocity.y = rand.NextInRange<std::uniform_real_distribution<float>>(range.min_y, range.max_y);
 
                 particle.velocity = velocity;
             }

@@ -1,26 +1,58 @@
 #include "particle/particle.h"
+#include "particle/particle_property.h"
 
-simpleengine::particle::Particle::Particle(sf::Texture& texture, sf::Vector2f velocity, uint32_t lifetime_ms, float rotation_velocity,
-        ParticlePropertyVector properties) : Super(nullptr), velocity(velocity), lifetime_ms(lifetime_ms),
-        rotation_velocity(rotation_velocity), properties(properties) {
-    age_clock.restart(); // Start age clock
-    sprite.setTexture(texture);
+#include <chrono>
+#include <iostream>
 
-    // Trigger OnParticleSpawn for particle properities.
-    for (ParticlePropertyPtr property : properties) {
-        property->OnParticleSpawn(*this);
+simpleengine::particle::Particle::Particle(const simpleengine::particle::Particle& other) {
+    // From simpleengine::Destructable
+    this->destroying = other.destroying;
+
+    this->sprite = other.sprite;
+    this->velocity = other.velocity;
+    this->rotation_velocity = other.rotation_velocity;
+    
+    // Copy the properties from the other particle. Make sure to empty properties.
+    this->properties.clear();
+    for(const ParticlePropertyPtr& property : other.properties) {
+        std::unique_ptr<ParticleProperty> ptr = property->Clone();
+        this->properties.push_back(std::move(ptr));
     }
+
+    birth_point = other.birth_point;
+    death_point = other.death_point;
+}
+
+simpleengine::particle::Particle& simpleengine::particle::Particle::operator=(Particle other) {
+    // From simpleengine::Destructable
+    this->destroying = other.destroying;
+
+    this->sprite = other.sprite;
+    this->velocity = other.velocity;
+    this->rotation_velocity = other.rotation_velocity;
+    
+    // Copy the properties from the other particle. Make sure to empty properties.
+    this->properties.clear();
+    for(const ParticlePropertyPtr& property : other.properties) {
+        std::unique_ptr<ParticleProperty> ptr = property->Clone();
+        this->properties.push_back(std::move(ptr));
+    }
+
+    birth_point = other.birth_point;
+    death_point = other.death_point;
+
+    return *this;
 }
 
 void simpleengine::particle::Particle::Update(const float& delta_time) {
-    // If the particle is older than its lifetime, destroy it.
-    if (age_clock.getElapsedTime().asMilliseconds() >= lifetime_ms) {
+    // If death_point has passed then destroy the particle.
+    if (std::chrono::high_resolution_clock::now().time_since_epoch() > death_point.time_since_epoch()) {
         Super::Destroy();
         return;
     }
 
     // Update all properties.
-    for (ParticlePropertyPtr property : properties) {
+    for (ParticlePropertyPtr& property : properties) {
         property->Update(*this);
     }
 
@@ -31,10 +63,10 @@ void simpleengine::particle::Particle::Render(sf::RenderTarget* target) {
     target->draw(sprite);
 }
 
-sf::Sprite& simpleengine::particle::Particle::GetSprite() {
-    return sprite;
+std::chrono::microseconds simpleengine::particle::Particle::GetAge() const {
+    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - birth_point);
 }
 
-const sf::Time simpleengine::particle::Particle::GetAge() const {
-    return age_clock.getElapsedTime();
+std::chrono::duration<long long, std::ratio<1, 1000000000>> simpleengine::particle::Particle::GetLifetime() const {
+    return death_point - birth_point;
 }
