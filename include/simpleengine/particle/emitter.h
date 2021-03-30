@@ -20,11 +20,12 @@
 #include <SFML/System/Clock.hpp>
 
 #include <SFML/System/Vector2.hpp>
+#include <chrono>
 
 namespace simpleengine {
     namespace particle {
         struct ParticleAttributes {
-            uint32_t lifetime_ms;
+            std::chrono::milliseconds lifetime;
             sf::Vector2f start_velocity;
             float rotation_velocity = 0;
             sf::Vector2f scale = sf::Vector2f(1, 1);

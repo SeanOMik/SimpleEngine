@@ -28,7 +28,6 @@ void simpleengine::particle::ParticleEmitter::Update(const float &delta_time) {
     // Check if we can spawn particles with max particle count, also use chance to check if we can.
     if (particles.size() + emit_count <= particle_count && random.NextInRange(0, 1) < emit_variance) {
         // Make sure that we don't emit too many particles to go over the max particle count
-        //uint32_t emitting_ct = (particles.size() + emit_count > particle_count) ? particle_count - particles.size() : emit_count;
         for (uint32_t i = 0; i < emit_count; i++) {
 
             ParticlePropertyVector particle_properties_clone;
@@ -36,7 +35,7 @@ void simpleengine::particle::ParticleEmitter::Update(const float &delta_time) {
                 particle_properties_clone.push_back(std::move(property->Clone()));
             }
 
-            Particle particle(texture, attributes.start_velocity, std::chrono::milliseconds(attributes.lifetime_ms), attributes.rotation_velocity, std::move(particle_properties_clone));
+            Particle particle(texture, attributes.start_velocity, attributes.lifetime, attributes.rotation_velocity, std::move(particle_properties_clone));
 
             // Offset the position of the particle randomly
             sf::Vector2f new_pos;
@@ -67,8 +66,6 @@ void simpleengine::particle::ParticleEmitter::Update(const float &delta_time) {
             }
         }
         avg_particle_lifetime /= particles.size();
-
-        //std::cout << "Particle Count: " << particles.size() << " - Avg. lifetime: " << avg_particle_lifetime.count() << "ms - Max lifetime: " << max_lifetime.count() << "ms" << std::endl;
     }
 }
 
