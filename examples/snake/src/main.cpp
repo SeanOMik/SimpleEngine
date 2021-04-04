@@ -44,6 +44,10 @@ private:
     const sf::Vector2f& entity_pos;
 
     simpleengine::Game& game;
+
+    bool IsStill() {
+        return movement_direction.x == 0 && movement_direction.y == 0;
+    }
 public:
     explicit SnakeMovementComponent(simpleengine::Entity& owning_entity, float movement_speed, const sf::Vector2u& window_size, simpleengine::Game& game)
         : simpleengine::Component(owning_entity), movement_speed(movement_speed), window_size(window_size),
@@ -59,20 +63,29 @@ public:
 
         switch (key) {
             case sf::Keyboard::W:
-                movement_direction.x = 0;
-                movement_direction.y = -15;
+                // Make sure we're not trying to move the opposite direction.
+                if (IsStill() || movement_direction.x != 0 && movement_direction.y != 15) {
+                    movement_direction.x = 0;
+                    movement_direction.y = -15;
+                }
                 break;
             case sf::Keyboard::A:
-                movement_direction.x = -15;
-                movement_direction.y = 0;
+                if (IsStill() || movement_direction.x != 15 && movement_direction.y != 0) {
+                    movement_direction.x = -15;
+                    movement_direction.y = 0;
+                }
                 break;
             case sf::Keyboard::S:
-                movement_direction.x = 0;
-                movement_direction.y = 15;
+                if (IsStill() || movement_direction.x != 0 && movement_direction.y != 15) {
+                    movement_direction.x = 0;
+                    movement_direction.y = 15;
+                }
                 break;
             case sf::Keyboard::D:
-                movement_direction.x = 15;
-                movement_direction.y = 0;
+                if (IsStill() || movement_direction.x != -15 && movement_direction.y != 0) {
+                    movement_direction.x = 15;
+                    movement_direction.y = 0;
+                }
                 break;
             case sf::Keyboard::Space:
                 movement_direction.x = 0;
