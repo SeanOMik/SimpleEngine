@@ -302,7 +302,7 @@ int main(int argc, char *argv[]) {
     auto snake_food = std::make_shared<SnakeFoodEntity>(window_size, snake_player);
     game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), snake_food));
     game.AddEvent(new simpleengine::EntityEvent(game.GetWindow(), snake_player));
-    game.AddEvent(new simpleengine::CollisionHandler(game.GetWindow(), { snake_player, snake_food } ));
+    game.AddEvent(new simpleengine::CollisionHandler(game));
 
     return game.Run();
 }

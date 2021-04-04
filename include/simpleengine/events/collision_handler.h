@@ -11,16 +11,20 @@
 #include "../entity.h"
 
 namespace simpleengine {
+    class Game;
     class CollisionHandler : public Event {
     public:
-        explicit CollisionHandler(sf::RenderWindow* window, std::vector<std::shared_ptr<Entity>> entities) : simpleengine::Event(window), entities(entities) {
+        explicit CollisionHandler(simpleengine::Game& game) : simpleengine::Event(nullptr), game(game) {
 
         }
 
         void Update(const float& delta_time) override;
         void Render(sf::RenderTarget* target) override { }
+
+        void UpdateHandledEntities();
     private:
-        std::vector<std::shared_ptr<Entity>> entities;
+        std::vector<std::shared_ptr<Entity>> handled_entities;
+        simpleengine::Game& game;
     };
 }
 

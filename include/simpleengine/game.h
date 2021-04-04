@@ -16,12 +16,15 @@
 #include <functional>
 
 #include "entity.h"
+#include "events/collision_handler.h"
 
 namespace simpleengine {
     class Event;
 
     class Game {
     public:
+        friend class CollisionHandler;
+        
         Game(int w, int h, const std::string& window_name);
         Game(const sf::Vector2u& window_size, const std::string& window_name);
         virtual ~Game();
