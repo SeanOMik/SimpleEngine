@@ -3,7 +3,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 project(SimpleEngine)
 
 # Add some CMake options:
-option(BUILD_EXAMPLES "Build example projects" ON)
+option(SIMPLE_ENGINE_BUILD_EXAMPLES "Build example projects" ON)
 
 set(SFML_BUILD_AUDIO ON)
 set(SFML_BUILD_GRAPHICS ON)
@@ -24,7 +24,7 @@ target_link_libraries(simpleengine PUBLIC sfml-system sfml-main sfml-window sfml
 #target_link_libraries(simpleengine PUBLIC FLAC OpenAL OpenGL Vorbis)
 
 # Add examples as a target if the user has them enabled
-if (BUILD_EXAMPLES)
+if (SIMPLE_ENGINE_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
