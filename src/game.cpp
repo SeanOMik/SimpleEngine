@@ -1,160 +1,94 @@
 //
 // Created by SeanOMik on 7/2/2020.
 // Github: https://github.com/SeanOMik
-// Email: seanomik@gmail.com
 //
 
 #include "game.h"
-#include "entity.h"
-#include "event.h"
 
-simpleengine::Game::Game(int w, int h, const std::string& window_name) {
-    // Create a render window
-    window = new sf::RenderWindow(sf::VideoMode(w, h), window_name);
-}
+#include <iostream>
 
-simpleengine::Game::Game(const sf::Vector2u& window_size, const std::string& window_name) : simpleengine::Game(window_size.x, window_size.y, window_name) {
+#include <gl/glew.h>
+#include <GLFW/glfw3.h>
 
+#include <gl/gl.h>
+
+simpleengine::Game::Game(int w, int h, const std::string& window_name, const bool& resizeable) {
+    // Create a window
+    glfwInit();
+
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+    glfwWindowHint(GLFW_RESIZABLE, resizeable);
+
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+    window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(w, h, window_name.c_str(), NULL, NULL));
+
+    // If we're not resizeable, we need to set the viewport size.
+    if (!resizeable) {
+        int fbWidth;
+        int fbHeight;
+        glfwGetFramebufferSize(window.get(), &fbWidth, &fbHeight);
+        glViewport(0, 0, fbWidth, fbHeight);
+    } else {
+        glfwSetFramebufferSizeCallback(window.get(), simpleengine::Game::framebuffer_resize_callback);
+    }
+
+    glfwMakeContextCurrent(window.get());
+
+    glewExperimental = GL_TRUE;
+
+    if (glewInit() != GLEW_OK) {
+        std::cout << "Failed to initialize glew!" << std::endl;
+        glfwTerminate();
+    }
 }
 
 simpleengine::Game::~Game() {
-    delete window;
-
-    std::vector<Event*>::iterator it = events.begin();
-    while (it != events.end()) {
-        delete (*it);
-        it = events.erase(it);
-    }
+    
 }
 
-void simpleengine::Game::UpdateSFMLEvents() {
-    sf::Event event;
-    while (window->pollEvent(event)) {
-        switch (event.type) {
-            case sf::Event::Closed:
-                close_event.Trigger();
-                window->close();
-                break;
-            case sf::Event::Resized:
-                resized_event.Trigger(event.size);
-                break;
-            case sf::Event::LostFocus:
-                lost_focus_event.Trigger();
-                break;
-            case sf::Event::GainedFocus:
-                gained_focus_event.Trigger();
-                break;
-            case sf::Event::TextEntered:
-                text_entered_event.Trigger(event.text);
-                break;
-            case sf::Event::KeyPressed:
-                key_pressed_event.Trigger(event.key);
-                break;
-            case sf::Event::KeyReleased:
-                key_released_event.Trigger(event.key);
-                break;
-            case sf::Event::MouseWheelMoved:
-                mouse_wheel_moved_event.Trigger(event.mouseWheel);
-                break;
-            case sf::Event::MouseWheelScrolled:
-                mouse_wheel_scrolled_event.Trigger(event.mouseWheelScroll);
-                break;
-            case sf::Event::MouseButtonPressed:
-                mouse_button_pressed_event.Trigger(event.mouseButton);
-                break;
-            case sf::Event::MouseButtonReleased:
-                mouse_button_released_event.Trigger(event.mouseButton);
-                break;
-            case sf::Event::MouseMoved:
-                mouse_move_event.Trigger(event.mouseMove);
-                break;
-            case sf::Event::MouseEntered:
-                mouse_entered_event.Trigger();
-                break;
-            case sf::Event::MouseLeft:
-                mouse_left_event.Trigger();
-                break;
-            case sf::Event::JoystickButtonPressed:
-                joy_btn_pressed_event.Trigger(event.joystickButton);
-                break;
-            case sf::Event::JoystickButtonReleased:
-                joy_btn_released_event.Trigger(event.joystickButton);
-                break;
-            case sf::Event::JoystickMoved:
-                joy_moved_event.Trigger(event.joystickMove);
-                break;
-            case sf::Event::JoystickConnected:
-                joy_connected_event.Trigger(event.joystickConnect);
-                break;
-            case sf::Event::JoystickDisconnected:
-                joy_disconnected_event.Trigger(event.joystickConnect);
-                break;
-            case sf::Event::TouchBegan:
-                touch_began_event.Trigger(event.touch);
-                break;
-            case sf::Event::TouchMoved:
-                touch_moved_event.Trigger(event.touch);
-                break;
-            case sf::Event::TouchEnded:
-                touch_ended_event.Trigger(event.touch);
-                break;
-            case sf::Event::SensorChanged:
-                sensor_event.Trigger(event.sensor);
-                break;
-            case sf::Event::Count:
-                break;
-        }
-    }
+void simpleengine::Game::update() {
+    
 }
 
-void simpleengine::Game::Update() {
-    delta_time = delta_time_clock.restart().asSeconds(); // Update delta time
-    UpdateSFMLEvents();
-
-    for (std::vector<Event*>::iterator it = events.begin(); it != events.end(); ) {
-        (*it)->Update(delta_time);
-
-        if ((*it)->IsDestroying()) {
-            delete (*it);
-            it = events.erase(it);
-        } else {
-            ++it;
-        }
-    }
+void simpleengine::Game::render_window() {
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    render_items();
 }
 
-void simpleengine::Game::RenderWindow() {
-    window->clear();
-    RenderItems();
-    window->display();
+void simpleengine::Game::render_items() {
+    
 }
 
-void simpleengine::Game::RenderItems() {
-    for (std::vector<Event*>::iterator it = events.begin(); it != events.end(); it++) {
-        (*it)->Render(window);
-    }
-}
+int simpleengine::Game::run() {
+    while (!glfwWindowShouldClose(window.get())) {
+        // Update input
+        glfwPollEvents();
 
-int simpleengine::Game::Run() {
-    sf::CircleShape shape(100);
-    shape.setFillColor(sf::Color::Green);
+        update();
 
-    while (window->isOpen()) {
-        Update();
-        RenderWindow();
+        render_window();
+
+        // End draw
+        glfwSwapBuffers(window.get());
+        glFlush();
     }
 
     return 0;
 }
 
-void simpleengine::Game::AddEvent(simpleengine::Event *event) {
-    events.emplace_back(event);
-}
-
-sf::RenderWindow* simpleengine::Game::GetWindow() {
+std::shared_ptr<GLFWwindow> simpleengine::Game::get_window() {
     return window;
 }
 
-void simpleengine::Game::ExitGame() {
-    window->close();
+void simpleengine::Game::exit() {
+    glfwSetWindowShouldClose(window.get(), true);
+    glfwTerminate();
+}
+
+void simpleengine::Game::framebuffer_resize_callback(GLFWwindow*, int fbW, int fbH) {
+    glViewport(0, 0, fbW, fbH);
 }
