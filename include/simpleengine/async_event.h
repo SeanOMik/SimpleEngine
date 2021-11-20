@@ -18,12 +18,12 @@ namespace simpleengine {
     public:
         explicit AsyncEvent(sf::RenderWindow* window = nullptr) : simpleengine::Event(window) {
             update_thread = std::thread( [this]() {
-                while (!quit) {
+                while (!destroying) {
                     std::unique_lock<std::mutex> unique_lock(mutex);
                     cond_var.wait(unique_lock);
 
                     // After waiting check if we're quiting and if we need to stop this thread.
-                    if (quit) break;
+                    if (destroying) break;
             
                     AsyncUpdate(tick_delta_time);
                 }
@@ -31,7 +31,7 @@ namespace simpleengine {
         }
 
         virtual ~AsyncEvent() {
-            quit = true;
+            destroying = true;
 
             // Notify the async updating thread that we're quiting.
             {

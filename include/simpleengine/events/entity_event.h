@@ -21,7 +21,7 @@ namespace simpleengine {
             entity->Update(delta_time);
 
             if (entity->IsDestroying()) {
-                quit = true;
+                destroying = true;
             }
         }
 

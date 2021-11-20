@@ -50,7 +50,12 @@ public:
     ParticleEmitter() : Super(texture, sf::Vector2f(350, 350), .5f, 5, 900, se::Range2f(-25, 25, -25, 25),
             se::particle::ParticleAttributes{std::chrono::milliseconds(500), sf::Vector2f(.1f, .1f), 5,
             sf::Vector2f(2, 2)}, particle_properties, emitter_properties) {
-        texture.loadFromFile("particle.png"); // The particle I tested with was 5x5 pixels
+        // The particle I tested with was 5x5 pixels
+        if (!texture.loadFromFile("particle.png")) {
+            std::cerr << "Failed to load particle.png!" << std::endl;
+            throw std::runtime_error("Failed to load particle.png");
+        }
+
         texture.setSmooth(true);
 
         particle_properties.emplace_back(std::make_unique<se::particle::RandomVelocityParticleProperty>(se::Range2f(-1.5f, 1.5f, -1.5f, 1.5f)));
