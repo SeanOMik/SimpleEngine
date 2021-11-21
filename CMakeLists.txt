@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.6)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 project(SimpleEngine)
 
+include(cmrc/CMakeRC.cmake)
+
 # Add some CMake options:
 option(SIMPLE_ENGINE_BUILD_EXAMPLES "Build example projects" ON)
 

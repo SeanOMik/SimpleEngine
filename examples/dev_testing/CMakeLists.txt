@@ -8,8 +8,18 @@ file(GLOB_RECURSE source_list src/*.cpp)
 target_sources(dev_testing PRIVATE ${source_list})
 target_include_directories(dev_testing PUBLIC include)
 
+# Embed shaders
+file(GLOB_RECURSE shaders_list resources/shaders/*.glsl)
+cmrc_add_resource_library(
+    resource_shaders
+    WHENCE resources/shaders
+    PREFIX shaders
+    ${shaders_list}
+)
+
 # Link simpleengine
 target_link_libraries(dev_testing PUBLIC simpleengine)
+target_link_libraries(dev_testing PRIVATE resource_shaders)
 
 # Set standard to C++20
 set_target_properties(dev_testing PROPERTIES CXX_STANDARD 20 CXX_EXTENSIONS OFF)

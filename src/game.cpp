@@ -4,6 +4,7 @@
 //
 
 #include "game.h"
+#include "event/event.h"
 
 #include <iostream>
 
@@ -12,17 +13,11 @@
 
 #include <gl/gl.h>
 
-simpleengine::Game::Game(int w, int h, const std::string& window_name, const bool& resizeable) {
+simpleengine::Game::Game(int w, int h, const std::string& window_name, const int& gl_profile, const int& major_version,
+        const int& minor_version, const bool& resizeable, const int& forward_compat) : window_resizeable(resizeable) {
+    initialize(gl_profile, major_version, minor_version, window_resizeable, forward_compat);
+
     // Create a window
-    glfwInit();
-
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-    glfwWindowHint(GLFW_RESIZABLE, resizeable);
-
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
     window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(w, h, window_name.c_str(), NULL, NULL));
 
     // If we're not resizeable, we need to set the viewport size.
@@ -45,22 +40,49 @@ simpleengine::Game::Game(int w, int h, const std::string& window_name, const boo
     }
 }
 
+void simpleengine::Game::initialize(const int& gl_profile, const int& major_version, const int& minor_version,
+        const bool& resizeable, const int& forward_compat) {
+    glfwInit();
+
+    glfwWindowHint(GLFW_OPENGL_PROFILE, gl_profile);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major_version);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor_version);
+    glfwWindowHint(GLFW_RESIZABLE, window_resizeable);
+
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, forward_compat);
+}
+
 simpleengine::Game::~Game() {
     
 }
 
+void simpleengine::Game::add_event(std::shared_ptr<simpleengine::Event> event) {
+    events.push_back(event);
+}
+
 void simpleengine::Game::update() {
-    
+    handle_input();
+
+    // Update items
+    for (const std::shared_ptr<Event>& event : events) {
+        event->update(0.f);
+    }
+}
+
+void simpleengine::Game::handle_input() {
+
 }
 
 void simpleengine::Game::render_window() {
-    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     render_items();
 }
 
 void simpleengine::Game::render_items() {
-    
+    for (const std::shared_ptr<Event>& event : events) {
+        event->render(window);
+    }
 }
 
 int simpleengine::Game::run() {

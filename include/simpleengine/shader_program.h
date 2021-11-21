@@ -1,0 +1,122 @@
+//
+// Created by SeanOMik on 7/2/2020.
+// Github: https://github.com/SeanOMik
+//
+
+#ifndef SIMPLEENGINE_SHADER_PROGRAM_H
+#define SIMPLEENGINE_SHADER_PROGRAM_H
+
+#include <gl/glew.h>
+#include <gl/gl.h>
+
+#include <GLFW/glfw3.h>
+
+#include "event/event.h"
+#include "shader.h"
+
+#include <exception>
+#include <fstream>
+#include <memory>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <vector>
+
+namespace simpleengine {
+    class ShaderProgram : public simpleengine::Event {
+    private:
+        using super = simpleengine::Event;
+    public:
+        ShaderProgram() : program(std::make_shared<GLuint>(glCreateProgram())) {
+            
+        }
+
+        virtual ~ShaderProgram() {
+            glDeleteProgram(*program);
+        }
+
+        /**
+         * @brief Add a shader to this shader program. Also checks that its using the same `program` as this.
+         * 
+         * @see ShaderProgram::add_shader(const ShaderType& type, const std::string& shader_path)
+         * @param shader The shader to add.
+         * @return ShaderProgram& self
+         */
+        ShaderProgram& add_shader(Shader& shader) {
+            if (shader.program != this->program) {
+                throw std::exception("The added shader does not have the same program as this shade program!");
+            }
+
+            shaders.push_back(shader);
+
+            return *this;
+        }
+
+        /**
+         * @brief Create and add a shader from a string to this shader program.
+         * 
+         * @param type The type of the shader.
+         * @param shader_path The path of the shader.
+         * @return ShaderProgram& self
+         */
+        ShaderProgram& add_shader_from_source(const ShaderType& type, std::string& shader_source) {
+            Shader shd = Shader::from_source(program, type, shader_source);
+
+            shaders.emplace_back(shd);
+
+            return *this;
+        }
+
+        /**
+         * @brief Create and add a shader from a filepath to this shader program.
+         * 
+         * @param type The type of the shader.
+         * @param shader_path The path of the shader.
+         * @return ShaderProgram& self
+         */
+        ShaderProgram& add_shader_from_path(const ShaderType& type, const std::string& shader_path) {
+            Shader shd = Shader::from_filepath(program, type, shader_path);
+
+            shaders.emplace_back(shd);
+
+            return *this;
+        }
+
+        /**
+         * @brief Link the shader program. Also removes unused shader resources.
+         * 
+         */
+        void link() {
+            if (shaders.empty()) {
+                throw std::exception("Shaders cannot be empty when running simpleengine::ShaderProgram::link()!");
+            }
+
+            glLinkProgram(*program);
+
+            GLint success = false;
+            glGetProgramiv(*program, GL_LINK_STATUS, &success);
+
+            if (!success) {
+                std::cerr << "Failed to link shader program!" << std::endl;
+                throw ShaderException("Failed to link shader program!");
+            }
+
+            for (Shader& shader : shaders) {
+                shader.delete_shader();
+            }
+        }
+
+        virtual void update(const float& delta_time) {
+
+        }
+
+        virtual void render(std::shared_ptr<GLFWwindow> target) {
+            glUseProgram(*program);
+        }
+
+        std::shared_ptr<GLuint> program;
+        std::vector<Shader> shaders;
+    };
+}
+
+#endif //SIMPLEENGINE_SHADER_PROGRAM_H
