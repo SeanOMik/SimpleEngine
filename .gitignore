@@ -8,6 +8,7 @@ cmake-build-cmake-build-w10-msvc-debug/*
 cmake-build-debug-wsl/*
 build/*
 .cache/*
+c/*
 
 # Compiled source #
 ###################

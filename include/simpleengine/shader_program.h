@@ -44,7 +44,7 @@ namespace simpleengine {
          */
         ShaderProgram& add_shader(Shader& shader) {
             if (shader.program != this->program) {
-                throw std::exception("The added shader does not have the same program as this shade program!");
+                throw std::runtime_error("The added shader does not have the same program as this shade program!");
             }
 
             shaders.push_back(shader);
@@ -88,7 +88,7 @@ namespace simpleengine {
          */
         void link() {
             if (shaders.empty()) {
-                throw std::exception("Shaders cannot be empty when running simpleengine::ShaderProgram::link()!");
+                throw std::runtime_error("Shaders cannot be empty when running simpleengine::ShaderProgram::link()!");
             }
 
             glLinkProgram(*program);

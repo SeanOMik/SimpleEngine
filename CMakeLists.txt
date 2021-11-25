@@ -25,6 +25,8 @@ target_link_libraries(simpleengine PUBLIC glfw)
 target_link_libraries(simpleengine PUBLIC glm::glm)
 target_link_libraries(simpleengine PUBLIC soil2)
 
+include_directories(${GLM_INCLUDE_DIRS})
+
 # Add examples as a target if the user has them enabled
 if (SIMPLE_ENGINE_BUILD_EXAMPLES)
     add_subdirectory(examples)

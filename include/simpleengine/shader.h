@@ -17,21 +17,22 @@
 #include <fstream>
 #include <gl/gl.h>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <iostream>
 #include <sstream>
 
 namespace simpleengine {
-    class ShaderException : public std::exception {
+    class ShaderException : public std::runtime_error {
     public:
-        explicit ShaderException(char const* const msg) : std::exception(msg) {
+        explicit ShaderException(char const* const msg) : std::runtime_error(msg) {
 
         }
     };
 
     enum ShaderType {
-        Vertex = GL_VERTEX_SHADER,
-        Fragment = GL_FRAGMENT_SHADER,
+        ST_Vertex = GL_VERTEX_SHADER,
+        ST_Fragment = GL_FRAGMENT_SHADER,
     };
 
     class Shader : public simpleengine::Event {
