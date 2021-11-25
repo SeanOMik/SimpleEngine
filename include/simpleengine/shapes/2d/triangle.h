@@ -39,7 +39,7 @@ namespace simpleengine::shapes_2d {
 
             vao.bind();
             vbo.buffer(vertices.data(), 0, vertices.size() * sizeof(float) * 3); // 3 floats are in each "row" of the vector.
-            vao.enable_attrib(vbo, 0, vertices.size(), GL_FLOAT, 3 * sizeof(float), 0);
+            vao.enable_attrib(vbo, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
         }
 
         virtual ~Triangle() = default;
@@ -52,7 +52,7 @@ namespace simpleengine::shapes_2d {
             glUseProgram(*shader_program);
 
             vao.bind();
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDrawArrays(GL_TRIANGLES, 0, vertices.size());
         }
     };
 }

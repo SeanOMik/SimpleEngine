@@ -46,24 +46,20 @@ int main(int argc, char *argv[]) {
         glm::vec3(0.5f, -0.5f, 0.f),
         glm::vec3(0.f, 0.5f, 0.f),
     }; */
-    /* std::vector<glm::vec3> vertices = {
+    std::vector<glm::vec3> vertices = {
         glm::vec3(0.5f,  0.5f, 0.0f),
         glm::vec3(0.5f, -0.5f, 0.0f),
+        glm::vec3(-0.5f,  0.5f, 0.0f),
+
+        glm::vec3(0.5f, -0.5f, 0.0f),
+        glm::vec3(-0.5f, -0.5f, 0.0f),
         glm::vec3(-0.5f,  0.5f, 0.0f),
     };
 
     std::shared_ptr<simpleengine::Event> tri(new simpleengine::shapes_2d::Triangle(base_shader_program, vertices));
-    game.add_event(tri); */
+    game.add_event(tri);
 
-    /* 0.5f,  0.5f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f,  0.5f, 0.0f,  // top left 
-    // second triangle
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f */
-
-    std::vector<glm::vec3> vertices = {
+    /* std::vector<glm::vec3> vertices = {
         glm::vec3(0.5f, 0.5f, 0.f), // top right
         glm::vec3(0.5f, -0.5f, 0.f), // bottom right
         glm::vec3(-0.5f, -0.5f, 0.f), // bottom left
@@ -76,7 +72,7 @@ int main(int argc, char *argv[]) {
     };
 
     std::shared_ptr<simpleengine::Event> square(new simpleengine::shapes_2d::Square(base_shader_program, vertices, indicies));
-    game.add_event(square);
+    game.add_event(square); */
 
     return game.run();
 }
