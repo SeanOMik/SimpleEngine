@@ -29,17 +29,51 @@ namespace simpleengine::shapes_2d {
     private:
         std::shared_ptr<GLuint> shader_program;
     public:
-        std::vector<glm::vec3> vertices;
+        std::vector<Vertex> vertices;
         gfx::VBO vbo;
         gfx::VAO vao;
 
-        Triangle(std::shared_ptr<GLuint> shader_program, std::vector<glm::vec3> vertices) : super(nullptr),
+        Triangle(std::shared_ptr<GLuint> shader_program, std::vector<Vertex> vertices) : super(nullptr),
                 shader_program(shader_program), vertices(vertices), vbo(gfx::VBO(GL_ARRAY_BUFFER, false)), 
                 vao(gfx::VAO()) {
 
             vao.bind();
-            vbo.buffer(vertices.data(), 0, vertices.size() * sizeof(float) * 3); // 3 floats are in each "row" of the vector.
-            vao.enable_attrib(vbo, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
+            vbo.buffer(vertices.data(), 0, sizeof(Vertex) * vertices.size());
+
+            /* vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, position));
+            vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
+            vao.enable_attrib(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, tex_coord)); */
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+            glEnableVertexAttribArray(0);
+            
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+            glEnableVertexAttribArray(1);
+            
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, tex_coord));
+            glEnableVertexAttribArray(2);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+
+            /* glCreateVertexArrays(1, &vao);
+            glBindVertexArray(vao);
+
+            glGenBuffers(1, &vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+            glEnableVertexAttribArray(0);
+            
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+            glEnableVertexAttribArray(1);
+            
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, tex_coord));
+            glEnableVertexAttribArray(2);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0); */
         }
 
         virtual ~Triangle() = default;

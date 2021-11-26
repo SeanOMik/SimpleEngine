@@ -30,23 +30,32 @@ namespace simpleengine::shapes_2d {
     private:
         std::shared_ptr<GLuint> shader_program;
     public:
-        std::vector<glm::vec3> vertices;
+        std::vector<Vertex> vertices;
         std::vector<GLuint> indicies;
         gfx::VBO ebo;
         gfx::VBO vbo;
         gfx::VAO vao;
 
-        Square(std::shared_ptr<GLuint> shader_program, std::vector<glm::vec3> vertices, std::vector<GLuint> indicies) :
+        Square(std::shared_ptr<GLuint> shader_program, std::vector<Vertex> vertices, std::vector<GLuint> indicies) :
                 super(nullptr), shader_program(shader_program), vertices(vertices), indicies(indicies),
                 ebo(gfx::VBO(GL_ELEMENT_ARRAY_BUFFER, false)), vbo(gfx::VBO(GL_ARRAY_BUFFER, false)),
                 vao(gfx::VAO()) {
 
             vao.bind();
-            vbo.buffer(vertices.data(), 0, vertices.size() * sizeof(float) * 3);
+            vbo.buffer(vertices.data(), 0, sizeof(Vertex) * vertices.size());
             ebo.buffer(indicies.data(), 0, indicies.size() * sizeof(GLuint));
 
-            // idfk why its 3
-            vao.enable_attrib(ebo, 0, 3, GL_FLOAT, 3 * sizeof(float), 0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+            glEnableVertexAttribArray(0);
+            
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+            glEnableVertexAttribArray(1);
+            
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, tex_coord));
+            glEnableVertexAttribArray(2);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
         }
 
         virtual ~Square() = default;

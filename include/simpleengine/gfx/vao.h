@@ -17,7 +17,7 @@ namespace simpleengine::gfx {
         GLuint handle;
 
         VAO() {
-            glGenVertexArrays(1, &handle);
+            glCreateVertexArrays(1, &handle);
         }
 
         ~VAO() {
@@ -43,6 +43,7 @@ namespace simpleengine::gfx {
             glBindVertexArray(0);
         }
 
+        // TODO: Fix this.
         void enable_attrib(VBO vbo, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset) {
             bind();
             vbo.bind();
@@ -69,7 +70,7 @@ namespace simpleengine::gfx {
 
             // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's
             // bound vertex buffer object so afterwards we can safely unbind.
-            glBindBuffer(GL_ARRAY_BUFFER, 0); 
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
 
             // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this
             // rarely happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally

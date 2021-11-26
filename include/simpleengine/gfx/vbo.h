@@ -32,9 +32,9 @@ namespace simpleengine::gfx {
             glBindBuffer(type, handle);
         }
 
-        void buffer(void *data, size_t offset, size_t count) {
+        void buffer(void *data, size_t offset, size_t size) {
             bind();
-            glBufferData(type, count - offset, data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+            glBufferData(type, size - offset, data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
         }
     };
 }

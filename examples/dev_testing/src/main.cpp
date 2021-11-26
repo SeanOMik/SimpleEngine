@@ -41,34 +41,25 @@ int main(int argc, char *argv[]) {
     shader_prog.link();
     std::shared_ptr<GLuint> base_shader_program = shader_prog.program;
 
-    /* std::vector<glm::vec3> vertices = {
-        glm::vec3(-0.5f, -0.5f, 0.f),
-        glm::vec3(0.5f, -0.5f, 0.f),
-        glm::vec3(0.f, 0.5f, 0.f),
-    }; */
-    std::vector<glm::vec3> vertices = {
-        glm::vec3(0.5f,  0.5f, 0.0f),
-        glm::vec3(0.5f, -0.5f, 0.0f),
-        glm::vec3(-0.5f,  0.5f, 0.0f),
-
-        glm::vec3(0.5f, -0.5f, 0.0f),
-        glm::vec3(-0.5f, -0.5f, 0.0f),
-        glm::vec3(-0.5f,  0.5f, 0.0f),
+    std::vector<simpleengine::Vertex> vertices = {
+        {glm::vec3(-0.5f, -0.5f, 0.f),			glm::vec3(1.f, 0.f, 0.f),		glm::vec2(0.f, 1.f)},
+        {glm::vec3(0.5f, -0.5f, 0.f),			glm::vec3(0.f, 1.f, 0.f),		glm::vec2(0.f, 0.f)},
+        {glm::vec3(0.f, 0.5f, 0.f),	    		glm::vec3(0.f, 0.f, 1.f),		glm::vec2(1.f, 0.f)},
     };
 
     std::shared_ptr<simpleengine::Event> tri(new simpleengine::shapes_2d::Triangle(base_shader_program, vertices));
     game.add_event(tri);
 
-    /* std::vector<glm::vec3> vertices = {
-        glm::vec3(0.5f, 0.5f, 0.f), // top right
-        glm::vec3(0.5f, -0.5f, 0.f), // bottom right
-        glm::vec3(-0.5f, -0.5f, 0.f), // bottom left
-        glm::vec3(-0.5f, 0.5f, 0.f), // top left
+    /* std::vector<simpleengine::Vertex> vertices = {
+        { glm::vec3(0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f) },
+        { glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(0.f, 0.f) },
+        { glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(1.f, 0.f) },
+        { glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(0.75f, 0.75f, 0.75f), glm::vec2(1.f, 1.f) },
     };
 
     std::vector<GLuint> indicies = {
-        0, 1, 3, // first triangle
-        1, 2, 3 // second triangle
+        0, 1, 3,
+        1, 2, 3
     };
 
     std::shared_ptr<simpleengine::Event> square(new simpleengine::shapes_2d::Square(base_shader_program, vertices, indicies));
