@@ -53,8 +53,8 @@ int main(int argc, char *argv[]) {
         {glm::vec3(0.f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f)}, // top
     };
 
-    std::shared_ptr<simpleengine::shapes_2d::Triangle> tri(new simpleengine::shapes_2d::Triangle(base_shader_program, vertices));
-    //tri->set_texture(wall_texture);
+    auto tri = std::make_shared<simpleengine::shapes_2d::Triangle>(base_shader_program, vertices);
+    tri->set_texture(wall_texture);
     game.add_event(tri);
 
     /* std::vector<simpleengine::Vertex> vertices = {
@@ -69,7 +69,8 @@ int main(int argc, char *argv[]) {
         1, 2, 3
     };
 
-    std::shared_ptr<simpleengine::Event> square(new simpleengine::shapes_2d::Square(base_shader_program, crate_texture, vertices, indicies));
+    auto square = std::make_shared<simpleengine::shapes_2d::Square>(base_shader_program, vertices, indicies);
+    //square->set_texture(crate_texture);
     game.add_event(square); */
 
     return game.run();
