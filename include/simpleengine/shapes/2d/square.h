@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_SQUARE_H
-#define SIMPLEENGINE_SQUARE_H
+#pragma once
 
 #include <gl/glew.h>
 #include <gl/gl.h>
@@ -53,5 +47,3 @@ namespace simpleengine::shapes_2d {
         virtual void render(std::shared_ptr<GLFWwindow> target) override;
     };
 }
-
-#endif //SIMPLEENGINE_TRIANGLE_H

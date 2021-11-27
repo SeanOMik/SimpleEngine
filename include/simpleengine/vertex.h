@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_VERTEX_H
-#define SIMPLEENGINE_VERTEX_H
+#pragma once
 
 #include <gl/glew.h>
 #include <gl/gl.h>
@@ -19,5 +13,3 @@ namespace simpleengine {
         glm::vec2 tex_coord;
     };
 }
-
-#endif //SIMPLEENGINE_VERTEX_H

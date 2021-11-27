@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_TEXTURE_H
-#define SIMPLEENGINE_TEXTURE_H
+#pragma once
 
 #include <gl/glew.h>
 #include <gl/gl.h>
@@ -62,5 +56,3 @@ namespace simpleengine::gfx {
         void bind() const;
     };
 }
-
-#endif

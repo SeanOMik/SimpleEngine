@@ -1,8 +1,3 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
 #include "simpleengine/gfx/texture.h"
 #include "simpleengine/shapes/2d/square.h"
 #include <simpleengine/gfx/shader.h>

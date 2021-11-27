@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_EVENT_H
-#define SIMPLEENGINE_EVENT_H
+#pragma once
 
 #include "../destructable.h"
 
@@ -24,5 +18,3 @@ namespace simpleengine {
         std::shared_ptr<GLFWwindow> window;
     };
 }
-
-#endif //GAMEENGINE_EVENT_H

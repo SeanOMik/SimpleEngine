@@ -3,8 +3,7 @@
 // Github: https://github.com/SeanOMik
 //
 
-#ifndef SIMPLEENGINE_DESTRUCTABLE_H
-#define SIMPLEENGINE_DESTRUCTABLE_H
+#pragma once
 
 namespace simpleengine {
     class Destructable {
@@ -20,5 +19,3 @@ namespace simpleengine {
         bool destroying = false;
     };
 }
-
-#endif //SIMPLEENGINE_DESTRUCTABLE_H

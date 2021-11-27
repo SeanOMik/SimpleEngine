@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_VAO_H
-#define SIMPLEENGINE_VAO_H
+#pragma once
 
 #include <gl/glew.h>
 #include <gl/GL.h>
@@ -68,5 +62,3 @@ namespace simpleengine::gfx {
         }
     };
 }
-
-#endif

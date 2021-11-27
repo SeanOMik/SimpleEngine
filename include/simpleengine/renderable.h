@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_RENDERABLE_H
-#define SIMPLEENGINE_RENDERABLE_H
+#pragma once
 
 #include "event/event.h"
 
@@ -21,5 +15,3 @@ namespace simpleengine {
         virtual ~Renderable() = default;
     };
 }
-
-#endif //SIMPLEENGINE_RENDERABLE_H

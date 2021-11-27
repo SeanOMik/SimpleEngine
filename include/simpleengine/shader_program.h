@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_SHADER_PROGRAM_H
-#define SIMPLEENGINE_SHADER_PROGRAM_H
+#pragma once
 
 #include <gl/glew.h>
 #include <gl/gl.h>
@@ -118,5 +112,3 @@ namespace simpleengine {
         std::vector<gfx::Shader> shaders;
     };
 }
-
-#endif //SIMPLEENGINE_SHADER_PROGRAM_H

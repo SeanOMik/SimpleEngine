@@ -1,8 +1,3 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
 #include "game.h"
 #include "event/event.h"
 

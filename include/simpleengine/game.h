@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_GAME_H
-#define SIMPLEENGINE_GAME_H
+#pragma once
 
 #include <string>
 #include <memory>
@@ -53,5 +47,3 @@ namespace simpleengine {
         const bool& window_resizeable;
     };
 }
-
-#endif //GAMEENGINE_GAME_H

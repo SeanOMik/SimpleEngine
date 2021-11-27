@@ -1,10 +1,4 @@
-//
-// Created by SeanOMik on 7/2/2020.
-// Github: https://github.com/SeanOMik
-//
-
-#ifndef SIMPLEENGINE_SHADER_H
-#define SIMPLEENGINE_SHADER_H
+#pragma once
 
 #include <chrono>
 #include <gl/glew.h>
@@ -198,5 +192,3 @@ namespace simpleengine::gfx {
         void setUniformUIntVec4(const char* uniform_name, glm::uvec4 vec, bool bind_shader = true);
     };
 }
-
-#endif //SIMPLEENGINE_SHADER_H
