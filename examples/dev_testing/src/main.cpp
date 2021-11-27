@@ -3,8 +3,9 @@
 // Github: https://github.com/SeanOMik
 //
 
+#include "simpleengine/gfx/texture.h"
 #include "simpleengine/shapes/2d/square.h"
-#include <simpleengine/shader.h>
+#include <simpleengine/gfx/shader.h>
 #include <simpleengine/renderable.h>
 #include <simpleengine/event/event.h>
 #include <simpleengine/shader_program.h>
@@ -19,6 +20,8 @@
 
 #include <cmrc/cmrc.hpp>
 CMRC_DECLARE(resource_shaders);
+
+#include <SOIL2/SOIL2.h>
 
 std::string read_resource_shader(const std::string& path) {
     auto fs = cmrc::resource_shaders::get_filesystem();
@@ -36,25 +39,29 @@ int main(int argc, char *argv[]) {
 
     // Create shader program
     simpleengine::ShaderProgram shader_prog;
-    shader_prog.add_shader_from_source(simpleengine::ShaderType::ST_Vertex, vertex_core);
-    shader_prog.add_shader_from_source(simpleengine::ShaderType::ST_Fragment, fragment_core);
+    shader_prog.add_shader_from_source(simpleengine::gfx::ShaderType::ST_Vertex, vertex_core);
+    shader_prog.add_shader_from_source(simpleengine::gfx::ShaderType::ST_Fragment, fragment_core);
     shader_prog.link();
     std::shared_ptr<GLuint> base_shader_program = shader_prog.program;
 
+    simpleengine::Texture wall_texture("resources/wall.jpg");
+    simpleengine::Texture crate_texture("resources/container.jpg", true, true);
+
     std::vector<simpleengine::Vertex> vertices = {
-        {glm::vec3(-0.5f, -0.5f, 0.f),			glm::vec3(1.f, 0.f, 0.f),		glm::vec2(0.f, 1.f)},
-        {glm::vec3(0.5f, -0.5f, 0.f),			glm::vec3(0.f, 1.f, 0.f),		glm::vec2(0.f, 0.f)},
-        {glm::vec3(0.f, 0.5f, 0.f),	    		glm::vec3(0.f, 0.f, 1.f),		glm::vec2(1.f, 0.f)},
+        {glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f)}, // bottom left
+        {glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f)}, // bottom right
+        {glm::vec3(0.f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f)}, // top
     };
 
-    std::shared_ptr<simpleengine::Event> tri(new simpleengine::shapes_2d::Triangle(base_shader_program, vertices));
+    std::shared_ptr<simpleengine::shapes_2d::Triangle> tri(new simpleengine::shapes_2d::Triangle(base_shader_program, vertices));
+    //tri->set_texture(wall_texture);
     game.add_event(tri);
 
     /* std::vector<simpleengine::Vertex> vertices = {
-        { glm::vec3(0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f) },
-        { glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(0.f, 0.f) },
-        { glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(1.f, 0.f) },
-        { glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(0.75f, 0.75f, 0.75f), glm::vec2(1.f, 1.f) },
+        { glm::vec3(0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(1.f, 1.f) },
+        { glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f) },
+        { glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.f, 0.f) },
+        { glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 1.f, 0.f), glm::vec2(0.f, 1.f) },
     };
 
     std::vector<GLuint> indicies = {
@@ -62,7 +69,7 @@ int main(int argc, char *argv[]) {
         1, 2, 3
     };
 
-    std::shared_ptr<simpleengine::Event> square(new simpleengine::shapes_2d::Square(base_shader_program, vertices, indicies));
+    std::shared_ptr<simpleengine::Event> square(new simpleengine::shapes_2d::Square(base_shader_program, crate_texture, vertices, indicies));
     game.add_event(square); */
 
     return game.run();

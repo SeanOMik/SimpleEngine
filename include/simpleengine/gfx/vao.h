@@ -28,23 +28,12 @@ namespace simpleengine::gfx {
             glDeleteVertexArrays(1, &handle);
         }
 
-        void bind() {
+        void bind() const {
             glBindVertexArray(handle);
         }
 
-        void attr(VBO vbo) {
-            bind();
-            vbo.bind();
-
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-            glEnableVertexAttribArray(0);
-
-            glBindBuffer(GL_ARRAY_BUFFER, 0); 
-            glBindVertexArray(0);
-        }
-
         // TODO: Fix this.
-        void enable_attrib(VBO vbo, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset) {
+        void enable_attrib(const VBO& vbo, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset) const {
             bind();
             vbo.bind();
 
@@ -63,7 +52,7 @@ namespace simpleengine::gfx {
                     glVertexAttribIPointer(index, size, type, stride, (void *) offset);
                     break;
                 default:
-                    glVertexAttribPointer(index, size, type, GL_FALSE, stride, (void *) 0);
+                    glVertexAttribPointer(index, size, type, GL_FALSE, stride, (void *) offset);
                     break;
             }
             glEnableVertexAttribArray(index);

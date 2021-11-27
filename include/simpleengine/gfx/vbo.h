@@ -28,7 +28,7 @@ namespace simpleengine::gfx {
             glDeleteBuffers(1, &handle);
         }
 
-        void bind() {
+        void bind() const {
             glBindBuffer(type, handle);
         }
 

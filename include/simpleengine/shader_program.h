@@ -12,7 +12,7 @@
 #include <GLFW/glfw3.h>
 
 #include "event/event.h"
-#include "shader.h"
+#include "gfx/shader.h"
 
 #include <exception>
 #include <fstream>
@@ -38,11 +38,11 @@ namespace simpleengine {
         /**
          * @brief Add a shader to this shader program. Also checks that its using the same `program` as this.
          * 
-         * @see ShaderProgram::add_shader(const ShaderType& type, const std::string& shader_path)
+         * @see ShaderProgram::add_shader(const gfx::ShaderType& type, const std::string& shader_path)
          * @param shader The shader to add.
          * @return ShaderProgram& self
          */
-        ShaderProgram& add_shader(Shader& shader) {
+        ShaderProgram& add_shader(gfx::Shader& shader) {
             if (shader.program != this->program) {
                 throw std::runtime_error("The added shader does not have the same program as this shade program!");
             }
@@ -59,8 +59,8 @@ namespace simpleengine {
          * @param shader_path The path of the shader.
          * @return ShaderProgram& self
          */
-        ShaderProgram& add_shader_from_source(const ShaderType& type, std::string& shader_source) {
-            Shader shd = Shader::from_source(program, type, shader_source);
+        ShaderProgram& add_shader_from_source(const gfx::ShaderType& type, std::string& shader_source) {
+            gfx::Shader shd = gfx::Shader::from_source(program, type, shader_source);
 
             shaders.emplace_back(shd);
 
@@ -74,8 +74,8 @@ namespace simpleengine {
          * @param shader_path The path of the shader.
          * @return ShaderProgram& self
          */
-        ShaderProgram& add_shader_from_path(const ShaderType& type, const std::string& shader_path) {
-            Shader shd = Shader::from_filepath(program, type, shader_path);
+        ShaderProgram& add_shader_from_path(const gfx::ShaderType& type, const std::string& shader_path) {
+            gfx::Shader shd = gfx::Shader::from_filepath(program, type, shader_path);
 
             shaders.emplace_back(shd);
 
@@ -98,10 +98,10 @@ namespace simpleengine {
 
             if (!success) {
                 std::cerr << "Failed to link shader program!" << std::endl;
-                throw ShaderException("Failed to link shader program!");
+                throw gfx::ShaderException("Failed to link shader program!");
             }
 
-            for (Shader& shader : shaders) {
+            for (gfx::Shader& shader : shaders) {
                 shader.delete_shader();
             }
         }
@@ -115,7 +115,7 @@ namespace simpleengine {
         }
 
         std::shared_ptr<GLuint> program;
-        std::vector<Shader> shaders;
+        std::vector<gfx::Shader> shaders;
     };
 }
 

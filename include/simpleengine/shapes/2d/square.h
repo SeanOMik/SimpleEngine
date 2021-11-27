@@ -18,7 +18,7 @@
 
 #include "../../gfx/vbo.h"
 #include "../../gfx/vao.h"
-#include "simpleengine/gfx/vao.h"
+#include "../../gfx/texture.h"
 
 #include <stdint.h>
 #include <vector>
@@ -29,6 +29,7 @@ namespace simpleengine::shapes_2d {
         using super = simpleengine::Renderable;
     private:
         std::shared_ptr<GLuint> shader_program;
+        Texture& texture;
     public:
         std::vector<Vertex> vertices;
         std::vector<GLuint> indicies;
@@ -36,10 +37,10 @@ namespace simpleengine::shapes_2d {
         gfx::VBO vbo;
         gfx::VAO vao;
 
-        Square(std::shared_ptr<GLuint> shader_program, std::vector<Vertex> vertices, std::vector<GLuint> indicies) :
+        Square(std::shared_ptr<GLuint> shader_program, Texture& texture, std::vector<Vertex> vertices, std::vector<GLuint> indicies) :
                 super(nullptr), shader_program(shader_program), vertices(vertices), indicies(indicies),
                 ebo(gfx::VBO(GL_ELEMENT_ARRAY_BUFFER, false)), vbo(gfx::VBO(GL_ARRAY_BUFFER, false)),
-                vao(gfx::VAO()) {
+                texture(texture) {
 
             vao.bind();
             vbo.buffer(vertices.data(), 0, sizeof(Vertex) * vertices.size());
@@ -65,6 +66,8 @@ namespace simpleengine::shapes_2d {
         }
 
         virtual void render(std::shared_ptr<GLFWwindow> target) override {
+            texture.bind();
+
             glUseProgram(*shader_program);
 
             vao.bind();
