@@ -29,7 +29,7 @@ namespace simpleengine::shapes_2d {
         using super = simpleengine::Renderable;
     private:
         gfx::Shader shader; // This only stores the shader program
-        nonstd::optional<Texture> texture;
+        nonstd::optional<gfx::Texture> texture;
     public:
         std::vector<Vertex> vertices;
         gfx::VBO vbo;
@@ -41,7 +41,7 @@ namespace simpleengine::shapes_2d {
 
         virtual ~Triangle() = default;
 
-        void set_texture(Texture texture);
+        void set_texture(gfx::Texture texture);
 
         virtual void update(const float& delta_time) override;
 

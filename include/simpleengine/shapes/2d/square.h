@@ -32,7 +32,7 @@ namespace simpleengine::shapes_2d {
         using super = simpleengine::Renderable;
     private:
         gfx::Shader shader;
-        nonstd::optional<Texture> texture;
+        nonstd::optional<gfx::Texture> texture;
     public:
         std::vector<Vertex> vertices;
         std::vector<GLuint> indicies;
@@ -46,7 +46,7 @@ namespace simpleengine::shapes_2d {
 
         virtual ~Square() = default;
 
-        void set_texture(Texture texture);
+        void set_texture(gfx::Texture texture);
         
         virtual void update(const float& delta_time) override;
 

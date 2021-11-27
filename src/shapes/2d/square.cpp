@@ -28,7 +28,7 @@ namespace simpleengine::shapes_2d {
 
     }
 
-    void Square::set_texture(Texture texture) {
+    void Square::set_texture(gfx::Texture texture) {
         this->texture = texture;
     }
     

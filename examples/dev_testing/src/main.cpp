@@ -44,8 +44,8 @@ int main(int argc, char *argv[]) {
     shader_prog.link();
     std::shared_ptr<GLuint> base_shader_program = shader_prog.program;
 
-    simpleengine::Texture wall_texture("resources/wall.jpg");
-    simpleengine::Texture crate_texture("resources/container.jpg", true, true);
+    simpleengine::gfx::Texture wall_texture("resources/wall.jpg");
+    simpleengine::gfx::Texture crate_texture("resources/container.jpg", true, true);
 
     std::vector<simpleengine::Vertex> vertices = {
         {glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f)}, // bottom left
