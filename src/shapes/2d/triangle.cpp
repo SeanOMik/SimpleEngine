@@ -30,7 +30,10 @@ namespace simpleengine::shapes_2d {
     }
 
     void Triangle::update(const float& delta_time) {
-
+        for (Vertex& vertex : vertices) {
+            vertex.position.translate_x(0.01f);
+            vertex.position.translate_y(0.01f);
+        }
     }
 
     void Triangle::render(std::shared_ptr<GLFWwindow> target) {

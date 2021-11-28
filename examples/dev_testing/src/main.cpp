@@ -1,5 +1,6 @@
 #include "simpleengine/gfx/texture.h"
 #include "simpleengine/shapes/2d/square.h"
+#include "simpleengine/vector.h"
 #include <simpleengine/gfx/shader.h>
 #include <simpleengine/renderable.h>
 #include <simpleengine/event/event.h>
@@ -43,13 +44,13 @@ int main(int argc, char *argv[]) {
     simpleengine::gfx::Texture crate_texture("resources/container.jpg", true, true);
 
     std::vector<simpleengine::Vertex> vertices = {
-        {glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f)}, // bottom left
-        {glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f)}, // bottom right
-        {glm::vec3(0.f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f)}, // top
+        { simpleengine::Vectorf(-0.5f, -0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f) }, // bottom left
+        { simpleengine::Vectorf(0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f) }, // bottom right
+        { simpleengine::Vectorf(0.f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f) }, // top
     };
 
     auto tri = std::make_shared<simpleengine::shapes_2d::Triangle>(base_shader_program, vertices);
-    tri->set_texture(wall_texture);
+    //tri->set_texture(wall_texture);
     game.add_event(tri);
 
     /* std::vector<simpleengine::Vertex> vertices = {

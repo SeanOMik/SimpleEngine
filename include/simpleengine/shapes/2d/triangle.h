@@ -14,6 +14,7 @@
 #include "../../gfx/shader.h"
 #include "../../gfx/texture.h"
 #include "../../optional.h"
+#include "../../translatable.h"
 
 #include <vector>
 
@@ -38,7 +39,6 @@ namespace simpleengine::shapes_2d {
         void set_texture(gfx::Texture texture);
 
         virtual void update(const float& delta_time) override;
-
         virtual void render(std::shared_ptr<GLFWwindow> target) override;
     };
 }
