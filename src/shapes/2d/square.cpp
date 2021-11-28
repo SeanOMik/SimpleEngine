@@ -41,10 +41,10 @@ namespace simpleengine::shapes_2d {
 
         // If theres a texture set, tell the fragment shader that and bind to the texture for drawing.
         if (texture.has_value()) {
-            shader.setUniformInt("texture_is_set", true, false);
+            shader.set_uniform_int("texture_is_set", true, false);
             texture.value().bind();
         } else {
-            shader.setUniformInt("texture_is_set", false, false);
+            shader.set_uniform_int("texture_is_set", false, false);
         }
 
         vao.bind();
