@@ -1,6 +1,7 @@
 #include "gfx/shader.h"
 
 #include <glm/fwd.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <memory>
 
 namespace simpleengine::gfx {
@@ -41,7 +42,7 @@ namespace simpleengine::gfx {
             throw ShaderException("Failed to compile shader!");
         }
 
-        glAttachShader(*shd.program, shd.shader);
+        shd.attach(shd.program);
 
         return shd;
     }
@@ -105,7 +106,11 @@ namespace simpleengine::gfx {
         glUseProgram(0);
     }
 
-    GLfloat Shader::getUniformFloat(GLint location) const {
+    void Shader::attach(std::shared_ptr<GLuint> program) {
+        glAttachShader(*program, shader);
+    }
+
+    GLfloat Shader::get_uniform_float(GLint location) const {
         use();
 
         GLfloat fl;
@@ -114,12 +119,12 @@ namespace simpleengine::gfx {
         return fl;
     }
 
-    GLfloat Shader::getUniformFloat(const char* uniform_name) const {
+    GLfloat Shader::get_uniform_float(const char* uniform_name) const {
         int location = glGetUniformLocation(*program, uniform_name);
-        return getUniformFloat(location);
+        return get_uniform_float(location);
     }
 
-    GLint Shader::getUniformInt(GLint location) const {
+    GLint Shader::get_uniform_int(GLint location) const {
         use();
 
         GLint _int;
@@ -128,12 +133,12 @@ namespace simpleengine::gfx {
         return _int;
     }
 
-    GLint Shader::getUniformInt(const char* uniform_name) const {
+    GLint Shader::get_uniform_int(const char* uniform_name) const {
         int location = glGetUniformLocation(*program, uniform_name);
-        return getUniformInt(location);
+        return get_uniform_int(location);
     }
 
-    GLuint Shader::getUniformUInt(GLint location) const {
+    GLuint Shader::get_uniform_uint(GLint location) const {
         use();
 
         GLuint _uint;
@@ -142,12 +147,12 @@ namespace simpleengine::gfx {
         return _uint;
     }
 
-    GLuint Shader::getUniformUInt(const char* uniform_name) const {
+    GLuint Shader::get_uniform_uint(const char* uniform_name) const {
         int location = glGetUniformLocation(*program, uniform_name);
-        return getUniformUInt(location);
+        return get_uniform_uint(location);
     }
 
-    GLdouble Shader::getUniformDouble(GLint location) const {
+    GLdouble Shader::get_uniform_double(GLint location) const {
         use();
 
         GLdouble dbl;
@@ -156,188 +161,188 @@ namespace simpleengine::gfx {
         return dbl;
     }
 
-    GLdouble Shader::getUniformDouble(const char* uniform_name) const {
+    GLdouble Shader::get_uniform_double(const char* uniform_name) const {
         int location = glGetUniformLocation(*program, uniform_name);
-        return getUniformDouble(location);
+        return get_uniform_double(location);
     }
 
-    void Shader::setUniformFloat(GLint location, GLfloat fl, bool bind_shader) {
+    void Shader::set_uniform_float(GLint location, GLfloat fl, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform1f(location, fl);
+        glUniform1fv(location, 1, &fl);
         if (bind_shader) {
             unuse();
         }
     }
  
-    void Shader::setUniformFloat(const char* uniform_name, GLfloat fl, bool bind_shader) {
+    void Shader::set_uniform_float(const char* uniform_name, GLfloat fl, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformFloat(location, fl, bind_shader);
+        set_uniform_float(location, fl, bind_shader);
     }
 
-    void Shader::setUniformFloatVec2(GLint location, glm::vec2 vec, bool bind_shader) {
+    void Shader::set_uniform_float_vec2(GLint location, glm::vec2 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform2f(location, vec.x, vec.y);
+        glUniform2fv(location, 1, glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformFloatVec2(const char* uniform_name, glm::vec2 vec, bool bind_shader) {
+    void Shader::set_uniform_float_vec2(const char* uniform_name, glm::vec2 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformFloatVec2(location, vec, bind_shader);
+        set_uniform_float_vec2(location, vec, bind_shader);
     }
     
-    void Shader::setUniformFloatVec3(GLint location, glm::vec3 vec, bool bind_shader) {
+    void Shader::set_uniform_float_vec3(GLint location, glm::vec3 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform3f(location, vec.x, vec.y, vec.z);
+        glUniform3fv(location, 1, glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformFloatVec3(const char* uniform_name, glm::vec3 vec, bool bind_shader) {
+    void Shader::set_uniform_float_vec3(const char* uniform_name, glm::vec3 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformFloatVec3(location, vec, bind_shader);
+        set_uniform_float_vec3(location, vec, bind_shader);
     }
     
-    void Shader::setUniformFloatVec4(GLint location, glm::vec4 vec, bool bind_shader) {
+    void Shader::set_uniform_float_vec4(GLint location, glm::vec4 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
+        glUniform4fv(location, 1, glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformFloatVec4(const char* uniform_name, glm::vec4 vec, bool bind_shader) {
+    void Shader::set_uniform_float_vec4(const char* uniform_name, glm::vec4 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformFloatVec4(location, vec, bind_shader);
+        set_uniform_float_vec4(location, vec, bind_shader);
     }
     
-    void Shader::setUniformInt(GLint location, GLint i, bool bind_shader) {
+    void Shader::set_uniform_int(GLint location, GLint i, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform1i(location, i);
+        glUniform1iv(location, 1, &i);
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformInt(const char* uniform_name, GLint i, bool bind_shader) {
+    void Shader::set_uniform_int(const char* uniform_name, GLint i, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformInt(location, i, bind_shader);
+        set_uniform_int(location, i, bind_shader);
     }
     
-    void Shader::setUniformIntVec2(GLint location, glm::ivec2 vec, bool bind_shader) {
+    void Shader::set_uniform_int_vec2(GLint location, glm::ivec2 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform2i(location, vec.x, vec.y);
+        glUniform2iv(location, 1, glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformIntVec2(const char* uniform_name, glm::ivec2 vec, bool bind_shader) {
+    void Shader::set_uniform_int_vec2(const char* uniform_name, glm::ivec2 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformIntVec2(location, vec, bind_shader);
+        set_uniform_int_vec2(location, vec, bind_shader);
     }
     
-    void Shader::setUniformIntVec3(GLint location, glm::ivec3 vec, bool bind_shader) {
+    void Shader::set_uniform_int_vec3(GLint location, glm::ivec3 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform3i(location, vec.x, vec.y, vec.z);
+        glUniform3iv(location, 1, glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformIntVec3(const char* uniform_name, glm::ivec3 vec, bool bind_shader) {
+    void Shader::set_uniform_int_vec3(const char* uniform_name, glm::ivec3 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformIntVec3(location, vec, bind_shader);
+        set_uniform_int_vec3(location, vec, bind_shader);
     }
     
-    void Shader::setUniformIntVec4(GLint location, glm::ivec4 vec, bool bind_shader) {
+    void Shader::set_uniform_int_vec4(GLint location, glm::ivec4 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform4i(location, vec.x, vec.y, vec.z, vec.w);
+        glUniform4iv(location, 1, glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformIntVec4(const char* uniform_name, glm::ivec4 vec, bool bind_shader) {
+    void Shader::set_uniform_int_vec4(const char* uniform_name, glm::ivec4 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformIntVec4(location, vec, bind_shader);
+        set_uniform_int_vec4(location, vec, bind_shader);
     }
     
-    void Shader::setUniformUInt(GLint location, GLuint ui, bool bind_shader) {
+    void Shader::set_uniform_uint(GLint location, GLuint ui, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform1ui(location, ui);
+        glUniform1uiv(location, 1, &ui);
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformUInt(const char* uniform_name, GLuint ui, bool bind_shader) {
+    void Shader::set_uniform_uint(const char* uniform_name, GLuint ui, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformUInt(location, ui, bind_shader);
+        set_uniform_uint(location, ui, bind_shader);
     }
     
-    void Shader::setUniformUIntVec2(GLint location, glm::uvec2 vec, bool bind_shader) {
+    void Shader::set_uniform_uint_vec2(GLint location, glm::uvec2 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform2ui(location, vec.x, vec.y);
+        glUniform2uiv(location, 1,glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformUIntVec2(const char* uniform_name, glm::uvec2 vec, bool bind_shader) {
+    void Shader::set_uniform_uint_vec2(const char* uniform_name, glm::uvec2 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformUIntVec2(location, vec, bind_shader);
+        set_uniform_uint_vec2(location, vec, bind_shader);
     }
     
-    void Shader::setUniformUIntVec3(GLint location, glm::uvec3 vec, bool bind_shader) {
+    void Shader::set_uniform_uint_vec3(GLint location, glm::uvec3 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform3ui(location, vec.x, vec.y, vec.z);
+        glUniform3uiv(location, 1, glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformUIntVec3(const char* uniform_name, glm::uvec3 vec, bool bind_shader) {
+    void Shader::set_uniform_uint_vec3(const char* uniform_name, glm::uvec3 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformUIntVec3(location, vec, bind_shader);
+        set_uniform_uint_vec3(location, vec, bind_shader);
     }
     
-    void Shader::setUniformUIntVec4(GLint location, glm::uvec4 vec, bool bind_shader) {
+    void Shader::set_uniform_uint_vec4(GLint location, glm::uvec4 vec, bool bind_shader) {
         if (bind_shader) {
             use();
         }
-        glUniform4ui(location, vec.x, vec.y, vec.z, vec.w);
+        glUniform4uiv(location, 1, glm::value_ptr(vec));
         if (bind_shader) {
             unuse();
         }
     }
 
-    void Shader::setUniformUIntVec4(const char* uniform_name, glm::uvec4 vec, bool bind_shader) {
+    void Shader::set_uniform_uint_vec4(const char* uniform_name, glm::uvec4 vec, bool bind_shader) {
         int location = glGetUniformLocation(*program, uniform_name);
-        setUniformUIntVec4(location, vec, bind_shader);
+        set_uniform_uint_vec4(location, vec, bind_shader);
     }
 }

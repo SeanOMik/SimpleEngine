@@ -10,6 +10,9 @@ namespace simpleengine::shapes_2d {
         vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
         vao.enable_attrib(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
+        // Tell the shader that there is no texture.
+        shader.set_uniform_int("texture_is_set", false);
+
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
@@ -21,6 +24,9 @@ namespace simpleengine::shapes_2d {
 
     void Triangle::set_texture(gfx::Texture texture) {
         this->texture = texture;
+        
+        // Tell the shader that there is a texture set.
+        shader.set_uniform_int("texture_is_set", true);
     }
 
     void Triangle::update(const float& delta_time) {
@@ -30,12 +36,8 @@ namespace simpleengine::shapes_2d {
     void Triangle::render(std::shared_ptr<GLFWwindow> target) {
         shader.use();
 
-        // If theres a texture set, tell the fragment shader that and bind to the texture for drawing.
         if (texture.has_value()) {
-            shader.setUniformInt("texture_is_set", true, false);
             texture.value().bind();
-        } else {
-            shader.setUniformInt("texture_is_set", false, false);
         }
         
         vao.bind();
