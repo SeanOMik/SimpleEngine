@@ -6,6 +6,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
 #include "../event/event.h"
@@ -197,5 +198,32 @@ namespace simpleengine::gfx {
         
         void set_uniform_uint_vec4(GLint location, glm::uvec4 vec, bool bind_shader = true);
         void set_uniform_uint_vec4(const char* uniform_name, glm::uvec4 vec, bool bind_shader = true);
+
+        void set_uniform_matrix_2f(GLint location, glm::mat2 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_2f(const char* uniform_name, glm::mat2 mat, bool bind_shader = true, bool transpose = false);
+ 
+        void set_uniform_matrix_3f(GLint location, glm::mat3 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_3f(const char* uniform_name, glm::mat3 mat, bool bind_shader = true, bool transpose = false);
+        
+        void set_uniform_matrix_4f(GLint location, glm::mat4 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_4f(const char* uniform_name, glm::mat4 mat, bool bind_shader = true, bool transpose = false);
+        
+        void set_uniform_matrix_2x3f(GLint location, glm::mat2x3 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_2x3f(const char* uniform_name, glm::mat2x3 mat, bool bind_shader = true, bool transpose = false);
+        
+        void set_uniform_matrix_3x2f(GLint location, glm::mat3x2 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_3x2f(const char* uniform_name, glm::mat3x2 mat, bool bind_shader = true, bool transpose = false);
+        
+        void set_uniform_matrix_2x4f(GLint location, glm::mat2x4 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_2x4f(const char* uniform_name, glm::mat2x4 mat, bool bind_shader = true, bool transpose = false);
+        
+        void set_uniform_matrix_4x2f(GLint location, glm::mat4x2 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_4x2f(const char* uniform_name, glm::mat4x2 mat, bool bind_shader = true, bool transpose = false);
+        
+        void set_uniform_matrix_3x4f(GLint location, glm::mat2x4 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_3x4f(const char* uniform_name, glm::mat3x4 mat, bool bind_shader = true, bool transpose = false);
+        
+        void set_uniform_matrix_4x3f(GLint location, glm::mat4x3 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_4x3f(const char* uniform_name, glm::mat4x3 mat, bool bind_shader = true, bool transpose = false);
     };
 }

@@ -81,21 +81,21 @@ namespace simpleengine {
             this->inner_vec.z += z;
         }
 
-        glm::mat4 rotation_matrix(float degrees, glm::vec3 rotation_axis) const {
+        static glm::mat4 rotation_matrix(float degrees, glm::vec3 rotation_axis) {
             glm::mat4 trans = glm::mat4(1.0f);
             trans = glm::rotate(trans, glm::radians(degrees), rotation_axis);
             return trans;
         }
 
-        glm::mat4 rotation_x_matrix(float degrees) const {
+        static glm::mat4 rotation_x_matrix(float degrees) {
             return rotation_axis(degrees, glm::vec3(1.f, 0.f, 0.f));
         }
 
-        glm::mat4 rotation_y_matrix(float degrees) const {
+        static glm::mat4 rotation_y_matrix(float degrees) {
             return rotation_axis(degrees, glm::vec3(0.f, 1.f, 0.f));
         }
 
-        glm::mat4 rotation_z_matrix(float degrees) const {
+        static glm::mat4 rotation_z_matrix(float degrees) {
             return rotation_axis(degrees, glm::vec3(0.f, 0.f, 1.f));
         }
 
