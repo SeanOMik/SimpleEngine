@@ -2,7 +2,8 @@
 
 namespace simpleengine::shapes_2d {
     Triangle::Triangle(gfx::Shader shader, std::vector<Vertex> vertices) : super(nullptr),
-                shader(shader), vertices(vertices), vbo(gfx::VBO(GL_ARRAY_BUFFER, false)), texture(nonstd::nullopt) {
+            shader(shader), vertices(vertices), vbo(gfx::VBO(GL_ARRAY_BUFFER, false)),
+            texture(nonstd::nullopt), translation(glm::mat4(1.0f)) {
         vao.bind();
         vbo.buffer(vertices.data(), 0, sizeof(Vertex) * vertices.size());
 
@@ -11,7 +12,13 @@ namespace simpleengine::shapes_2d {
         vao.enable_attrib(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
         // Tell the shader that there is no texture.
-        shader.set_uniform_int("texture_is_set", false);
+        shader.use();
+        shader.set_uniform_int("texture_is_set", false, false);
+
+        /* translation = glm::rotate(translation, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+        translation = glm::scale(translation, glm::vec3(0.5, 0.5, 0.5)); */ 
+        shader.set_uniform_matrix_4f("translation", translation, false);
+        shader.unuse();
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -30,10 +37,10 @@ namespace simpleengine::shapes_2d {
     }
 
     void Triangle::update(const float& delta_time) {
-        for (Vertex& vertex : vertices) {
+        /* for (Vertex& vertex : vertices) {
             vertex.position.translate_x(0.01f);
             vertex.position.translate_y(0.01f);
-        }
+        } */
     }
 
     void Triangle::render(std::shared_ptr<GLFWwindow> target) {

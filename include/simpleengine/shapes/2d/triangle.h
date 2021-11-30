@@ -25,6 +25,7 @@ namespace simpleengine::shapes_2d {
     private:
         gfx::Shader shader; // This only stores the shader program
         nonstd::optional<gfx::Texture> texture;
+        glm::mat4 translation;
     public:
         std::vector<Vertex> vertices;
         gfx::VBO vbo;
