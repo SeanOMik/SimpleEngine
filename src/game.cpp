@@ -3,29 +3,34 @@
 
 #include <iostream>
 
+#ifdef __linux__
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <GL/gl.h>
+#elif
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
-
 #include <gl/gl.h>
+#endif
 
 simpleengine::Game::Game(int w, int h, const std::string& window_name, const int& gl_profile, const int& major_version,
         const int& minor_version, const bool& resizeable, const int& forward_compat) : window_resizeable(resizeable) {
     initialize(gl_profile, major_version, minor_version, window_resizeable, forward_compat);
 
     // Create a window
-    window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(w, h, window_name.c_str(), NULL, NULL));
+    window = glfwCreateWindow(w, h, window_name.c_str(), NULL, NULL);
 
     // If we're not resizeable, we need to set the viewport size.
     if (!resizeable) {
         int fbWidth;
         int fbHeight;
-        glfwGetFramebufferSize(window.get(), &fbWidth, &fbHeight);
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
         glViewport(0, 0, fbWidth, fbHeight);
     } else {
-        glfwSetFramebufferSizeCallback(window.get(), simpleengine::Game::framebuffer_resize_callback);
+        glfwSetFramebufferSizeCallback(window, simpleengine::Game::framebuffer_resize_callback);
     }
 
-    glfwMakeContextCurrent(window.get());
+    glfwMakeContextCurrent(window);
 
     glewExperimental = GL_TRUE;
 
@@ -48,7 +53,7 @@ void simpleengine::Game::initialize(const int& gl_profile, const int& major_vers
 }
 
 simpleengine::Game::~Game() {
-    
+    glfwDestroyWindow(window);
 }
 
 void simpleengine::Game::add_event(std::shared_ptr<simpleengine::Event> event) {
@@ -81,7 +86,7 @@ void simpleengine::Game::render_items() {
 }
 
 int simpleengine::Game::run() {
-    while (!glfwWindowShouldClose(window.get())) {
+    while (!glfwWindowShouldClose(window)) {
         // Update input
         glfwPollEvents();
 
@@ -90,19 +95,19 @@ int simpleengine::Game::run() {
         render_window();
 
         // End draw
-        glfwSwapBuffers(window.get());
+        glfwSwapBuffers(window);
         glFlush();
     }
 
     return 0;
 }
 
-std::shared_ptr<GLFWwindow> simpleengine::Game::get_window() {
+GLFWwindow* simpleengine::Game::get_window() {
     return window;
 }
 
 void simpleengine::Game::exit() {
-    glfwSetWindowShouldClose(window.get(), true);
+    glfwSetWindowShouldClose(window, true);
     glfwTerminate();
 }
 

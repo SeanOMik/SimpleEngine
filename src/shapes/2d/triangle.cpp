@@ -43,7 +43,7 @@ namespace simpleengine::shapes_2d {
         } */
     }
 
-    void Triangle::render(std::shared_ptr<GLFWwindow> target) {
+    void Triangle::render(GLFWwindow* target) {
         shader.use();
 
         if (texture.has_value()) {

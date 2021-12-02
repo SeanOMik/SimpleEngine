@@ -36,7 +36,7 @@ namespace simpleengine::shapes_2d {
 
     }
 
-    void Square::render(std::shared_ptr<GLFWwindow> target) {
+    void Square::render(GLFWwindow* target) {
         shader.use();
 
         // If theres a texture set, tell the fragment shader that and bind to the texture for drawing.

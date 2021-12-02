@@ -88,15 +88,15 @@ namespace simpleengine {
         }
 
         static glm::mat4 rotation_x_matrix(float degrees) {
-            return rotation_axis(degrees, glm::vec3(1.f, 0.f, 0.f));
+            return rotation_matrix(degrees, glm::vec3(1.f, 0.f, 0.f));
         }
 
         static glm::mat4 rotation_y_matrix(float degrees) {
-            return rotation_axis(degrees, glm::vec3(0.f, 1.f, 0.f));
+            return rotation_matrix(degrees, glm::vec3(0.f, 1.f, 0.f));
         }
 
         static glm::mat4 rotation_z_matrix(float degrees) {
-            return rotation_axis(degrees, glm::vec3(0.f, 0.f, 1.f));
+            return rotation_matrix(degrees, glm::vec3(0.f, 0.f, 1.f));
         }
 
         void rotate(float degrees, glm::vec3 rotation_axis) {

@@ -11,7 +11,7 @@ namespace simpleengine {
     private:
         using super = simpleengine::Event;
     public:
-        explicit Renderable(std::shared_ptr<GLFWwindow> window = nullptr) : super(window) {}
+        explicit Renderable(GLFWwindow* window = nullptr) : super(window) {}
         virtual ~Renderable() = default;
     };
 }
