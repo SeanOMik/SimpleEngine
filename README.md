@@ -1,11 +1,11 @@
 ## SimpleEngine
-SimpleEngine is a 2D game engine written in C++20. Its main focus is simplicity of all systems.
+SimpleEngine is a 3D and 2D game engine written in modern C++20. Its main focus is simplicity of all systems.
 
 ## State
-This game engine is not near being ready for an actual game. Its more of something for me to mess around with to learn new C++ concepts.
+The `feature/3d-opengl` branch is not usable **AT ALL**, doesn't even have a coordinate system yet. The `master` branch is 2D only but still isn't in a state to make a game. This project is more of something for me to mess around with to learn new C++20 concepts.
 
 ## Dependencies
-* [SFML2](https://www.sfml-dev.org/)
-
-## Install
-Should be simple, just install SFML2 from somewhere and make sure that CMake can find it. For windows I used vcpkg, you can use whatever.
+* glew
+* glfw3
+* glm
+* soil2
