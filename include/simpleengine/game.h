@@ -4,7 +4,12 @@
 #include <memory>
 #include <vector>
 
+#ifdef __linux__
+#include <GL/glew.h>
+#elif
 #include <gl/glew.h>
+#endif
+
 #include <GLFW/glfw3.h>
 
 #include "event/event.h"
@@ -35,14 +40,14 @@ namespace simpleengine {
         int run();
 
         //void AddEvent(Event* event);
-        std::shared_ptr<GLFWwindow> get_window();
+        GLFWwindow* get_window();
     private:
         static void framebuffer_resize_callback(GLFWwindow*, int fbW, int fbH);
 
         void initialize(const int& gl_profile, const int& major_version, const int& minor_version,
             const bool& resizeable, const int& forward_compat = GL_TRUE);
 
-        std::shared_ptr<GLFWwindow> window;
+        GLFWwindow* window;
         std::vector<std::shared_ptr<simpleengine::Event>> events;
         const bool& window_resizeable;
     };

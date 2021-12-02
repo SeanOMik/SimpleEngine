@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef __linux__
+#include <GL/glew.h>
+#include <GL/gl.h>
+#elif
 #include <gl/glew.h>
 #include <gl/gl.h>
+#endif
 
 #include <GLFW/glfw3.h>
 
