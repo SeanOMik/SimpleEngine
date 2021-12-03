@@ -39,7 +39,9 @@ namespace simpleengine::shapes_2d {
     void Square::render(GLFWwindow* target) {
         shader.use();
 
-        // If theres a texture set, tell the fragment shader that and bind to the texture for drawing.
+        shader.set_uniform_matrix_4f("transform", transform_matrix, false);
+
+        // When binding to the texture, also tell the shader if the texture is set or not.
         if (texture.has_value()) {
             shader.set_uniform_int("texture_is_set", true, false);
             texture.value().bind();

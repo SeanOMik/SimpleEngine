@@ -14,6 +14,8 @@
 
 #include "../../renderable.h"
 #include "../../vertex.h"
+#include "../../transformable.h"
+#include "../../optional.h"
 
 #include "../../gfx/vbo.h"
 #include "../../gfx/vao.h"
@@ -23,10 +25,8 @@
 #include <stdint.h>
 #include <vector>
 
-#include "../../optional.h"
-
 namespace simpleengine::shapes_2d {
-    class Square : public simpleengine::Renderable {
+    class Square : public simpleengine::Renderable, public simpleengine::Transformable {
     private:
         using super = simpleengine::Renderable;
     private:
