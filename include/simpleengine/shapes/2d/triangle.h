@@ -19,18 +19,15 @@
 #include "../../gfx/shader.h"
 #include "../../gfx/texture.h"
 #include "../../optional.h"
-#include "../../translatable.h"
+#include "../../transformable.h"
 
 #include <vector>
 
 namespace simpleengine::shapes_2d {
-    class Triangle : public simpleengine::Renderable {
-    private:
-        using super = simpleengine::Renderable;
+    class Triangle : public simpleengine::Renderable, public simpleengine::Transformable {
     private:
         gfx::Shader shader; // This only stores the shader program
         nonstd::optional<gfx::Texture> texture;
-        glm::mat4 translation;
     public:
         std::vector<Vertex> vertices;
         gfx::VBO vbo;
