@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     tri->scale(.75f);
     game.add_event(tri); */
 
-    /* std::vector<simpleengine::Vertex> vertices = {
+    /* std::vector<simpleengine::Vertex> cube_vertices = {
         { simpleengine::Vectorf(-0.5f,0.5f,-0.5f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(1.f, 1.f) },
         { simpleengine::Vectorf(-0.5f,-0.5f,-0.5f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f) },
         { simpleengine::Vectorf(0.5f,-0.5f,-0.5f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.f, 0.f) },
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
         { simpleengine::Vectorf(0.5f,-0.5f,0.5f), glm::vec3(1.f, 1.f, 0.f), glm::vec2(0.f, 1.f) },
     };
 
-    std::vector<GLuint> indicies = {
+    std::vector<GLuint> cube_indicies = {
         0,1,3,
         3,1,2,
         4,5,7,
@@ -128,8 +128,8 @@ int main(int argc, char *argv[]) {
         23,21,22
     };
 
-    auto square = std::make_shared<simpleengine::gfx::Model>(game.get_window(), base_shader_program, vertices, indicies);
-    game.add_event(square); */
+    auto cube = std::make_shared<simpleengine::gfx::Model>(game.get_window(), base_shader_program, cube_vertices, cube_indicies);
+    game.add_event(cube); */
 
     auto camera = std::make_shared<simpleengine::Camera>(game.get_window(), base_shader_program);
     game.add_event(camera);
