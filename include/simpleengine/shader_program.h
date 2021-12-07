@@ -26,6 +26,9 @@ namespace simpleengine {
     private:
         using super = simpleengine::Event;
     public:
+        std::shared_ptr<GLuint> program;
+        std::vector<gfx::Shader> shaders;
+
         ShaderProgram() : program(std::make_shared<GLuint>(glCreateProgram())) {
             
         }
@@ -112,8 +115,5 @@ namespace simpleengine {
         virtual void render(GLFWwindow* target) {
             glUseProgram(*program);
         }
-
-        std::shared_ptr<GLuint> program;
-        std::vector<gfx::Shader> shaders;
     };
 }

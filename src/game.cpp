@@ -38,6 +38,16 @@ simpleengine::Game::Game(int w, int h, const std::string& window_name, const int
         std::cout << "Failed to initialize glew!" << std::endl;
         glfwTerminate();
     }
+
+    enable_default_gl_options();
+}
+
+void simpleengine::Game::enable_default_gl_options() const {
+    glEnable(GL_DEPTH_TEST);
+}
+
+void simpleengine::Game::enable_gl_option(GLenum option) const {
+    glEnable(option);
 }
 
 void simpleengine::Game::initialize(const int& gl_profile, const int& major_version, const int& minor_version,

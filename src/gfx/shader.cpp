@@ -110,6 +110,14 @@ namespace simpleengine::gfx {
         glAttachShader(*program, shader);
     }
 
+    int Shader::get_uniform_location(const std::string& uniform_name) const {
+        return this->get_uniform_location(uniform_name.c_str());
+    }
+
+    int Shader::get_uniform_location(const char* uniform_name) const {
+        return glGetUniformLocation(*program, uniform_name);
+    }
+
     GLfloat Shader::get_uniform_float(GLint location) const {
         use();
 
@@ -120,7 +128,7 @@ namespace simpleengine::gfx {
     }
 
     GLfloat Shader::get_uniform_float(const char* uniform_name) const {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         return get_uniform_float(location);
     }
 
@@ -134,7 +142,7 @@ namespace simpleengine::gfx {
     }
 
     GLint Shader::get_uniform_int(const char* uniform_name) const {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         return get_uniform_int(location);
     }
 
@@ -148,7 +156,7 @@ namespace simpleengine::gfx {
     }
 
     GLuint Shader::get_uniform_uint(const char* uniform_name) const {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         return get_uniform_uint(location);
     }
 
@@ -162,7 +170,7 @@ namespace simpleengine::gfx {
     }
 
     GLdouble Shader::get_uniform_double(const char* uniform_name) const {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         return get_uniform_double(location);
     }
 
@@ -177,7 +185,7 @@ namespace simpleengine::gfx {
     }
  
     void Shader::set_uniform_float(const char* uniform_name, GLfloat fl, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_float(location, fl, bind_shader);
     }
 
@@ -192,7 +200,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_float_vec2(const char* uniform_name, glm::vec2 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_float_vec2(location, vec, bind_shader);
     }
     
@@ -207,7 +215,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_float_vec3(const char* uniform_name, glm::vec3 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_float_vec3(location, vec, bind_shader);
     }
     
@@ -222,7 +230,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_float_vec4(const char* uniform_name, glm::vec4 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_float_vec4(location, vec, bind_shader);
     }
     
@@ -237,7 +245,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_int(const char* uniform_name, GLint i, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_int(location, i, bind_shader);
     }
     
@@ -252,7 +260,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_int_vec2(const char* uniform_name, glm::ivec2 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_int_vec2(location, vec, bind_shader);
     }
     
@@ -267,7 +275,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_int_vec3(const char* uniform_name, glm::ivec3 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_int_vec3(location, vec, bind_shader);
     }
     
@@ -282,7 +290,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_int_vec4(const char* uniform_name, glm::ivec4 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_int_vec4(location, vec, bind_shader);
     }
     
@@ -297,7 +305,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_uint(const char* uniform_name, GLuint ui, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_uint(location, ui, bind_shader);
     }
     
@@ -312,7 +320,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_uint_vec2(const char* uniform_name, glm::uvec2 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_uint_vec2(location, vec, bind_shader);
     }
     
@@ -327,7 +335,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_uint_vec3(const char* uniform_name, glm::uvec3 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_uint_vec3(location, vec, bind_shader);
     }
     
@@ -342,7 +350,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_uint_vec4(const char* uniform_name, glm::uvec4 vec, bool bind_shader) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_uint_vec4(location, vec, bind_shader);
     }
 
@@ -357,7 +365,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_2f(const char* uniform_name, glm::mat2 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_2f(location, mat, bind_shader, transpose);
     }
 
@@ -372,7 +380,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_3f(const char* uniform_name, glm::mat3 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_3f(location, mat, bind_shader, transpose);
     }
     
@@ -387,7 +395,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_4f(const char* uniform_name, glm::mat4 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_4f(location, mat, bind_shader, transpose);
     }
     
@@ -402,7 +410,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_2x3f(const char* uniform_name, glm::mat2x3 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_2x3f(location, mat, bind_shader, transpose);
     }
     
@@ -417,7 +425,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_3x2f(const char* uniform_name, glm::mat3x2 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_3x2f(location, mat, bind_shader, transpose);
     }
     
@@ -432,7 +440,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_2x4f(const char* uniform_name, glm::mat2x4 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_2x4f(location, mat, bind_shader, transpose);
     }
     
@@ -447,7 +455,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_4x2f(const char* uniform_name, glm::mat4x2 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_4x2f(location, mat, bind_shader, transpose);
     }
     
@@ -462,7 +470,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_3x4f(const char* uniform_name, glm::mat3x4 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_3x4f(location, mat, bind_shader, transpose);
     }
     
@@ -477,7 +485,7 @@ namespace simpleengine::gfx {
     }
 
     void Shader::set_uniform_matrix_4x3f(const char* uniform_name, glm::mat4x3 mat, bool bind_shader, bool transpose) {
-        int location = glGetUniformLocation(*program, uniform_name);
+        int location = get_uniform_location(uniform_name);
         set_uniform_matrix_4x3f(location, mat, bind_shader, transpose);
     }
 }

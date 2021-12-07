@@ -33,13 +33,13 @@ namespace simpleengine::shapes_2d {
     }
     
     void Square::update(const float& delta_time) {
-
+        this->rotate_y(1.f);
     }
 
     void Square::render(GLFWwindow* target) {
         shader.use();
 
-        shader.set_uniform_matrix_4f("transform", transform_matrix, false);
+        shader.set_uniform_matrix_4f("transform_matrix", transform_matrix, false);
 
         // When binding to the texture, also tell the shader if the texture is set or not.
         if (texture.has_value()) {

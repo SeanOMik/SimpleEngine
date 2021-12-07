@@ -30,6 +30,9 @@ namespace simpleengine {
             const int& minor_version = 4, const bool& resizeable = false, const int& forward_compat = GL_TRUE);
         virtual ~Game();
 
+        void enable_default_gl_options() const;
+        void enable_gl_option(GLenum option) const;
+
         void add_event(std::shared_ptr<simpleengine::Event> event);
 
         void update();

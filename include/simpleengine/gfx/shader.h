@@ -106,6 +106,22 @@ namespace simpleengine::gfx {
         void attach(std::shared_ptr<GLuint> program);
 
         /**
+         * @brief Get the location of the uniform variable in the shader.
+         * 
+         * @param uniform_name The name of the uniform variable.
+         * @return int The location of the uniform in the shader.
+         */
+        int get_uniform_location(const std::string& uniform_name) const;
+
+        /**
+         * @brief Get the location of the uniform variable in the shader.
+         * 
+         * @param uniform_name The name of the uniform variable.
+         * @return int The location of the uniform in the shader.
+         */
+        int get_uniform_location(const char* uniform_name) const;
+
+        /**
          * @brief Get a Uniform Float from the shader using a `location`.
          * 
          * @param location The location of the uniform float.
