@@ -52,10 +52,6 @@ namespace simpleengine {
             transform_matrix = glm::translate(transform_matrix, glm::vec3(x, y, z));
         }
 
-        virtual void translate(const float& x, const float& y, const float& z) {
-            transform_matrix = glm::translate(transform_matrix, glm::vec3(x, y, z));
-        }
-
         virtual void translate(const glm::vec3& vec) {
             transform_matrix = glm::translate(transform_matrix, vec);
         }

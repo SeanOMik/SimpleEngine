@@ -14,9 +14,10 @@
 #include "../../gfx/vbo.h"
 #include "../../gfx/shader.h"
 #include "../../gfx/texture.h"
+#include "../../gfx/textured_model.h"
 
 namespace simpleengine::objects_3d {
-    class ObjModel : public simpleengine::Renderable, public simpleengine::Transformable {
+    class ObjModel : public simpleengine::gfx::TexturedModel {
     private:
         std::vector<std::string> split_string(std::string str, const char delim) {
             std::istringstream ss(str);
@@ -50,31 +51,31 @@ namespace simpleengine::objects_3d {
             out_normals.at(currentVertexIndex) = current_norm;
         }
 
-        nonstd::optional<gfx::Texture> texture;
+        //nonstd::optional<gfx::Texture> texture;
     public:
-        std::vector<simpleengine::Vertex> model_vertices;
+        /* std::vector<simpleengine::Vertex> model_vertices;
         std::vector<GLuint> indicies;
         gfx::VBO ebo;
         gfx::VBO vbo;
         gfx::VAO vao;
-        gfx::Shader shader;
+        gfx::Shader shader; */
 
-        ObjModel(gfx::Shader shader, std::string filename) : ObjModel(shader, std::ifstream(filename, std::ios::in | std::ios::binary)) {
+        ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::string filename) :
+                ObjModel(window, shader, texture, std::ifstream(filename, std::ios::in | std::ios::binary)) {
 
         }
 
-        ObjModel(gfx::Shader shader, std::ifstream file_stream) :
-                shader(shader), ebo(gfx::VBO(GL_ELEMENT_ARRAY_BUFFER, false)), vbo(gfx::VBO(GL_ARRAY_BUFFER, false)),
-                texture(nonstd::nullopt) {
+        ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::ifstream file_stream) :
+                simpleengine::gfx::TexturedModel(window, shader, texture, std::vector<Vertex>()) {
             
             if (!file_stream.is_open()) {
                 std::cerr << "File stream that was given to ObjModel::ObjModel is not open!" << std::endl;
                 throw std::runtime_error("Failed to open ObjModel model file");
             }
 
-            std::vector<glm::vec3> vertices;
-            std::vector<glm::vec2> read_textures;
-            std::vector<glm::vec3> read_normals;
+            std::vector<glm::vec3> obj_vertices;
+            std::vector<glm::vec2> obj_textures;
+            std::vector<glm::vec3> obj_normals;
 
             std::vector<glm::vec2> textures;
             std::vector<glm::vec3> normals;
@@ -85,13 +86,13 @@ namespace simpleengine::objects_3d {
 
                 if (line_tokens.front() == "v") {
                     //glm::vec3 vertex(stof(line_tokens[1]), stof(line_tokens[2]), stof(line_tokens[3]));
-                    vertices.emplace_back(stof(line_tokens[1]), stof(line_tokens[2]), stof(line_tokens[3]));
+                    obj_vertices.emplace_back(stof(line_tokens[1]), stof(line_tokens[2]), stof(line_tokens[3]));
                 } else if (line_tokens.front() == "vt") {
-                    read_textures.emplace_back(stof(line_tokens[1]), stof(line_tokens[2]));
+                    obj_textures.emplace_back(stof(line_tokens[1]), stof(line_tokens[2]));
                 } else if (line_tokens.front() == "vn") {
-                    read_normals.emplace_back(stof(line_tokens[1]), stof(line_tokens[2]), stof(line_tokens[3]));
+                    obj_normals.emplace_back(stof(line_tokens[1]), stof(line_tokens[2]), stof(line_tokens[3]));
                 } else if (line_tokens.front() == "f") {
-                    auto size = vertices.size();
+                    auto size = obj_vertices.size();
                     textures.resize(size);
                     normals.resize(size);
 
@@ -110,19 +111,19 @@ namespace simpleengine::objects_3d {
                 std::vector<std::string> vertex2 = split_string(line_tokens[2], '/');
                 std::vector<std::string> vertex3 = split_string(line_tokens[3], '/');
                 
-                process_vertex(vertex1, indicies, read_textures, read_normals, textures, normals);
-                process_vertex(vertex2, indicies, read_textures, read_normals, textures, normals);
-                process_vertex(vertex3, indicies, read_textures, read_normals, textures, normals);
+                process_vertex(vertex1, indicies, obj_textures, obj_normals, textures, normals);
+                process_vertex(vertex2, indicies, obj_textures, obj_normals, textures, normals);
+                process_vertex(vertex3, indicies, obj_textures, obj_normals, textures, normals);
             } while (std::getline(file_stream, line));
             
             file_stream.close();
 
-            for (int i = 0; i < vertices.size(); i++) {
-                model_vertices.emplace_back(simpleengine::Vectorf(vertices.at(i)), glm::vec3(1.f), textures.at(i));
+            for (int i = 0; i < obj_vertices.size(); i++) {
+                vertices.emplace_back(simpleengine::Vectorf(obj_vertices.at(i)), glm::vec3(1.f), textures.at(i));
             }
 
             vao.bind();
-            vbo.buffer(model_vertices.data(), 0, sizeof(Vertex) * model_vertices.size());
+            vbo.buffer(vertices.data(), 0, sizeof(Vertex) * vertices.size());
             ebo.buffer(indicies.data(), 0, indicies.size() * sizeof(GLuint));
 
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
@@ -136,8 +137,6 @@ namespace simpleengine::objects_3d {
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
-
-            this->translate(glm::vec3(0.f, -1.f, -15.f));
         }
 
         void set_texture(gfx::Texture texture) {
@@ -148,7 +147,7 @@ namespace simpleengine::objects_3d {
             this->rotate_y(0.5f);
         }
 
-        virtual void render(GLFWwindow* target) override {
+        /* virtual void render(GLFWwindow* target) override {
             shader.use();
 
             shader.set_uniform_matrix_4f("transform_matrix", transform_matrix, false);
@@ -163,6 +162,6 @@ namespace simpleengine::objects_3d {
 
             vao.bind();
             glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
-        }
+        } */
     };
 }

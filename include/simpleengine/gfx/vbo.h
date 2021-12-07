@@ -15,6 +15,8 @@ namespace simpleengine::gfx {
         GLint type;
         bool dynamic;
 
+        VBO() = default;
+
         VBO(GLint type, bool dynamic) : type(type), dynamic(dynamic) {
             glGenBuffers(1, &handle);
         }

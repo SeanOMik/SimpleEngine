@@ -1,6 +1,6 @@
 #include "simpleengine/camera.h"
+#include "simpleengine/gfx/model.h"
 #include "simpleengine/gfx/texture.h"
-#include "simpleengine/objects/2d/shapes/square.h"
 #include "simpleengine/vector.h"
 #include <glm/ext/matrix_clip_space.hpp>
 #include <simpleengine/gfx/shader.h>
@@ -8,7 +8,6 @@
 #include <simpleengine/event/event.h>
 #include <simpleengine/shader_program.h>
 #include <simpleengine/game.h>
-#include <simpleengine/objects/2d/shapes/triangle.h>
 #include <simpleengine/vertex.h>
 #include <simpleengine/objects/3d/obj_model.h>
 
@@ -48,18 +47,38 @@ int main(int argc, char *argv[]) {
 
     simpleengine::gfx::Texture stall_texture("resources/stallTexture.png");
 
-    auto stall = std::make_shared<simpleengine::objects_3d::ObjModel>(simpleengine::gfx::Shader(base_shader_program), "resources/stall.obj");
+    auto stall = std::make_shared<simpleengine::objects_3d::ObjModel>(game.get_window(), simpleengine::gfx::Shader(base_shader_program),
+        stall_texture, "resources/stall.obj");
     stall->set_texture(stall_texture);
+    stall->translate(0.f, -4.f, -18.f);
     game.add_event(stall);
 
-    /* std::vector<simpleengine::Vertex> vertices = {
-        { simpleengine::Vectorf(-0.5f, -0.5f, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f) }, // bottom left
+    /* std::vector<simpleengine::Vertex> square_vertices = {
+        { simpleengine::Vectorf(0.5f, 0.5f, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f) }, // top right
         { simpleengine::Vectorf(0.5f, -0.5f, -1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f) }, // bottom right
-        { simpleengine::Vectorf(0.f, 0.5f, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f) }, // top
+        { simpleengine::Vectorf(-0.5f, -0.5f, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f) }, // bottom left
+        { simpleengine::Vectorf(-0.5f, 0.5f, -1.f), glm::vec3(.5f, 0.5f, 0.f), glm::vec2(0.5f, 1.0f) }, // top left
     };
 
-    auto tri = std::make_shared<simpleengine::objects_2d::shapes::Triangle>(base_shader_program, vertices);
-    //tri->set_texture(wall_texture);
+    std::vector<GLuint> indicies = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    auto square = std::make_shared<simpleengine::gfx::Model>(game.get_window(), base_shader_program, square_vertices, indicies);
+    square->translate(1.25f, 0.f, -1.f);
+    square->scale(.75f);
+    game.add_event(square);
+
+    std::vector<simpleengine::Vertex> tri_vertices = {
+        { simpleengine::Vectorf(-0.5f, -0.5f, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f) }, // top right
+        { simpleengine::Vectorf(0.5f, -0.5f, -1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f) }, // bottom right
+        { simpleengine::Vectorf(0.f, 0.5f, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f) }, // bottom left
+    };
+
+    auto tri = std::make_shared<simpleengine::gfx::Model>(game.get_window(), base_shader_program, tri_vertices);
+    tri->translate(-1.25f, 0.f, -1.f);
+    tri->scale(.75f);
     game.add_event(tri); */
 
     /* std::vector<simpleengine::Vertex> vertices = {
@@ -109,8 +128,7 @@ int main(int argc, char *argv[]) {
         23,21,22
     };
 
-    auto square = std::make_shared<simpleengine::shapes_2d::Square>(base_shader_program, vertices, indicies);
-    //square->set_texture(crate_texture);
+    auto square = std::make_shared<simpleengine::gfx::Model>(game.get_window(), base_shader_program, vertices, indicies);
     game.add_event(square); */
 
     auto camera = std::make_shared<simpleengine::Camera>(game.get_window(), base_shader_program);
