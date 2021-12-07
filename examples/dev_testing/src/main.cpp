@@ -10,6 +10,7 @@
 #include <simpleengine/game.h>
 #include <simpleengine/objects/2d/shapes/triangle.h>
 #include <simpleengine/vertex.h>
+#include <simpleengine/objects/3d/obj_model.h>
 
 #include <chrono>
 #include <iostream>
@@ -45,7 +46,13 @@ int main(int argc, char *argv[]) {
     /* simpleengine::gfx::Texture wall_texture("resources/wall.jpg");
     simpleengine::gfx::Texture crate_texture("resources/container.jpg", true, true); */
 
-    std::vector<simpleengine::Vertex> vertices = {
+    simpleengine::gfx::Texture stall_texture("resources/stallTexture.png");
+
+    auto stall = std::make_shared<simpleengine::objects_3d::ObjModel>(simpleengine::gfx::Shader(base_shader_program), "resources/stall.obj");
+    stall->set_texture(stall_texture);
+    game.add_event(stall);
+
+    /* std::vector<simpleengine::Vertex> vertices = {
         { simpleengine::Vectorf(-0.5f, -0.5f, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f) }, // bottom left
         { simpleengine::Vectorf(0.5f, -0.5f, -1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f) }, // bottom right
         { simpleengine::Vectorf(0.f, 0.5f, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f) }, // top
@@ -53,7 +60,7 @@ int main(int argc, char *argv[]) {
 
     auto tri = std::make_shared<simpleengine::objects_2d::shapes::Triangle>(base_shader_program, vertices);
     //tri->set_texture(wall_texture);
-    game.add_event(tri);
+    game.add_event(tri); */
 
     /* std::vector<simpleengine::Vertex> vertices = {
         { simpleengine::Vectorf(-0.5f,0.5f,-0.5f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(1.f, 1.f) },

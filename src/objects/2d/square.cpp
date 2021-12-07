@@ -2,7 +2,7 @@
 
 namespace simpleengine::objects_2d::shapes {
     Square::Square(gfx::Shader shader, std::vector<Vertex> vertices, std::vector<GLuint> indicies) :
-            super(nullptr), shader(shader), vertices(vertices), indicies(indicies),
+            simpleengine::Renderable(nullptr), shader(shader), vertices(vertices), indicies(indicies),
             ebo(gfx::VBO(GL_ELEMENT_ARRAY_BUFFER, false)), vbo(gfx::VBO(GL_ARRAY_BUFFER, false)),
             texture(nonstd::nullopt) {
 

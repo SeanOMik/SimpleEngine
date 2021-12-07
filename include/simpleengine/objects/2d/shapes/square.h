@@ -28,8 +28,6 @@
 namespace simpleengine::objects_2d::shapes {
     class Square : public simpleengine::Renderable, public simpleengine::Transformable {
     private:
-        using super = simpleengine::Renderable;
-    private:
         gfx::Shader shader;
         nonstd::optional<gfx::Texture> texture;
     public:

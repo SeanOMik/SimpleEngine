@@ -20,7 +20,7 @@ namespace simpleengine {
     }
     
     void Camera::update(const float& delta_time) {
-        /* if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             position.z -= 0.02f;
         }
         
@@ -34,7 +34,7 @@ namespace simpleengine {
         
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
             position.x -= 0.02f;
-        } */
+        }
 
         view_matrix = glm::lookAt(position, position + cam_front, world_up);
 

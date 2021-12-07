@@ -15,9 +15,9 @@ namespace simpleengine {
 
         }
 
-        Vector(glm::vec<3, VectorType, glm::defaultp> glm_vec) : inner_vec(glm_vec) {
+        /* Vector(glm::vec<3, VectorType, glm::defaultp> glm_vec) : inner_vec(glm_vec) {
 
-        }
+        } */
 
         Vector(const glm::vec<3, VectorType, glm::defaultp>& glm_vec) : inner_vec(glm_vec) {
 

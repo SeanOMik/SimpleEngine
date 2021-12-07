@@ -19,5 +19,9 @@ namespace simpleengine {
         simpleengine::Vectorf position;
         glm::vec3 color;
         glm::vec2 tex_coord;
+
+        Vertex(simpleengine::Vectorf position, glm::vec3 color, glm::vec2 tex_coord) : position(position), color(color), tex_coord(tex_coord) {
+            
+        }
     };
 }
