@@ -12,18 +12,18 @@
 
 #include <glm/glm.hpp>
 
-#include "../../renderable.h"
-#include "../../vertex.h"
-#include "../../gfx/vbo.h"
-#include "../../gfx/vao.h"
-#include "../../gfx/shader.h"
-#include "../../gfx/texture.h"
-#include "../../optional.h"
-#include "../../transformable.h"
+#include "../../../renderable.h"
+#include "../../../vertex.h"
+#include "../../../gfx/vbo.h"
+#include "../../../gfx/vao.h"
+#include "../../../gfx/shader.h"
+#include "../../../gfx/texture.h"
+#include "../../../optional.h"
+#include "../../../transformable.h"
 
 #include <vector>
 
-namespace simpleengine::shapes_2d {
+namespace simpleengine::objects_2d::shapes {
     class Triangle : public simpleengine::Renderable, public simpleengine::Transformable {
     private:
         gfx::Shader shader; // This only stores the shader program

@@ -1,6 +1,6 @@
 #include "simpleengine/camera.h"
 #include "simpleengine/gfx/texture.h"
-#include "simpleengine/shapes/2d/square.h"
+#include "simpleengine/objects/2d/shapes/square.h"
 #include "simpleengine/vector.h"
 #include <glm/ext/matrix_clip_space.hpp>
 #include <simpleengine/gfx/shader.h>
@@ -8,7 +8,7 @@
 #include <simpleengine/event/event.h>
 #include <simpleengine/shader_program.h>
 #include <simpleengine/game.h>
-#include <simpleengine/shapes/2d/triangle.h>
+#include <simpleengine/objects/2d/shapes/triangle.h>
 #include <simpleengine/vertex.h>
 
 #include <chrono>
@@ -20,37 +20,6 @@
 CMRC_DECLARE(resource_shaders);
 
 #include <SOIL2/SOIL2.h>
-
-/* class Triangle3D : public simpleengine::shapes_2d::Triangle {
-public:
-    glm::mat4 projection_matrix;
-    //glm::mat4 view_matrix;
-
-    const float fov = 70;
-    const float near_plane = 0.1f;
-    const float far_plane = 1000.f;
-
-    Triangle3D(simpleengine::gfx::Shader shader, std::vector<simpleengine::Vertex> vertices) :
-        simpleengine::shapes_2d::Triangle(shader, vertices) {
-
-        projection_matrix = glm::perspective(glm::radians(fov), 640.f / 480.f, near_plane, far_plane);
-
-        shader.use();
-        shader.set_uniform_matrix_4f("projection_matrix", projection_matrix, false);
-        //shader.set_uniform_matrix_4f("view_matrix", view_matrix, false);
-        shader.unuse();
-    }
-
-    Triangle3D(std::shared_ptr<GLuint> shader_program, std::vector<simpleengine::Vertex> vertices) :
-        simpleengine::shapes_2d::Triangle(shader_program, vertices) {
-
-        
-    }
-
-    virtual void render(GLFWwindow* target) override {
-
-    }
-}; */
 
 std::string read_resource_shader(const std::string& path) {
     auto fs = cmrc::resource_shaders::get_filesystem();
@@ -82,7 +51,7 @@ int main(int argc, char *argv[]) {
         { simpleengine::Vectorf(0.f, 0.5f, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f) }, // top
     };
 
-    auto tri = std::make_shared<simpleengine::shapes_2d::Triangle>(base_shader_program, vertices);
+    auto tri = std::make_shared<simpleengine::objects_2d::shapes::Triangle>(base_shader_program, vertices);
     //tri->set_texture(wall_texture);
     game.add_event(tri);
 

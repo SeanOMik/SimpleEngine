@@ -12,20 +12,20 @@
 
 #include <glm/glm.hpp>
 
-#include "../../renderable.h"
-#include "../../vertex.h"
-#include "../../transformable.h"
-#include "../../optional.h"
+#include "../../../renderable.h"
+#include "../../../vertex.h"
+#include "../../../transformable.h"
+#include "../../../optional.h"
 
-#include "../../gfx/vbo.h"
-#include "../../gfx/vao.h"
-#include "../../gfx/texture.h"
-#include "../../gfx/shader.h"
+#include "../../../gfx/vbo.h"
+#include "../../../gfx/vao.h"
+#include "../../../gfx/texture.h"
+#include "../../../gfx/shader.h"
 
 #include <stdint.h>
 #include <vector>
 
-namespace simpleengine::shapes_2d {
+namespace simpleengine::objects_2d::shapes {
     class Square : public simpleengine::Renderable, public simpleengine::Transformable {
     private:
         using super = simpleengine::Renderable;

@@ -1,6 +1,6 @@
-#include "shapes/2d/triangle.h"
+#include "objects/2d/shapes/triangle.h"
 
-namespace simpleengine::shapes_2d {
+namespace simpleengine::objects_2d::shapes {
     Triangle::Triangle(gfx::Shader shader, std::vector<Vertex> vertices) : simpleengine::Renderable(nullptr),
             simpleengine::Transformable(glm::mat4(1.f)), shader(shader), vertices(vertices),
             vbo(gfx::VBO(GL_ARRAY_BUFFER, false)), texture(nonstd::nullopt) {
