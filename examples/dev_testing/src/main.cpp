@@ -49,7 +49,6 @@ int main(int argc, char *argv[]) {
 
     auto stall = std::make_shared<simpleengine::objects_3d::ObjModel>(game.get_window(), simpleengine::gfx::Shader(base_shader_program),
         stall_texture, "resources/stall.obj");
-    stall->set_texture(stall_texture);
     stall->translate(0.f, -4.f, -18.f);
     game.add_event(stall);
 

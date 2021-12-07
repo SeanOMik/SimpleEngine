@@ -20,7 +20,8 @@ namespace simpleengine::gfx {
     public:
         gfx::Texture texture;
 
-        TexturedModel(GLFWwindow* window, gfx::Shader shader, gfx::Texture texture, std::vector<Vertex> vertices, std::vector<GLuint> indicies);
+        TexturedModel(GLFWwindow* window, gfx::Shader shader, gfx::Texture texture, std::vector<Vertex> vertices,
+            std::vector<GLuint> indicies = std::vector<GLuint>());
         TexturedModel(GLFWwindow* window, std::shared_ptr<GLuint> shader_program, gfx::Texture texture, std::vector<Vertex> vertices,
             std::vector<GLuint> indicies = std::vector<GLuint>());
 
