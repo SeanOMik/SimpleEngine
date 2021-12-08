@@ -68,9 +68,6 @@ namespace simpleengine::objects_3d {
                 auto size = obj_vertices.size();
                 textures.resize(size);
                 normals.resize(size);
-
-                std::cout << "Textures should be size of " << size << " but is a size of " << textures.size() << std::endl;
-                std::cout << "Normals should be size of " << size << " but is a size of " << normals.size() << std::endl;
                 break;
             }
         }

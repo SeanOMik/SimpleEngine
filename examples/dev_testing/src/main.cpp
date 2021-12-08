@@ -35,20 +35,19 @@ int main(int argc, char *argv[]) {
     std::string vertex_core = read_resource_shader("shaders/vertex_core.glsl");
     std::string fragment_core = read_resource_shader("shaders/fragment_core.glsl");
 
-    // Create shader program
+    // Compile shader program
     simpleengine::ShaderProgram shader_prog;
     shader_prog.add_shader_from_source(simpleengine::gfx::ShaderType::ST_Vertex, vertex_core);
     shader_prog.add_shader_from_source(simpleengine::gfx::ShaderType::ST_Fragment, fragment_core);
     shader_prog.link();
-    std::shared_ptr<GLuint> base_shader_program = shader_prog.program;
+    simpleengine::gfx::Shader core_shader = shader_prog.shaders.front();
 
     /* simpleengine::gfx::Texture wall_texture("resources/wall.jpg");
     simpleengine::gfx::Texture crate_texture("resources/container.jpg", true, true); */
 
     simpleengine::gfx::Texture stall_texture("resources/stallTexture.png");
 
-    auto stall = std::make_shared<simpleengine::objects_3d::ObjModel>(game.get_window(), simpleengine::gfx::Shader(base_shader_program),
-        stall_texture, "resources/stall.obj");
+    auto stall = std::make_shared<simpleengine::objects_3d::ObjModel>(game.get_window(), core_shader, stall_texture, "resources/stall.obj");
     stall->translate(0.f, -4.f, -18.f);
     game.add_event(stall);
 
@@ -64,7 +63,7 @@ int main(int argc, char *argv[]) {
         1, 2, 3
     };
 
-    auto square = std::make_shared<simpleengine::gfx::Model>(game.get_window(), base_shader_program, square_vertices, indicies);
+    auto square = std::make_shared<simpleengine::gfx::Model>(game.get_window(), core_shader, square_vertices, indicies);
     square->translate(1.25f, 0.f, -1.f);
     square->scale(.75f);
     game.add_event(square);
@@ -75,7 +74,7 @@ int main(int argc, char *argv[]) {
         { simpleengine::Vectorf(0.f, 0.5f, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(0.5f, 1.0f) }, // bottom left
     };
 
-    auto tri = std::make_shared<simpleengine::gfx::Model>(game.get_window(), base_shader_program, tri_vertices);
+    auto tri = std::make_shared<simpleengine::gfx::Model>(game.get_window(), core_shader, tri_vertices);
     tri->translate(-1.25f, 0.f, -1.f);
     tri->scale(.75f);
     game.add_event(tri); */
@@ -127,10 +126,10 @@ int main(int argc, char *argv[]) {
         23,21,22
     };
 
-    auto cube = std::make_shared<simpleengine::gfx::Model>(game.get_window(), base_shader_program, cube_vertices, cube_indicies);
+    auto cube = std::make_shared<simpleengine::gfx::Model>(game.get_window(), core_shader, cube_vertices, cube_indicies);
     game.add_event(cube); */
 
-    auto camera = std::make_shared<simpleengine::Camera>(game.get_window(), base_shader_program);
+    auto camera = std::make_shared<simpleengine::Camera>(game.get_window(), core_shader);
     game.add_event(camera);
 
     return game.run();
