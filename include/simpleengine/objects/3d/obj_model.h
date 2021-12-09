@@ -19,9 +19,27 @@
 namespace simpleengine::objects_3d {
     class ObjModel : public simpleengine::gfx::TexturedModel {
     private:
+        /**
+         * @brief Split a string multiple times (if possible) with a character delimiter.
+         * 
+         * @param str The string to split.
+         * @param delim The character to split by.
+         * @return std::vector<std::string> The tokens that were split out of str.
+         */
         std::vector<std::string> split_string(std::string str, const char delim);
-        static void process_vertex(const std::vector<std::string>& vertex_data, std::vector<GLuint>& indicies, const std::vector<glm::vec2>& in_textures,
-                const std::vector<glm::vec3>& in_normals, std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals);
+
+        /**
+         * @brief Process a vertex from tokens read from the .obj file.
+         * 
+         * @param vertex_data The vertex string tokens to process the vertex from.
+         * @param in_textures The texture coords that are unsorted, just read from the .obj file.
+         * @param in_normals The normals that are unsorted, just read from the .obj file.
+         * @param out_indicies (out) The vector to insert the indicies that were extracted from `vertex_data` into.
+         * @param out_textures (out) The vector to insert the texture coords that were extracted from `vertex_data` into.
+         * @param out_normals (out) The vector to insert the normals that were extracted from `vertex_data` into.
+         */
+        static void process_vertex(const std::vector<std::string>& vertex_data, const std::vector<glm::vec2>& in_textures,
+                const std::vector<glm::vec3>& in_normals, std::vector<GLuint>& out_indicies, std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals);
     private:
         /**
          * @brief This is replaced with `lit_vertices`!!!!
@@ -35,22 +53,5 @@ namespace simpleengine::objects_3d {
         ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::ifstream file_stream);
 
         virtual void update(const float& delta_time) override;
-
-        /* virtual void render(GLFWwindow* target) override {
-            shader.use();
-
-            shader.set_uniform_matrix_4f("transform_matrix", transform_matrix, false);
-
-            // When binding to the texture, also tell the shader if the texture is set or not.
-            if (texture.has_value()) {
-                shader.set_uniform_int("texture_is_set", true, false);
-                texture.value().bind();
-            } else {
-                shader.set_uniform_int("texture_is_set", false, false);
-            }
-
-            vao.bind();
-            glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
-        } */
     };
 }

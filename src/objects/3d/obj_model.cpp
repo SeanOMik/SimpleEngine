@@ -17,11 +17,12 @@ namespace simpleengine::objects_3d {
         return tokens;
     }
 
-    void ObjModel::process_vertex(const std::vector<std::string>& vertex_data, std::vector<GLuint>& indicies, const std::vector<glm::vec2>& in_textures,
-            const std::vector<glm::vec3>& in_normals, std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals) {
+    void ObjModel::process_vertex(const std::vector<std::string>& vertex_data, const std::vector<glm::vec2>& in_textures,
+            const std::vector<glm::vec3>& in_normals, std::vector<GLuint>& out_indicies, std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals) {
         
+        // Get the index the current vertex and put it in indicies
         int currentVertexIndex = stoi(vertex_data[0]) - 1;
-        indicies.push_back(currentVertexIndex);
+        out_indicies.push_back(currentVertexIndex);
 
         // Read texture coords
         glm::vec2 current_tex = in_textures.at(stoi(vertex_data[1]) - 1);
@@ -46,13 +47,17 @@ namespace simpleengine::objects_3d {
             throw std::runtime_error("Failed to open ObjModel model file");
         }
 
+        // The vertices, texture coords, and normals that were read from the obj file
+        // these are not in a particular order.
         std::vector<glm::vec3> obj_vertices;
         std::vector<glm::vec2> obj_textures;
         std::vector<glm::vec3> obj_normals;
 
+        // The texture coords and normals that have been sorted.
         std::vector<glm::vec2> textures;
         std::vector<glm::vec3> normals;
 
+        // Read the vertices, texture coords, and normals. Break when run into indices
         std::string line;
         while (std::getline(file_stream, line)) {
             std::vector<std::string> line_tokens = split_string(line, ' ');
@@ -72,6 +77,7 @@ namespace simpleengine::objects_3d {
             }
         }
 
+        // Process the indicies. This will sort everything for storing inside of the Vertex list.
         do {
             if (!line.starts_with("f")) {
                 continue;
@@ -81,21 +87,24 @@ namespace simpleengine::objects_3d {
             std::vector<std::string> vertex2 = split_string(line_tokens[2], '/');
             std::vector<std::string> vertex3 = split_string(line_tokens[3], '/');
             
-            process_vertex(vertex1, indicies, obj_textures, obj_normals, textures, normals);
-            process_vertex(vertex2, indicies, obj_textures, obj_normals, textures, normals);
-            process_vertex(vertex3, indicies, obj_textures, obj_normals, textures, normals);
+            process_vertex(vertex1, obj_textures, obj_normals, indicies, textures, normals);
+            process_vertex(vertex2, obj_textures, obj_normals, indicies, textures, normals);
+            process_vertex(vertex3, obj_textures, obj_normals, indicies, textures, normals);
         } while (std::getline(file_stream, line));
         
         file_stream.close();
 
+        // Insert everything into lit_vertices.
         for (int i = 0; i < obj_vertices.size(); i++) {
             lit_vertices.emplace_back(simpleengine::Vectorf(obj_vertices.at(i)), glm::vec3(1.f), textures.at(i), normals.at(i));
         }
 
+        // Create VAO and EBO and assign buffers
         vao.bind();
         vbo.buffer(lit_vertices.data(), 0, sizeof(LitVertex) * lit_vertices.size());
         ebo.buffer(indicies.data(), 0, indicies.size() * sizeof(GLuint));
 
+        // Enable VAO attributes
         vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, position));
         //vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color));
         vao.enable_attrib(vbo, 1, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord));
@@ -106,6 +115,6 @@ namespace simpleengine::objects_3d {
     }
 
     void ObjModel::update(const float& delta_time) {
-        this->rotate_y(0.5f);
+        this->rotate_y(0.5f); // Slowly rotate (for debugging)
     }
 }
