@@ -1,4 +1,4 @@
-#include "objects/3d/obj_model.h""
+#include "objects/3d/obj_model.h"
 
 namespace simpleengine::objects_3d {
     std::vector<std::string> ObjModel::split_string(std::string str, const char delim) {
