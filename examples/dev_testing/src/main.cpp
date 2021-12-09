@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     auto light = std::make_shared<simpleengine::gfx::Light>(core_shader, glm::vec3(0.f, 0.f, -20.f), glm::vec3(1.f, 1.f, 1.f));
     game.add_event(light);
 
-    simpleengine::gfx::Texture white_texture("resources/white_texture.jpg");
+    simpleengine::gfx::Texture white_texture("resources/white_texture.png");
     auto dragon = std::make_shared<simpleengine::objects_3d::ObjModel>(game.get_window(), core_shader, white_texture, "resources/dragon.obj");
     dragon->translate(0.f, -5.f, -25.f);
     game.add_event(dragon);
