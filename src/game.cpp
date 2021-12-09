@@ -44,6 +44,8 @@ simpleengine::Game::Game(int w, int h, const std::string& window_name, const int
 
 void simpleengine::Game::enable_default_gl_options() const {
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 }
 
 void simpleengine::Game::enable_gl_option(GLenum option) const {
