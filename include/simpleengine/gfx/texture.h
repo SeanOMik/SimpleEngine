@@ -29,6 +29,8 @@ namespace simpleengine::gfx {
         int height;
         int width;
         int channels;
+        float shine_damper = 1.f;
+        float reflectivity = 0.f;
 
         /**
          * @brief Construct a new Texture object from a path.

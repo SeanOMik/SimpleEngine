@@ -19,6 +19,8 @@ namespace simpleengine::gfx {
     void TexturedModel::render(GLFWwindow* target) {
         shader.use();
         shader.set_uniform_matrix_4f("transform_matrix", transform_matrix, false);
+        shader.set_uniform_float("shine_damper", texture.shine_damper, false);
+        shader.set_uniform_float("reflectivity", texture.reflectivity, false);
 
         // When binding to the texture, tell the shader if the texture is set or not.
         shader.set_uniform_int("texture_is_set", (GLint) true, false);
