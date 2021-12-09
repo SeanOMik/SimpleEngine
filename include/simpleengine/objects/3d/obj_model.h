@@ -22,7 +22,15 @@ namespace simpleengine::objects_3d {
         std::vector<std::string> split_string(std::string str, const char delim);
         static void process_vertex(const std::vector<std::string>& vertex_data, std::vector<GLuint>& indicies, const std::vector<glm::vec2>& in_textures,
                 const std::vector<glm::vec3>& in_normals, std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals);
+    private:
+        /**
+         * @brief This is replaced with `lit_vertices`!!!!
+         * 
+         */
+        using simpleengine::gfx::Model::vertices;
     public:
+        std::vector<LitVertex> lit_vertices;
+
         ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::string filename);
         ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::ifstream file_stream);
 

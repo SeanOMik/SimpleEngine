@@ -93,7 +93,7 @@ namespace simpleengine {
         }
 
         virtual void scale(float scalar) {
-            transform_matrix = scalar * transform_matrix;
+            transform_matrix = glm::scale(transform_matrix, glm::vec3(scalar, scalar, scalar));
         }
     };
 }

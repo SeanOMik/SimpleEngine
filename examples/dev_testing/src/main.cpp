@@ -1,8 +1,10 @@
 #include "simpleengine/camera.h"
+#include "simpleengine/gfx/light.h"
 #include "simpleengine/gfx/model.h"
 #include "simpleengine/gfx/texture.h"
 #include "simpleengine/vector.h"
 #include <glm/ext/matrix_clip_space.hpp>
+#include <glm/fwd.hpp>
 #include <simpleengine/gfx/shader.h>
 #include <simpleengine/renderable.h>
 #include <simpleengine/event/event.h>
@@ -45,11 +47,19 @@ int main(int argc, char *argv[]) {
     /* simpleengine::gfx::Texture wall_texture("resources/wall.jpg");
     simpleengine::gfx::Texture crate_texture("resources/container.jpg", true, true); */
 
-    simpleengine::gfx::Texture stall_texture("resources/stallTexture.png");
 
+    auto light = std::make_shared<simpleengine::gfx::Light>(core_shader, glm::vec3(0.f, 0.f, -20.f), glm::vec3(1.f, 1.f, 1.f));
+    game.add_event(light);
+
+    simpleengine::gfx::Texture white_texture("resources/white_texture.jpg");
+    auto dragon = std::make_shared<simpleengine::objects_3d::ObjModel>(game.get_window(), core_shader, white_texture, "resources/dragon.obj");
+    dragon->translate(0.f, -5.f, -25.f);
+    game.add_event(dragon);
+
+    /* simpleengine::gfx::Texture stall_texture("resources/stallTexture.png");
     auto stall = std::make_shared<simpleengine::objects_3d::ObjModel>(game.get_window(), core_shader, stall_texture, "resources/stall.obj");
-    stall->translate(0.f, -4.f, -18.f);
-    game.add_event(stall);
+    stall->translate(0.f, -4.f, -25.f);
+    game.add_event(stall); */
 
     /* std::vector<simpleengine::Vertex> square_vertices = {
         { simpleengine::Vectorf(0.5f, 0.5f, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f) }, // top right
@@ -129,7 +139,7 @@ int main(int argc, char *argv[]) {
     auto cube = std::make_shared<simpleengine::gfx::Model>(game.get_window(), core_shader, cube_vertices, cube_indicies);
     game.add_event(cube); */
 
-    auto camera = std::make_shared<simpleengine::Camera>(game.get_window(), core_shader);
+    auto camera = std::make_shared<simpleengine::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, -10));
     game.add_event(camera);
 
     return game.run();

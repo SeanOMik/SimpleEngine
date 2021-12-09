@@ -89,21 +89,17 @@ namespace simpleengine::objects_3d {
         file_stream.close();
 
         for (int i = 0; i < obj_vertices.size(); i++) {
-            vertices.emplace_back(simpleengine::Vectorf(obj_vertices.at(i)), glm::vec3(1.f), textures.at(i));
+            lit_vertices.emplace_back(simpleengine::Vectorf(obj_vertices.at(i)), glm::vec3(1.f), textures.at(i), normals.at(i));
         }
 
         vao.bind();
-        vbo.buffer(vertices.data(), 0, sizeof(Vertex) * vertices.size());
+        vbo.buffer(lit_vertices.data(), 0, sizeof(LitVertex) * lit_vertices.size());
         ebo.buffer(indicies.data(), 0, indicies.size() * sizeof(GLuint));
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
-        glEnableVertexAttribArray(0);
-        
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
-        glEnableVertexAttribArray(1);
-        
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, tex_coord));
-        glEnableVertexAttribArray(2);
+        vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, position));
+        //vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color));
+        vao.enable_attrib(vbo, 1, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord));
+        vao.enable_attrib(vbo, 2, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, normal));
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);

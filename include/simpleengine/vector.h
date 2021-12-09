@@ -11,6 +11,8 @@ namespace simpleengine {
     private:
         glm::vec<3, VectorType, glm::defaultp> inner_vec;
     public:
+        Vector() = default;
+
         Vector(VectorType x, VectorType y, VectorType z) : inner_vec(x, y, z) {
 
         }

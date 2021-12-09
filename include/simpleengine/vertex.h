@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #ifdef __linux__
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -15,12 +16,32 @@
 namespace simpleengine {
     class Vertex {
     public:
-        //glm::vec3 position;
         simpleengine::Vectorf position;
         glm::vec3 color;
         glm::vec2 tex_coord;
 
+        Vertex() = default;
+
         Vertex(simpleengine::Vectorf position, glm::vec3 color, glm::vec2 tex_coord) : position(position), color(color), tex_coord(tex_coord) {
+            
+        }
+    };
+
+    /**
+     * @brief A `Vertex` that can be lit up.
+     * 
+     */
+    class LitVertex {
+    public:
+        simpleengine::Vectorf position;
+        glm::vec3 color;
+        glm::vec2 tex_coord;
+        glm::vec3 normal;
+
+        LitVertex() = default;
+
+        LitVertex(simpleengine::Vectorf position, glm::vec3 color, glm::vec2 tex_coord, glm::vec3 normal) :
+                position(position), color(color), tex_coord(tex_coord), normal(normal) {
             
         }
     };
