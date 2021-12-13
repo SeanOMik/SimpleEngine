@@ -19,11 +19,22 @@ add_library(simpleengine STATIC ${source_list})
 # Link headers
 target_include_directories(simpleengine PUBLIC include PRIVATE include/simpleengine)
 
+# Embed shaders
+file(GLOB_RECURSE simpleeng_resources_list resources/**)
+cmrc_add_resource_library(
+    simpleengine_resources# ALIAS simpleengine::res::shaders
+    #NAMESPACE simpleengine__res
+    #WHENCE resources/shaders
+    #PREFIX resources/shaders
+    ${simpleeng_resources_list}
+)
+
 # Link dependencies
 target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
 target_link_libraries(simpleengine PUBLIC glm::glm)
 target_link_libraries(simpleengine PUBLIC soil2)
+target_link_libraries(simpleengine PRIVATE simpleengine_resources)
 
 include_directories(${GLM_INCLUDE_DIRS})
 

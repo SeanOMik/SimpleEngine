@@ -115,6 +115,6 @@ namespace simpleengine::objects_3d {
     }
 
     void ObjModel::update(const float& delta_time) {
-        this->rotate_y(0.5f); // Slowly rotate (for debugging)
+        this->rotate_y(0.05f); // Slowly rotate (for debugging)
     }
 }
