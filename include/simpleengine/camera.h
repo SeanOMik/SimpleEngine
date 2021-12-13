@@ -31,7 +31,7 @@ namespace simpleengine {
             float near_plane = 0.1f, float far_plane = 1000.f, glm::vec3 world_up = glm::vec3(0.f, 1.f, 0.f), 
             glm::vec3 cam_front = glm::vec3(0.f, 0.f, -1.f));
 
-        Camera(GLFWwindow* window, std::shared_ptr<GLuint> shader_prog, float fov = 70, glm::vec3 position = glm::vec3(0.f),
+        Camera(GLFWwindow* window, GLuint shader_prog, float fov = 70, glm::vec3 position = glm::vec3(0.f),
             glm::vec3 rotation = glm::vec3(0.f), float near_plane = 0.1f, float far_plane = 1000.f, glm::vec3 world_up = glm::vec3(0.f, 1.f, 0.f), 
             glm::vec3 cam_front = glm::vec3(0.f, 0.f, -1.f));
         

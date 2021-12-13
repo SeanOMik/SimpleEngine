@@ -3,7 +3,7 @@
 #ifdef __linux__
 #include <GL/glew.h>
 #include <GL/gl.h>
-#elif
+#else
 #include <gl/glew.h>
 #include <gl/gl.h>
 #endif
@@ -26,15 +26,15 @@ namespace simpleengine {
     private:
         using super = simpleengine::Event;
     public:
-        std::shared_ptr<GLuint> program;
+        GLuint program;
         std::vector<gfx::Shader> shaders;
 
-        ShaderProgram() : program(std::make_shared<GLuint>(glCreateProgram())) {
+        ShaderProgram() : program(glCreateProgram()) {
             
         }
 
         virtual ~ShaderProgram() {
-            glDeleteProgram(*program);
+            glDeleteProgram(program);
         }
 
         /**
@@ -93,10 +93,10 @@ namespace simpleengine {
                 throw std::runtime_error("Shaders cannot be empty when running simpleengine::ShaderProgram::link()!");
             }
 
-            glLinkProgram(*program);
+            glLinkProgram(program);
 
             GLint success = false;
-            glGetProgramiv(*program, GL_LINK_STATUS, &success);
+            glGetProgramiv(program, GL_LINK_STATUS, &success);
 
             if (!success) {
                 std::cerr << "Failed to link shader program!" << std::endl;
@@ -113,7 +113,7 @@ namespace simpleengine {
         }
 
         virtual void render(GLFWwindow* target) {
-            glUseProgram(*program);
+            glUseProgram(program);
         }
     };
 }

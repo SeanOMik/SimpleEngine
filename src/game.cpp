@@ -7,7 +7,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
-#elif
+#else
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
 #include <gl/gl.h>

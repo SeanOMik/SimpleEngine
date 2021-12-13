@@ -5,16 +5,16 @@
 #include <memory>
 
 namespace simpleengine::gfx {
-    Shader::Shader(std::shared_ptr<GLuint> program) : program(program) {
+    Shader::Shader(GLuint program) : program(program) {
 
     }
 
-    Shader::Shader(std::shared_ptr<GLuint> program, GLuint shader) : program(program), shader(shader) {
+    Shader::Shader(GLuint program, GLuint shader) : program(program), shader(shader) {
         
     }
 
     Shader Shader::from_source(const ShaderType& type, std::string& shader_source) {
-        Shader shd = Shader::from_source(std::make_shared<GLuint>(glCreateProgram()), type, shader_source);
+        Shader shd = Shader::from_source(glCreateProgram(), type, shader_source);
 
         shd.link();
         shd.delete_shader();
@@ -22,7 +22,7 @@ namespace simpleengine::gfx {
         return shd;
     }
 
-    Shader Shader::from_source(std::shared_ptr<GLuint> program, const ShaderType& type, std::string& shader_source) {
+    Shader Shader::from_source(GLuint program, const ShaderType& type, std::string& shader_source) {
         Shader shd;
         shd.program = program;
         shd.shader = glCreateShader(type);
@@ -48,7 +48,7 @@ namespace simpleengine::gfx {
     }
 
     Shader Shader::from_filepath(const ShaderType& type, const std::string& shader_path) {
-        Shader shd = Shader::from_filepath(std::make_shared<GLuint>(glCreateProgram()), type, shader_path);
+        Shader shd = Shader::from_filepath(glCreateProgram(), type, shader_path);
 
         shd.link();
         shd.delete_shader();
@@ -56,7 +56,7 @@ namespace simpleengine::gfx {
         return shd;
     }
 
-    Shader Shader::from_filepath(std::shared_ptr<GLuint> program, const ShaderType& type,
+    Shader Shader::from_filepath(GLuint program, const ShaderType& type,
             const std::string& shader_path) {
         std::ifstream fstream(shader_path, std::ios::in);
 
@@ -83,10 +83,10 @@ namespace simpleengine::gfx {
     }
 
     void Shader::link() {
-        glLinkProgram(*program);
+        glLinkProgram(program);
 
         GLint success = false;
-        glGetProgramiv(*program, GL_LINK_STATUS, &success);
+        glGetProgramiv(program, GL_LINK_STATUS, &success);
 
         if (!success) {
             std::cerr << "Failed to link shader program!" << std::endl;
@@ -99,15 +99,15 @@ namespace simpleengine::gfx {
     }
 
     void Shader::use() const {
-        glUseProgram(*program);
+        glUseProgram(program);
     }
 
     void Shader::unuse() {
         glUseProgram(0);
     }
 
-    void Shader::attach(std::shared_ptr<GLuint> program) {
-        glAttachShader(*program, shader);
+    void Shader::attach(GLuint program) {
+        glAttachShader(program, shader);
     }
 
     int Shader::get_uniform_location(const std::string& uniform_name) const {
@@ -115,14 +115,14 @@ namespace simpleengine::gfx {
     }
 
     int Shader::get_uniform_location(const char* uniform_name) const {
-        return glGetUniformLocation(*program, uniform_name);
+        return glGetUniformLocation(program, uniform_name);
     }
 
     GLfloat Shader::get_uniform_float(GLint location) const {
         use();
 
         GLfloat fl;
-        glGetUniformfv(*program, location, &fl);
+        glGetUniformfv(program, location, &fl);
 
         return fl;
     }
@@ -136,7 +136,7 @@ namespace simpleengine::gfx {
         use();
 
         GLint _int;
-        glGetUniformiv(*program, location, &_int);
+        glGetUniformiv(program, location, &_int);
 
         return _int;
     }
@@ -150,7 +150,7 @@ namespace simpleengine::gfx {
         use();
 
         GLuint _uint;
-        glGetUniformuiv(*program, location, &_uint);
+        glGetUniformuiv(program, location, &_uint);
 
         return _uint;
     }
@@ -164,7 +164,7 @@ namespace simpleengine::gfx {
         use();
 
         GLdouble dbl;
-        glGetUniformdv(*program, location, &dbl);
+        glGetUniformdv(program, location, &dbl);
 
         return dbl;
     }

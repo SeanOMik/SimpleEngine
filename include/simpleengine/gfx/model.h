@@ -21,7 +21,7 @@ namespace simpleengine::gfx {
         gfx::Shader shader;
 
         Model(GLFWwindow* window, gfx::Shader shader, std::vector<Vertex> vertices, std::vector<GLuint> indicies = std::vector<GLuint>());
-        Model(GLFWwindow* window, std::shared_ptr<GLuint> shader_program, std::vector<Vertex> vertices,
+        Model(GLFWwindow* window, GLuint shader_program, std::vector<Vertex> vertices,
             std::vector<GLuint> indicies = std::vector<GLuint>());
     protected:
         void setup_vertexes();

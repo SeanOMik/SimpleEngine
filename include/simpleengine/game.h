@@ -6,7 +6,7 @@
 
 #ifdef __linux__
 #include <GL/glew.h>
-#elif
+#else
 #include <gl/glew.h>
 #endif
 

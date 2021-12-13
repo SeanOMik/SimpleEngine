@@ -4,7 +4,7 @@
 #ifdef __linux__
 #include <GL/glew.h>
 #include <GL/gl.h>
-#elif
+#else
 #include <gl/glew.h>
 #include <gl/gl.h>
 #endif

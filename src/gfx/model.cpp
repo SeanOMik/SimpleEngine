@@ -8,7 +8,7 @@ namespace simpleengine::gfx {
         setup_vertexes();
     }
 
-    Model::Model(GLFWwindow* window, std::shared_ptr<GLuint> shader_program, std::vector<Vertex> vertices, std::vector<GLuint> indicies) :
+    Model::Model(GLFWwindow* window, GLuint shader_program, std::vector<Vertex> vertices, std::vector<GLuint> indicies) :
             Model(window, gfx::Shader(shader_program), vertices, indicies) {
 
     }

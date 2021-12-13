@@ -6,7 +6,7 @@ namespace simpleengine::gfx {
 
     }
 
-    TexturedModel::TexturedModel(GLFWwindow* window, std::shared_ptr<GLuint> shader_program, gfx::Texture texture,
+    TexturedModel::TexturedModel(GLFWwindow* window, GLuint shader_program, gfx::Texture texture,
             std::vector<Vertex> vertices, std::vector<GLuint> indicies) : TexturedModel(window, gfx::Shader(shader_program),
             texture, vertices, indicies) {
 

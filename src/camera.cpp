@@ -13,7 +13,7 @@ namespace simpleengine {
         projection_matrix = glm::perspective(glm::radians(fov), ((float) width) / height, near_plane, far_plane);
     }
 
-    Camera::Camera(GLFWwindow* window, std::shared_ptr<GLuint> shader_prog, float fov, glm::vec3 position, glm::vec3 rotation,
+    Camera::Camera(GLFWwindow* window, GLuint shader_prog, float fov, glm::vec3 position, glm::vec3 rotation,
             float near_plane, float far_plane, glm::vec3 world_up, glm::vec3 cam_front) : Camera(window, gfx::Shader(shader_prog), fov, position,
             rotation, near_plane, far_plane, world_up, cam_front) {
 

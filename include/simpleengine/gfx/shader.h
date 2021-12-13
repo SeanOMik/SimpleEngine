@@ -5,7 +5,7 @@
 #ifdef __linux__
 #include <GL/glew.h>
 #include <GL/gl.h>
-#elif
+#else
 #include <gl/glew.h>
 #include <gl/gl.h>
 #endif
@@ -39,21 +39,17 @@ namespace simpleengine::gfx {
     };
 
     class Shader {
-    protected:
-        Shader() {
-
-        }
     public:
-        std::shared_ptr<GLuint> program;
+        GLuint program;
         GLuint shader;
 
-        Shader(std::shared_ptr<GLuint> program);
-
-        Shader(std::shared_ptr<GLuint> program, GLuint shader);
+        Shader() = default;
+        Shader(GLuint program);
+        Shader(GLuint program, GLuint shader);
 
         static Shader from_source(const ShaderType& type, std::string& shader_source);
 
-        static Shader from_source(std::shared_ptr<GLuint> program, const ShaderType& type, std::string& shader_source);
+        static Shader from_source(GLuint program, const ShaderType& type, std::string& shader_source);
 
         /**
          * @brief Load a shader from a filepath.
@@ -70,7 +66,7 @@ namespace simpleengine::gfx {
          * @param type The type of the shader.
          * @param shader_path The path of shader source.
          */
-        static Shader from_filepath(std::shared_ptr<GLuint> program, const ShaderType& type, const std::string& shader_path);
+        static Shader from_filepath(GLuint program, const ShaderType& type, const std::string& shader_path);
 
         virtual ~Shader();
 
@@ -103,7 +99,7 @@ namespace simpleengine::gfx {
          * 
          * @param program The program to attach the shader to.
          */
-        void attach(std::shared_ptr<GLuint> program);
+        void attach(GLuint program);
 
         /**
          * @brief Get the location of the uniform variable in the shader.
