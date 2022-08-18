@@ -90,4 +90,8 @@ namespace simpleengine::gfx {
     void Texture::bind() const {
         glBindTexture(image_type, texture_id);
     }
+
+    unsigned int Texture::get_texture_id() const {
+        return texture_id;
+    }
 }

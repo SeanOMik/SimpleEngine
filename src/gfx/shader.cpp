@@ -189,6 +189,22 @@ namespace simpleengine::gfx {
         set_uniform_float(location, fl, bind_shader);
     }
 
+    void Shader::set_uniform_float_array(GLint location, int count, GLfloat* arr, bool bind_shader) {
+        if (bind_shader) {
+            use();
+        }
+        glUniform1fv(location, count, arr);
+        if (bind_shader) {
+            unuse();
+        }
+    }
+
+    void Shader::set_uniform_float_array(const char* uniform_name, int count, GLfloat* arr, bool bind_shader) {
+        int location = get_uniform_location(uniform_name);
+        set_uniform_float_array(location, count, arr, bind_shader);
+    }
+ 
+
     void Shader::set_uniform_float_vec2(GLint location, glm::vec2 vec, bool bind_shader) {
         if (bind_shader) {
             use();
@@ -249,6 +265,19 @@ namespace simpleengine::gfx {
         set_uniform_int(location, i, bind_shader);
     }
     
+    void Shader::set_uniform_int_array(GLint location, int count, GLint* arr, bool bind_shader) {
+        if (bind_shader) {
+            use();
+        }
+
+        glUniform1iv(location, count, arr);
+    }
+
+    void Shader::set_uniform_int_array(const char* uniform_name, int count, GLint* arr, bool bind_shader) {
+        int location = get_uniform_location(uniform_name);
+        set_uniform_int_array(location, count, arr, bind_shader);
+    }
+
     void Shader::set_uniform_int_vec2(GLint location, glm::ivec2 vec, bool bind_shader) {
         if (bind_shader) {
             use();

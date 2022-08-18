@@ -24,7 +24,7 @@ namespace simpleengine::gfx {
         Model(GLFWwindow* window, GLuint shader_program, std::vector<Vertex> vertices,
             std::vector<GLuint> indicies = std::vector<GLuint>());
     protected:
-        void setup_vertexes();
+        virtual void setup_vertices();
     public:
 
         virtual void update(const float& delta_time) override;

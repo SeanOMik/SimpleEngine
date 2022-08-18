@@ -46,6 +46,7 @@ void simpleengine::Game::enable_default_gl_options() const {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    //glFrontFace(GL_CW);
 }
 
 void simpleengine::Game::enable_gl_option(GLenum option) const {
@@ -72,39 +73,50 @@ void simpleengine::Game::add_event(std::shared_ptr<simpleengine::Event> event) {
     events.push_back(event);
 }
 
-void simpleengine::Game::update() {
-    handle_input();
+void simpleengine::Game::update(const float& delta_time) {
+    handle_input(delta_time);
 
     // Update items
     for (const std::shared_ptr<Event>& event : events) {
-        event->update(0.f);
+        event->update(delta_time);
     }
 }
 
-void simpleengine::Game::handle_input() {
+void simpleengine::Game::handle_input(const float& delta_time) {
 
 }
 
-void simpleengine::Game::render_window() {
+void simpleengine::Game::render_window(const float& delta_time) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    render_items();
+    render_items(delta_time);
 }
 
-void simpleengine::Game::render_items() {
+void simpleengine::Game::render_items(const float& delta_time) {
     for (const std::shared_ptr<Event>& event : events) {
         event->render(window);
     }
 }
 
+float simpleengine::Game::get_delta_time() {
+    float current_frame_time = glfwGetTime();
+    float delta_time = current_frame_time - last_frame_time;
+    last_frame_time = current_frame_time;
+
+    return delta_time;
+}
+
 int simpleengine::Game::run() {
     while (!glfwWindowShouldClose(window)) {
+        // Get delta time first thing
+        float delta_time = get_delta_time();
+
         // Update input
         glfwPollEvents();
 
-        update();
+        update(delta_time);
 
-        render_window();
+        render_window(delta_time);
 
         // End draw
         glfwSwapBuffers(window);

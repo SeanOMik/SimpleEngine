@@ -17,7 +17,7 @@
 #include "../../gfx/textured_model.h"
 
 namespace simpleengine::objects_3d {
-    class ObjModel : public simpleengine::gfx::TexturedModel {
+    class Mesh : public simpleengine::gfx::TexturedModel {
     private:
         /**
          * @brief Split a string multiple times (if possible) with a character delimiter.
@@ -49,8 +49,8 @@ namespace simpleengine::objects_3d {
     public:
         std::vector<LitVertex> lit_vertices;
 
-        ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::string filename);
-        ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::ifstream file_stream);
+        Mesh(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::string filename);
+        Mesh(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::ifstream file_stream);
 
         virtual void update(const float& delta_time) override;
     };

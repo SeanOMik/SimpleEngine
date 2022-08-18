@@ -52,9 +52,9 @@ namespace simpleengine {
             transform_matrix = glm::translate(transform_matrix, glm::vec3(x, y, z));
         }
 
-        virtual void translate(const glm::vec3& vec) {
+        /* virtual void translate(const glm::vec3& vec) {
             transform_matrix = glm::translate(transform_matrix, vec);
-        }
+        } */
 
         virtual glm::mat4 rotation_matrix(float degrees, glm::vec3 rotation_axis) const {
             return glm::rotate(transform_matrix, glm::radians(degrees), rotation_axis);

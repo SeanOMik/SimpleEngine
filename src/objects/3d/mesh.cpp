@@ -1,7 +1,7 @@
-#include "objects/3d/obj_model.h"
+#include "objects/3d/mesh.h"
 
 namespace simpleengine::objects_3d {
-    std::vector<std::string> ObjModel::split_string(std::string str, const char delim) {
+    std::vector<std::string> Mesh::split_string(std::string str, const char delim) {
         std::istringstream ss(str);
 
         std::vector<std::string> tokens;
@@ -17,8 +17,9 @@ namespace simpleengine::objects_3d {
         return tokens;
     }
 
-    void ObjModel::process_vertex(const std::vector<std::string>& vertex_data, const std::vector<glm::vec2>& in_textures,
-            const std::vector<glm::vec3>& in_normals, std::vector<GLuint>& out_indicies, std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals) {
+    void Mesh::process_vertex(const std::vector<std::string>& vertex_data, const std::vector<glm::vec2>& in_textures,
+            const std::vector<glm::vec3>& in_normals, std::vector<GLuint>& out_indicies, 
+            std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals) {
         
         // Get the index the current vertex and put it in indicies
         int currentVertexIndex = stoi(vertex_data[0]) - 1;
@@ -34,13 +35,13 @@ namespace simpleengine::objects_3d {
         out_normals.at(currentVertexIndex) = current_norm;
     }
 
-    ObjModel::ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::string filename) :
-            ObjModel(window, shader, texture, std::ifstream(filename, std::ios::in | std::ios::binary)) {
+    Mesh::Mesh(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::string filename) :
+            Mesh(window, shader, texture, std::ifstream(filename, std::ios::in | std::ios::binary)) {
 
     }
 
-    ObjModel::ObjModel(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::ifstream file_stream) :
-            simpleengine::gfx::TexturedModel(window, shader, texture, std::vector<Vertex>()) {
+    Mesh::Mesh(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::ifstream file_stream) :
+            simpleengine::gfx::TexturedModel(window, shader, std::vector<gfx::Texture>{texture}, std::vector<Vertex>()) {
         
         if (!file_stream.is_open()) {
             std::cerr << "File stream that was given to ObjModel::ObjModel is not open!" << std::endl;
@@ -94,9 +95,13 @@ namespace simpleengine::objects_3d {
         
         file_stream.close();
 
+        const int texture_id = 0;
+
+        std::cout << "Texture ID: " << texture_id << std::endl;
+
         // Insert everything into lit_vertices.
         for (int i = 0; i < obj_vertices.size(); i++) {
-            lit_vertices.emplace_back(simpleengine::Vectorf(obj_vertices.at(i)), glm::vec3(1.f), textures.at(i), normals.at(i));
+            lit_vertices.emplace_back(simpleengine::Vectorf(obj_vertices.at(i)), glm::vec3(1.f), textures.at(i), normals.at(i), texture_id);
         }
 
         // Create VAO and EBO and assign buffers
@@ -106,15 +111,16 @@ namespace simpleengine::objects_3d {
 
         // Enable VAO attributes
         vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, position));
-        //vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color));
-        vao.enable_attrib(vbo, 1, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord));
+        vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color));
         vao.enable_attrib(vbo, 2, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, normal));
-
+        vao.enable_attrib(vbo, 3, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord));
+        vao.enable_attrib(vbo, 4, 1, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, texture_id));
+        
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
 
-    void ObjModel::update(const float& delta_time) {
-        this->rotate_y(0.05f); // Slowly rotate (for debugging)
+    void Mesh::update(const float& delta_time) {
+        this->rotate_y(0.0005f); // Slowly rotate (for debugging)
     }
 }

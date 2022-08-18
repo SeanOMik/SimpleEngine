@@ -12,7 +12,11 @@
 
 #include <glm/glm.hpp>
 
+#ifdef __linux__
+#include <SOIL2.h>
+#else
 #include <SOIL2/SOIL2.h>
+#endif
 
 #include <stdexcept>
 #include <vector>
@@ -26,11 +30,21 @@ namespace simpleengine::gfx {
 
         unsigned int image_type;
     public:
+        /**
+         * @brief The type of the texture
+         * 
+         */
+        enum Type {
+            TexT_DIFFUSE,
+            TexT_SPECULAR
+        };
+
         int height;
         int width;
         int channels;
         float shine_damper = 1.f;
         float reflectivity = 0.f;
+        Type type;
 
         /**
          * @brief Construct a new Texture object from a path.
@@ -61,5 +75,7 @@ namespace simpleengine::gfx {
         Texture(std::vector<unsigned char> buffer, bool img_2d = true, bool mipmap = true);
 
         void bind() const;
+
+        unsigned int get_texture_id() const;
     };
 }

@@ -183,6 +183,9 @@ namespace simpleengine::gfx {
 
         void set_uniform_float(GLint location, GLfloat fl, bool bind_shader = true);
         void set_uniform_float(const char* uniform_name, GLfloat fl, bool bind_shader = true);
+
+        void set_uniform_float_array(GLint location, int count, GLfloat* arr, bool bind_shader = true);
+        void set_uniform_float_array(const char* uniform_name, int count, GLfloat* arr, bool bind_shader = true);
  
         void set_uniform_float_vec2(GLint location, glm::vec2 vec, bool bind_shader = true);
         void set_uniform_float_vec2(const char* uniform_name, glm::vec2 vec, bool bind_shader = true);
@@ -195,6 +198,9 @@ namespace simpleengine::gfx {
         
         void set_uniform_int(GLint location, GLint i, bool bind_shader = true);
         void set_uniform_int(const char* uniform_name, GLint i, bool bind_shader = true);
+
+        void set_uniform_int_array(GLint location, int count, GLint* arr, bool bind_shader = true);
+        void set_uniform_int_array(const char* uniform_name, int count, GLint* arr, bool bind_shader = true);
         
         void set_uniform_int_vec2(GLint location, glm::ivec2 vec, bool bind_shader = true);
         void set_uniform_int_vec2(const char* uniform_name, glm::ivec2 vec, bool bind_shader = true);

@@ -35,10 +35,10 @@ namespace simpleengine {
 
         void add_event(std::shared_ptr<simpleengine::Event> event);
 
-        void update();
-        void handle_input();
-        void render_window();
-        void render_items();
+        void update(const float& delta_time);
+        void handle_input(const float& delta_time);
+        void render_window(const float& delta_time);
+        void render_items(const float& delta_time);
         void exit();
         int run();
 
@@ -53,5 +53,11 @@ namespace simpleengine {
         GLFWwindow* window;
         std::vector<std::shared_ptr<simpleengine::Event>> events;
         const bool& window_resizeable;
+
+        float get_delta_time();
+
+        float last_frame_time;
+        /* float currentFrameTime;
+        float deltaTime; */
     };
 }
