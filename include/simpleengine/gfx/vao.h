@@ -65,5 +65,20 @@ namespace simpleengine::gfx {
             // don't unbind VAOs (nor VBOs) when it's not directly necessary.
             glBindVertexArray(0);
         }
+
+        void disable_attrib(const VBO& vbo, GLuint index) const {
+            bind();
+            vbo.bind();
+
+            glDisableVertexAttribArray(index);
+            //glDisableVertexArrayAttrib(index);
+        }
+
+        void set_attrib_value(const VBO& vbo, GLuint index, float f) const {
+            bind();
+            vbo.bind();
+
+            glVertexAttrib1f(index, f);
+        }
     };
 }

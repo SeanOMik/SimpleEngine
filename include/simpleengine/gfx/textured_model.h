@@ -21,14 +21,14 @@ namespace simpleengine::gfx {
     public:
         std::vector<gfx::Texture> textures;
 
-        TexturedModel(GLFWwindow* window, gfx::Shader shader, gfx::Texture texture, std::vector<Vertex> vertices,
+        TexturedModel(GLFWwindow* window, gfx::Shader shader, gfx::Texture texture, std::vector<LitVertex> vertices,
             std::vector<GLuint> indicies = std::vector<GLuint>());
-        TexturedModel(GLFWwindow* window, GLuint shader_program, gfx::Texture texture, std::vector<Vertex> vertices,
+        TexturedModel(GLFWwindow* window, GLuint shader_program, gfx::Texture texture, std::vector<LitVertex> vertices,
             std::vector<GLuint> indicies = std::vector<GLuint>());
 
-        TexturedModel(GLFWwindow* window, gfx::Shader shader, std::vector<gfx::Texture> textures, std::vector<Vertex> vertices,
+        TexturedModel(GLFWwindow* window, gfx::Shader shader, std::vector<gfx::Texture> textures, std::vector<LitVertex> vertices,
             std::vector<GLuint> indicies = std::vector<GLuint>());
-        TexturedModel(GLFWwindow* window, GLuint shader_program, std::vector<gfx::Texture> textures, std::vector<Vertex> vertices,
+        TexturedModel(GLFWwindow* window, GLuint shader_program, std::vector<gfx::Texture> textures, std::vector<LitVertex> vertices,
             std::vector<GLuint> indicies = std::vector<GLuint>());
 
         virtual void update(const float& delta_time) override;

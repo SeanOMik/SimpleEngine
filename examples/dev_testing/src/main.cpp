@@ -67,11 +67,11 @@ int main(int argc, char *argv[]) {
     terrain->translate(0.f, -5.f, -15.f);
     game.add_event(terrain); */
 
-    se::gfx::Texture stall_texture("examples/dev_testing/resources/stallTextureb.png");
+    /* se::gfx::Texture stall_texture("examples/dev_testing/resources/stallTextureb.png");
     auto stall = std::make_shared<se::objects_3d::Mesh>(game.get_window(), core_shader, stall_texture, "examples/dev_testing/resources/stall.obj");
     stall->translate(10.f, -5.f, 0.f);
     stall->rotate_y(90.f);
-    game.add_event(stall);
+    game.add_event(stall); */
 
     /* std::vector<se::Vertex> square_vertices = {
         { se::Vectorf(0.5f, 0.5f, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f) }, // top right
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     tri->scale(.75f);
     game.add_event(tri); */
 
-    /* std::vector<se::Vertex> cube_vertices = {
+    std::vector<se::LitVertex> cube_vertices = {
         { se::Vectorf(-1.f, -1.f, -1.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 0.f) },
         { se::Vectorf(1.f, -1.f, -1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(1.f, 0.f) },
         { se::Vectorf(1.f, 1.f, -1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(2.f, 0.f) },
@@ -137,8 +137,9 @@ int main(int argc, char *argv[]) {
     };
 
     auto cube = std::make_shared<se::gfx::Model>(game.get_window(), core_shader, cube_vertices, cube_indicies);
-    cube->translate(3.f, 0.f, 0.f);
-    game.add_event(cube); */
+    cube->calculate_normals();
+    cube->translate(3.5f, 0.f, 0.f);
+    game.add_event(cube);
 
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
     game.add_event(camera);

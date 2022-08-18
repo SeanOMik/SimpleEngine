@@ -2,24 +2,24 @@
 #include "gfx/ssbo.h"
 
 namespace simpleengine::gfx {
-    TexturedModel::TexturedModel(GLFWwindow* window, gfx::Shader shader, gfx::Texture texture, std::vector<Vertex> vertices,
+    TexturedModel::TexturedModel(GLFWwindow* window, gfx::Shader shader, gfx::Texture texture, std::vector<LitVertex> vertices,
             std::vector<GLuint> indicies) : simpleengine::gfx::Model(window, shader, vertices, indicies), 
             textures(std::vector<gfx::Texture>{texture}) {
     }
 
     TexturedModel::TexturedModel(GLFWwindow* window, GLuint shader_program, gfx::Texture texture,
-            std::vector<Vertex> vertices, std::vector<GLuint> indicies) : TexturedModel(window, gfx::Shader(shader_program),
+            std::vector<LitVertex> vertices, std::vector<GLuint> indicies) : TexturedModel(window, gfx::Shader(shader_program),
             std::vector<gfx::Texture>{texture}, vertices, indicies) {
 
     }
 
-    TexturedModel::TexturedModel(GLFWwindow* window, gfx::Shader shader, std::vector<gfx::Texture> textures, std::vector<Vertex> vertices,
+    TexturedModel::TexturedModel(GLFWwindow* window, gfx::Shader shader, std::vector<gfx::Texture> textures, std::vector<LitVertex> vertices,
             std::vector<GLuint> indicies) : simpleengine::gfx::Model(window, shader, vertices, indicies), 
             textures(textures) {
     }
 
     TexturedModel::TexturedModel(GLFWwindow* window, GLuint shader_program, std::vector<gfx::Texture> textures,
-            std::vector<Vertex> vertices, std::vector<GLuint> indicies) : TexturedModel(window, gfx::Shader(shader_program),
+            std::vector<LitVertex> vertices, std::vector<GLuint> indicies) : TexturedModel(window, gfx::Shader(shader_program),
             textures, vertices, indicies) {
 
     }

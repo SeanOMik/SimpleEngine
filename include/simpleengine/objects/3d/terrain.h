@@ -26,7 +26,7 @@ namespace simpleengine::objects_3d {
         gfx::Texture texture;
 
         Terrain(GLFWwindow* window, gfx::Shader shader, gfx::Texture texture, int grid_x, int grid_y, float size = 800.f, int vertex_count = 128) :
-                simpleengine::gfx::TexturedModel(window, shader, { texture }, std::vector<Vertex>()), x(grid_x * size), y(grid_y * size),
+                simpleengine::gfx::TexturedModel(window, shader, { texture }, std::vector<LitVertex>()), x(grid_x * size), y(grid_y * size),
                 texture(texture), size(size), vertex_count(vertex_count) {
 
             generate_terrain();

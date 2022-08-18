@@ -41,7 +41,7 @@ namespace simpleengine::objects_3d {
     }
 
     Mesh::Mesh(GLFWwindow *window, gfx::Shader shader, gfx::Texture texture, std::ifstream file_stream) :
-            simpleengine::gfx::TexturedModel(window, shader, std::vector<gfx::Texture>{texture}, std::vector<Vertex>()) {
+            simpleengine::gfx::TexturedModel(window, shader, std::vector<gfx::Texture>{texture}, std::vector<LitVertex>()) {
         
         if (!file_stream.is_open()) {
             std::cerr << "File stream that was given to ObjModel::ObjModel is not open!" << std::endl;
