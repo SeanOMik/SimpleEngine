@@ -50,9 +50,10 @@ namespace simpleengine::gfx {
         void bind() const {
             glBindVertexArray(handle);
 
+            // TODO: Handle opengl errors EVERYWHERE
             GLenum err = glGetError();
             if (err != GL_NO_ERROR) {
-                //fprintf(stderr, "Ran into opengl error: 0x%x\n", err);
+                fprintf(stderr, "Ran into opengl error: 0x%x\n", err);
                 //std::cerr << "Ran into enum error: "
             }
         }

@@ -9,9 +9,11 @@
 namespace simpleengine {
     class Renderable : public simpleengine::Event {
     private:
-        using super = simpleengine::Event;
+        using Super = simpleengine::Event;
     public:
-        explicit Renderable(GLFWwindow* window = nullptr) : super(window) {}
+        Renderable() = default;
         virtual ~Renderable() = default;
+
+        virtual void render(GLFWwindow* target) = 0;
     };
 }

@@ -1,22 +1,24 @@
 #include "simpleengine/camera.h"
 #include "simpleengine/gfx/light.h"
+#include "simpleengine/gfx/material.h"
 #include "simpleengine/gfx/model.h"
 #include "simpleengine/gfx/renderer.h"
 #include "simpleengine/gfx/texture.h"
-#include "simpleengine/objects/3d/terrain.h"
 #include "simpleengine/vector.h"
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/fwd.hpp>
-#include <memory>
 #include <simpleengine/gfx/shader.h>
 #include <simpleengine/renderable.h>
 #include <simpleengine/event/event.h>
 #include <simpleengine/shader_program.h>
 #include <simpleengine/game.h>
 #include <simpleengine/vertex.h>
-#include <simpleengine/objects/3d/mesh.h>
 #include <simpleengine/gfx/shaders/core_3d_shader.h>
 
+#include <simpleengine/scene.h>
+
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/fwd.hpp>
+
+#include <memory>
 #include <chrono>
 #include <iostream>
 #include <sstream>
@@ -32,22 +34,6 @@ CMRC_DECLARE(resource_shaders);
 #endif
 
 namespace se = simpleengine;
-
-class RendererEvent : public se::Event {
-public:
-    RendererEvent(se::gfx::Renderer renderer) : se::Event(), renderer(renderer) {}
-    ~RendererEvent() = default;
-
-    se::gfx::Renderer renderer;
-    
-    virtual void update(const float& delta_time) override {
-
-    }
-
-    virtual void render(GLFWwindow* target) override {
-        this->renderer.render(nullptr);
-    }
-};
 
 std::string read_resource_shader(const std::string& path) {
     auto fs = cmrc::resource_shaders::get_filesystem();
@@ -153,14 +139,17 @@ int main(int argc, char *argv[]) {
         5, 6, 12, 12, 6, 13
     };
 
-    auto cube = std::make_shared<se::gfx::Model>(game.get_window(), core_shader, cube_vertices, cube_indicies);
+    se::gfx::Material material(white_texture, 1.f, 0.f, 0.f, 0.f, 0.f);
+
+    auto cube = std::make_shared<se::gfx::Model>(cube_vertices, cube_indicies,
+        std::optional<se::gfx::Material>(material));
     cube->calculate_normals();
     cube->translate(3.5f, 0.f, 0.f);
     //game.add_event(cube);
 
-    auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
+    /* auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
     renderer->add_model(white_texture, cube);
-    game.add_event(renderer);
+    game.add_event(renderer); */
 
     /* auto r_event = std::make_shared<RendererEvent>(renderer);
     game.add_event(r_event); */

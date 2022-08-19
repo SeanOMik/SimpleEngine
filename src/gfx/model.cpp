@@ -1,58 +1,13 @@
 #include "gfx/model.h"
 
 namespace simpleengine::gfx {
-    Model::Model(GLFWwindow* window, gfx::Shader shader, std::vector<LitVertex> vertices, std::vector<GLuint> indicies) :
-            simpleengine::Renderable(window), shader(shader), vertices(vertices), indicies(indicies), vbo(gfx::VBO::init(GL_ARRAY_BUFFER, false)),
-            ebo(gfx::VBO::init(GL_ELEMENT_ARRAY_BUFFER, false)), vao(gfx::VAO::init()) {
+    Model::Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, std::optional<Material> material) :
+            material(material), vertices(vertices), indicies(indicies) {
 
-        //setup_vertices();
-    }
-
-    Model::Model(GLFWwindow* window, GLuint shader_program, std::vector<LitVertex> vertices, std::vector<GLuint> indicies) :
-            Model(window, gfx::Shader(shader_program), vertices, indicies) {
-
-    }
-
-    void Model::setup_vertices() {
-        vao.bind();
-        vbo.buffer(vertices.data(), 0, sizeof(LitVertex) * vertices.size());
-        if (!indicies.empty()) {
-            ebo.buffer(indicies.data(), 0, indicies.size() * sizeof(GLuint));
-        }
-
-        // Enable VAO attributes
-        vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, position));
-        vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color));
-        vao.enable_attrib(vbo, 2, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, normal));
-        // Attribute 2 is used for normals
-        vao.enable_attrib(vbo, 3, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord));
-        vao.enable_attrib(vbo, 4, 1, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, texture_id));
-
-        /* vao.disable_attrib(vbo, 2);
-        vao.disable_attrib(vbo, 4);
-        vao.set_attrib_value(vbo, 4, -1.f); */
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
     }
 
     void Model::update(const float& delta_time) {
         this->rotate_y(1.f);
-    }
-
-    void Model::render(GLFWwindow* target) {
-        shader.use();
-        shader.set_uniform_matrix_4f("transform_matrix", transform_matrix, false);
-
-        // When binding to the texture, also tell the shader if the texture is set or not.
-        //shader.set_uniform_int("texture_is_set", (GLint) false, false);
-        
-        vao.bind();
-        if (indicies.empty()) {
-            glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-        } else {
-            glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
-        }
     }
 
     glm::vec3 Model::compute_face_normal(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3) {

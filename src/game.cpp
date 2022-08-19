@@ -94,7 +94,7 @@ void simpleengine::Game::render_window(const float& delta_time) {
 
 void simpleengine::Game::render_items(const float& delta_time) {
     for (const std::shared_ptr<Event>& event : events) {
-        event->render(window);
+        //event->render(window);
     }
 }
 
