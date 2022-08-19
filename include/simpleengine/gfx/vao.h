@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdio>
+#include <iostream>
 #ifdef __linux__
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -15,12 +17,30 @@ namespace simpleengine::gfx {
     public:
         GLuint handle;
 
-        VAO() {
-            glCreateVertexArrays(1, &handle);
+        VAO(GLuint handle) : handle(handle) {
+            //glCreateVertexArrays(1, &handle);
         }
 
         ~VAO() {
-            destroy();
+            std::cout << "TODO, drop VAO (" << handle << ")" << std::endl;
+        }
+
+        VAO& operator=(const VAO& other) {
+            if (this != &other) {
+                handle = other.handle;
+            }
+
+
+            std::cout << "Copied " << handle << std::endl;
+
+            return *this;
+        }
+
+        static VAO init() {
+            GLuint handle;
+            glCreateVertexArrays(1, &handle);
+
+            return VAO(handle);
         }
 
         void destroy() {
@@ -29,6 +49,12 @@ namespace simpleengine::gfx {
 
         void bind() const {
             glBindVertexArray(handle);
+
+            GLenum err = glGetError();
+            if (err != GL_NO_ERROR) {
+                //fprintf(stderr, "Ran into opengl error: 0x%x\n", err);
+                //std::cerr << "Ran into enum error: "
+            }
         }
 
         // TODO: Fix this.

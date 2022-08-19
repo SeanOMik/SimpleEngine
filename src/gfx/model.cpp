@@ -2,10 +2,10 @@
 
 namespace simpleengine::gfx {
     Model::Model(GLFWwindow* window, gfx::Shader shader, std::vector<LitVertex> vertices, std::vector<GLuint> indicies) :
-            simpleengine::Renderable(window), shader(shader), vertices(vertices), indicies(indicies), vbo(gfx::VBO(GL_ARRAY_BUFFER, false)),
-            ebo(gfx::VBO(GL_ELEMENT_ARRAY_BUFFER, false)) {
+            simpleengine::Renderable(window), shader(shader), vertices(vertices), indicies(indicies), vbo(gfx::VBO::init(GL_ARRAY_BUFFER, false)),
+            ebo(gfx::VBO::init(GL_ELEMENT_ARRAY_BUFFER, false)), vao(gfx::VAO::init()) {
 
-        setup_vertices();
+        //setup_vertices();
     }
 
     Model::Model(GLFWwindow* window, GLuint shader_program, std::vector<LitVertex> vertices, std::vector<GLuint> indicies) :
