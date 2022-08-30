@@ -1,4 +1,6 @@
 #include "simpleengine/camera.h"
+#include "simpleengine/ecs/component/model_componenet.h"
+#include "simpleengine/ecs/entity.h"
 #include "simpleengine/gfx/light.h"
 #include "simpleengine/gfx/material.h"
 #include "simpleengine/gfx/model.h"
@@ -13,7 +15,7 @@
 #include <simpleengine/vertex.h>
 #include <simpleengine/gfx/shaders/core_3d_shader.h>
 
-#include <simpleengine/scene.h>
+//#include <simpleengine/scene.h>
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/fwd.hpp>
@@ -141,14 +143,25 @@ int main(int argc, char *argv[]) {
 
     se::gfx::Material material(white_texture, 1.f, 0.f, 0.f, 0.f, 0.f);
 
-    auto cube = std::make_shared<se::gfx::Model>(cube_vertices, cube_indicies,
+    auto entity = std::make_shared<simpleengine::Entity>();
+    se::gfx::Model model(cube_vertices, cube_indicies, std::optional<se::gfx::Material>(material));
+    model.calculate_normals();
+
+    se::ModelComponent model_component(model);
+
+    entity->add_component(model_component);
+    entity->translate(3.5f, 0.f, 0.f);
+
+    /* auto cube = std::make_shared<se::gfx::Model>(cube_vertices, cube_indicies,
         std::optional<se::gfx::Material>(material));
     cube->calculate_normals();
-    cube->translate(3.5f, 0.f, 0.f);
+    cube->translate(3.5f, 0.f, 0.f); */
     //game.add_event(cube);
 
-    /* auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
-    renderer->add_model(white_texture, cube);
+    auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
+    renderer->submit_entity(entity);
+    game.add_event(renderer);
+    /* renderer->add_model(white_texture, cube);
     game.add_event(renderer); */
 
     /* auto r_event = std::make_shared<RendererEvent>(renderer);
@@ -157,5 +170,9 @@ int main(int argc, char *argv[]) {
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
     game.add_event(camera);
 
-    return game.run();
+    int res = game.run();
+
+    renderer->destroy();
+    
+    return res;
 }

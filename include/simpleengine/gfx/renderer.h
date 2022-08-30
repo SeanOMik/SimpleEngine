@@ -1,10 +1,13 @@
 #pragma once
 
+#include "../ecs/entity.h"
+#include "material.h"
 #include "texture.h"
 #include "shader.h"
 //#include "renderable.h"
 #include "model.h"
 
+#include <unordered_map>
 #include <vector>
 
 namespace simpleengine::gfx {
@@ -12,35 +15,58 @@ namespace simpleengine::gfx {
     private:
         GLFWwindow* window;
     public:
-        class RenderingModel {
+        class RenderingBuffers {
         public:
-            RenderingModel(std::shared_ptr<simpleengine::gfx::Model> model, simpleengine::gfx::Texture texture, gfx::VBO ebo,
-                gfx::VBO vbo, gfx::VAO vao) : model(model), texture(texture), ebo(ebo), vbo(vbo), vao(vao) {
-
-            }
-
-            std::shared_ptr<simpleengine::gfx::Model> model;
-            simpleengine::gfx::Texture texture;
-
+            gfx::Model& model;
             gfx::VBO ebo;
             gfx::VBO vbo;
             gfx::VAO vao;
+
+            RenderingBuffers(gfx::Model& model, gfx::VBO ebo, gfx::VBO vbo, gfx::VAO vao) : model(model), ebo(ebo), vbo(vbo), vao(vao) {
+                
+            }
+
+            /* std::vector<LitVertex>& vertices;
+            std::vector<GLuint>& indicies; */
+            /// If these buffers were rendered last update.
+            //bool rendered;
+        };
+
+        class RenderingModel {
+        public:
+            std::shared_ptr<simpleengine::Entity> entity;
+            std::unordered_map<uint32_t, RenderingBuffers> rendering_buffers;
+
+            RenderingModel(std::shared_ptr<simpleengine::Entity> entity) : entity(entity) {
+
+            }
+
+            /**
+             * @brief Create and delete buffers for new and old components in entity.
+             * 
+             */
+            void update_buffers();
+
+            /**
+             * @brief Destroy the buffers
+             * 
+             */
+            void destroy_buffers();
         };
 
         gfx::Shader shader;
-        std::vector<RenderingModel> rendering_models;
+        std::unordered_map<uint32_t, RenderingModel> rendering_models;
 
         Renderer(GLFWwindow* window, gfx::Shader shader);
         Renderer(GLFWwindow* window, GLuint shader_program);
         
-        virtual void add_model(simpleengine::gfx::Texture texture, std::shared_ptr<simpleengine::gfx::Model> model);
-        virtual void remove_model(std::shared_ptr<simpleengine::gfx::Model> model);
+        virtual void submit_entity(std::shared_ptr<simpleengine::Entity> entity);
+        virtual bool withdraw_entity(std::shared_ptr<simpleengine::Entity> entity);
 
         virtual void initialize();
+        virtual void destroy();
 
-        virtual void update(const float& delta_time) override {
-        
-        }
+        virtual void update(const float& delta_time) override;
         
         virtual void render(GLFWwindow* target) override;
     };

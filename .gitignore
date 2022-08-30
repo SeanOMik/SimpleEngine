@@ -1,5 +1,6 @@
 # Don't track content of these folders
 .vscode/*
+.VSCodeCounter
 CMakeFiles/*
 .vs/*
 out/*

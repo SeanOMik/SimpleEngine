@@ -54,7 +54,6 @@ namespace simpleengine::gfx {
             GLenum err = glGetError();
             if (err != GL_NO_ERROR) {
                 fprintf(stderr, "Ran into opengl error: 0x%x\n", err);
-                //std::cerr << "Ran into enum error: "
             }
         }
 
@@ -91,6 +90,12 @@ namespace simpleengine::gfx {
             // rarely happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally
             // don't unbind VAOs (nor VBOs) when it's not directly necessary.
             glBindVertexArray(0);
+
+            // TODO: Handle opengl errors EVERYWHERE
+            GLenum err = glGetError();
+            if (err != GL_NO_ERROR) {
+                fprintf(stderr, "Ran into opengl error: 0x%x\n", err);
+            }
         }
 
         void disable_attrib(const VBO& vbo, GLuint index) const {

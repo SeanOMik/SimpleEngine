@@ -1,6 +1,12 @@
 #include "gfx/model.h"
+#include <optional>
 
 namespace simpleengine::gfx {
+    Model::Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material) :
+            material(std::make_optional(material)), vertices(vertices), indicies(indicies) {
+
+    }
+
     Model::Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, std::optional<Material> material) :
             material(material), vertices(vertices), indicies(indicies) {
 
