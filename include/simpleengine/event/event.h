@@ -4,8 +4,6 @@
 
 #include <memory>
 
-#include <GLFW/glfw3.h>
-
 namespace simpleengine {
     class Event : public simpleengine::Destructable {
     public:

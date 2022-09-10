@@ -3,13 +3,23 @@
 
 namespace simpleengine::gfx {
     Model::Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material) :
-            material(std::make_optional(material)), vertices(vertices), indicies(indicies) {
+            material(std::make_optional(material)), vertices(vertices), indicies(indicies),
+           vbo(gfx::VBO::init(GL_ARRAY_BUFFER, false)),  ebo(gfx::VBO::init(GL_ELEMENT_ARRAY_BUFFER, false)),
+           vao(gfx::VAO::init()) {
 
     }
 
     Model::Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, std::optional<Material> material) :
-            material(material), vertices(vertices), indicies(indicies) {
+            material(material), vertices(vertices), indicies(indicies),
+            vbo(gfx::VBO::init(GL_ARRAY_BUFFER, false)), ebo(gfx::VBO::init(GL_ELEMENT_ARRAY_BUFFER, false)),
+            vao(gfx::VAO::init()) {
 
+    }
+
+    void Model::destroy() {
+        this->ebo.destroy();
+        this->vbo.destroy();
+        this->vao.destroy();
     }
 
     void Model::update(const float& delta_time) {

@@ -23,8 +23,15 @@ namespace simpleengine::gfx {
         std::vector<LitVertex> vertices;
         std::vector<GLuint> indicies;
 
+        // Buffer objects
+        gfx::VBO ebo;
+        gfx::VBO vbo;
+        gfx::VAO vao;
+
         Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material);
         Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies = std::vector<GLuint>(), std::optional<Material> material = std::nullopt);
+
+        virtual void destroy() override;
 
         virtual void update(const float& delta_time) override;
 

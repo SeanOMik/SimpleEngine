@@ -22,7 +22,7 @@ namespace simpleengine::gfx {
         }
 
         ~VAO() {
-            std::cout << "TODO, drop VAO (" << handle << ")" << std::endl;
+            std::cout << "~vao(" << handle << ")" << std::endl;
         }
 
         VAO& operator=(const VAO& other) {
@@ -49,18 +49,14 @@ namespace simpleengine::gfx {
 
         void bind() const {
             glBindVertexArray(handle);
-
-            // TODO: Handle opengl errors EVERYWHERE
-            GLenum err = glGetError();
-            if (err != GL_NO_ERROR) {
-                fprintf(stderr, "Ran into opengl error: 0x%x\n", err);
-            }
         }
 
         // TODO: Fix this.
-        void enable_attrib(const VBO& vbo, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset) const {
-            bind();
-            vbo.bind();
+        void enable_attrib(const VBO& vbo, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset, bool should_bind = true) const {
+            if (should_bind) {
+                bind();
+                vbo.bind();
+            }
 
             // NOTE: glVertexAttribPointer will AUTO-CONVERT integer values to floating point.
             // Integer vertex attributes must be specified with glVertexAttribIPointer.
@@ -82,19 +78,15 @@ namespace simpleengine::gfx {
             }
             glEnableVertexAttribArray(index);
 
-            // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's
-            // bound vertex buffer object so afterwards we can safely unbind.
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            if (should_bind) {
+                // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's
+                // bound vertex buffer object so afterwards we can safely unbind.
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-            // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this
-            // rarely happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally
-            // don't unbind VAOs (nor VBOs) when it's not directly necessary.
-            glBindVertexArray(0);
-
-            // TODO: Handle opengl errors EVERYWHERE
-            GLenum err = glGetError();
-            if (err != GL_NO_ERROR) {
-                fprintf(stderr, "Ran into opengl error: 0x%x\n", err);
+                // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this
+                // rarely happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally
+                // don't unbind VAOs (nor VBOs) when it's not directly necessary.
+                glBindVertexArray(0);
             }
         }
 
@@ -103,7 +95,6 @@ namespace simpleengine::gfx {
             vbo.bind();
 
             glDisableVertexAttribArray(index);
-            //glDisableVertexArrayAttrib(index);
         }
 
         void set_attrib_value(const VBO& vbo, GLuint index, float f) const {

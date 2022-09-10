@@ -15,27 +15,11 @@ namespace simpleengine::gfx {
     private:
         GLFWwindow* window;
     public:
-        class RenderingBuffers {
-        public:
-            gfx::Model& model;
-            gfx::VBO ebo;
-            gfx::VBO vbo;
-            gfx::VAO vao;
-
-            RenderingBuffers(gfx::Model& model, gfx::VBO ebo, gfx::VBO vbo, gfx::VAO vao) : model(model), ebo(ebo), vbo(vbo), vao(vao) {
-                
-            }
-
-            /* std::vector<LitVertex>& vertices;
-            std::vector<GLuint>& indicies; */
-            /// If these buffers were rendered last update.
-            //bool rendered;
-        };
 
         class RenderingModel {
         public:
             std::shared_ptr<simpleengine::Entity> entity;
-            std::unordered_map<uint32_t, RenderingBuffers> rendering_buffers;
+            std::unordered_map<uint32_t, gfx::Model&> component_models;
 
             RenderingModel(std::shared_ptr<simpleengine::Entity> entity) : entity(entity) {
 
@@ -54,17 +38,19 @@ namespace simpleengine::gfx {
             void destroy_buffers();
         };
 
-        gfx::Shader shader;
         std::unordered_map<uint32_t, RenderingModel> rendering_models;
+        gfx::Shader shader;
 
         Renderer(GLFWwindow* window, gfx::Shader shader);
         Renderer(GLFWwindow* window, GLuint shader_program);
-        
+
+        void enable_debug();
+
         virtual void submit_entity(std::shared_ptr<simpleengine::Entity> entity);
         virtual bool withdraw_entity(std::shared_ptr<simpleengine::Entity> entity);
 
         virtual void initialize();
-        virtual void destroy();
+        virtual void destroy() override;
 
         virtual void update(const float& delta_time) override;
         

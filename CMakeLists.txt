@@ -19,7 +19,13 @@ endif()
 find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(soil2 REQUIRED)
+
+if (WIN32)
+    find_package(soil2 CONFIG REQUIRED)
+else()
+    find_package(soil2 REQUIRED)
+endif()
+
 find_package(OpenGL REQUIRED)
 
 # Link sources
@@ -42,7 +48,11 @@ cmrc_add_resource_library(
 # Link dependencies
 target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
-target_link_libraries(simpleengine PUBLIC glm)
+if (WIN32)
+    target_link_libraries(simpleengine PUBLIC glm::glm)
+else()
+    target_link_libraries(simpleengine PUBLIC glm)
+endif()
 target_link_libraries(simpleengine PUBLIC soil2)
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
 target_link_libraries(simpleengine PRIVATE simpleengine_resources)

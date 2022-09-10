@@ -159,6 +159,7 @@ int main(int argc, char *argv[]) {
     //game.add_event(cube);
 
     auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
+    renderer->enable_debug();
     renderer->submit_entity(entity);
     game.add_event(renderer);
     /* renderer->add_model(white_texture, cube);
