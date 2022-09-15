@@ -49,7 +49,7 @@ namespace simpleengine::gfx {
     }
 
     void Renderer::RenderingModel::destroy_buffers() {
-        std::cout << "Destroying buffers for entity!" << std::endl;
+        std::cout << "Destroying entity models..." << std::endl;
 
         // Iterate through all buffer lists and destroy each inner buffer.
         for (auto& pair : component_models) {
@@ -69,9 +69,9 @@ namespace simpleengine::gfx {
     void debug_message_callback(GLenum source, GLenum type, GLuint id, GLenum severity,
             GLsizei length, const GLchar* message, const void* userParam) {
         
-        fprintf( stderr, "%s type = 0x%x, severity = 0x%x, message = %s\n",
-           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-            type, severity, message );
+        fprintf(stderr, "%s type = 0x%x, severity = 0x%x, message = %s\n",
+           (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+            type, severity, message);
     }
 
     void Renderer::enable_debug() {
@@ -131,7 +131,6 @@ namespace simpleengine::gfx {
                     shader.set_uniform_int("u_textures", 0, false);
 
                     if (material.has_value()) {
-                        //Material& material = material
                         shader.set_uniform_float("u_texture_shine", material->shine, false);
                         shader.set_uniform_float("u_texture_reflectivity", material->reflectivity, false);
 
