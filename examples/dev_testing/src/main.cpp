@@ -1,6 +1,7 @@
 #include "simpleengine/camera.h"
 #include "simpleengine/ecs/component/model_componenet.h"
 #include "simpleengine/ecs/entity.h"
+#include "simpleengine/entity_manager.h"
 #include "simpleengine/gfx/light.h"
 #include "simpleengine/gfx/material.h"
 #include "simpleengine/gfx/model.h"
@@ -169,30 +170,26 @@ int main(int argc, char *argv[]) {
 
     se::gfx::Material material(white_texture, 1.f, 0.f, 0.f, 0.f, 0.f);
 
-    auto entity = std::make_shared<simpleengine::Entity>();
+    // Create a model component
     se::gfx::Model model(cube_vertices, cube_indicies, std::optional<se::gfx::Material>(material));
     model.calculate_normals();
-
     se::ModelComponent model_component(model);
 
+    // Create the entity and add the model component to it.
+    auto entity = std::make_shared<simpleengine::Entity>();
     entity->add_component(model_component);
     entity->translate(3.5f, 0.f, 0.f);
 
-    /* auto cube = std::make_shared<se::gfx::Model>(cube_vertices, cube_indicies,
-        std::optional<se::gfx::Material>(material));
-    cube->calculate_normals();
-    cube->translate(3.5f, 0.f, 0.f); */
-    //game.add_event(cube);
-
+    // Create a renderer and submit the entity into it.
     auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
     renderer->enable_debug();
     renderer->submit_entity(entity);
     game.add_renderable(renderer);
-    /* renderer->add_model(white_texture, cube);
-    game.add_event(renderer); */
 
-    /* auto r_event = std::make_shared<RendererEvent>(renderer);
-    game.add_event(r_event); */
+    // Create an EntityManager, and submit the entity into it.
+    auto ecs_manager = std::make_shared<se::EntityManager>();
+    ecs_manager->submit_entity(entity);
+    game.add_event(ecs_manager);
 
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
     game.add_event(camera);

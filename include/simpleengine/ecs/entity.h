@@ -18,6 +18,7 @@ namespace simpleengine {
      * 
      */
     class Entity : public simpleengine::Event, public simpleengine::Transformable {
+        // TODO: Don't extend from Event, create own destroy function
     private:
         static uint32_t incrementing_handle;
         uint32_t handle;
@@ -58,6 +59,8 @@ namespace simpleengine {
             for (auto& component : components) {
                 component->update(delta_time);
             }
+
+            rotate_y(delta_time * 10);
         }
 
         template<typename T>
