@@ -30,6 +30,8 @@ namespace simpleengine::gfx {
 
         Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material);
         Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies = std::vector<GLuint>(), std::optional<Material> material = std::nullopt);
+        Model(Material material, std::string filename);
+        Model(Material material, std::ifstream file_stream);
 
         virtual void destroy() override;
 
@@ -44,5 +46,10 @@ namespace simpleengine::gfx {
          *
          */
         void calculate_normals();
+
+    private:
+        void process_vertex(const std::vector<std::string>& vertex_data, const std::vector<glm::vec2>& in_textures,
+            const std::vector<glm::vec3>& in_normals, std::vector<GLuint>& out_indicies, 
+            std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals);
     };
 }
