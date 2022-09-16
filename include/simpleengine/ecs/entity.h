@@ -102,5 +102,17 @@ namespace simpleengine {
             assert(!has_component<T>()); // TODO: Don't assert, give an error
             components.push_back(std::make_shared<T>(component));
         }
+
+        template<typename T, typename ...Args>
+        std::shared_ptr<T> add_component(Args&&... args) {
+            static_assert(std::is_base_of_v<Component, T>, "Component class must derive from simpleengine::Component");
+
+            // Only allow one type of the same component
+            assert(!has_component<T>()); // TODO: Don't assert, give an error
+            auto comp = std::make_shared<T>(std::forward<Args>(args)...);
+            components.push_back(comp);
+
+            return comp;
+        }
     };
 }

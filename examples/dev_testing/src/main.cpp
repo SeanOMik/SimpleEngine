@@ -170,14 +170,9 @@ int main(int argc, char *argv[]) {
 
     se::gfx::Material material(white_texture, 1.f, 0.f, 0.f, 0.f, 0.f);
 
-    // Create a model component
-    se::gfx::Model model(cube_vertices, cube_indicies, std::optional<se::gfx::Material>(material));
-    model.calculate_normals();
-    se::ModelComponent model_component(model);
-
     // Create the entity and add the model component to it.
     auto entity = std::make_shared<simpleengine::Entity>();
-    entity->add_component(model_component);
+    entity->add_component<se::ModelComponent>(cube_vertices, cube_indicies, material, true);
     entity->translate(3.5f, 0.f, 0.f);
 
     // Create a renderer and submit the entity into it.
