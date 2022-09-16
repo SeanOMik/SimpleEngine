@@ -7,6 +7,7 @@
 #include "simpleengine/gfx/renderer.h"
 #include "simpleengine/gfx/texture.h"
 #include "simpleengine/vector.h"
+#include <GLFW/glfw3.h>
 #include <simpleengine/gfx/shader.h>
 #include <simpleengine/renderable.h>
 #include <simpleengine/event/event.h>
@@ -36,6 +37,31 @@ CMRC_DECLARE(resource_shaders);
 #endif
 
 namespace se = simpleengine;
+
+class FPSCounterEvent : public se::Event {
+public:
+    double last_frame_time;
+    int frame_count;
+
+    FPSCounterEvent() : se::Event() {
+        this->last_frame_time = glfwGetTime();
+        frame_count = 0;
+    }
+
+    virtual void update(const float& delta_time) {
+        double current_time = glfwGetTime();
+        frame_count++;
+
+        // Check if the last print was 1 second ago.
+        if (current_time - last_frame_time >= 1.0) {
+            double ms_per_frame = 1000 / (double) frame_count;
+            
+            printf("%d fps, %f ms/frame\n", frame_count, ms_per_frame);
+            frame_count = 0;
+            last_frame_time += 1.0;
+        }
+    }
+};
 
 std::string read_resource_shader(const std::string& path) {
     auto fs = cmrc::resource_shaders::get_filesystem();
@@ -161,7 +187,7 @@ int main(int argc, char *argv[]) {
     auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
     renderer->enable_debug();
     renderer->submit_entity(entity);
-    game.add_event(renderer);
+    game.add_renderable(renderer);
     /* renderer->add_model(white_texture, cube);
     game.add_event(renderer); */
 
@@ -171,6 +197,11 @@ int main(int argc, char *argv[]) {
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
     game.add_event(camera);
 
+    auto fps_counter = std::make_shared<FPSCounterEvent>();
+    game.add_event(fps_counter);
+
+    game.set_enable_vsync(true);
+    //game.set_fps_limit(120);
     int res = game.run();
 
     renderer->destroy();

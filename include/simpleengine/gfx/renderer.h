@@ -54,6 +54,6 @@ namespace simpleengine::gfx {
 
         virtual void update(const float& delta_time) override;
         
-        virtual void render(GLFWwindow* target) override;
+        virtual void render() override;
     };
 }

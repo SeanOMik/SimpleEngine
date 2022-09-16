@@ -1,7 +1,11 @@
 #include "game.h"
 #include "event/event.h"
+#include "renderable.h"
 
+#include <chrono>
 #include <iostream>
+#include <ratio>
+#include <thread>
 
 #ifdef __linux__
 #include <GL/glew.h>
@@ -14,7 +18,8 @@
 #endif
 
 simpleengine::Game::Game(int w, int h, const std::string& window_name, const int& gl_profile, const int& major_version,
-        const int& minor_version, const bool& resizeable, const int& forward_compat) : window_resizeable(resizeable) {
+        const int& minor_version, const bool& resizeable, const int& forward_compat) : window_resizeable(resizeable),
+        enable_vsync(true), fps_limit(-1) {
     initialize(gl_profile, major_version, minor_version, window_resizeable, forward_compat);
 
     // Create a window
@@ -47,6 +52,8 @@ void simpleengine::Game::enable_default_gl_options() const {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     //glFrontFace(GL_CW);
+
+    update_enabled_vsync();
 }
 
 void simpleengine::Game::enable_gl_option(GLenum option) const {
@@ -73,6 +80,33 @@ void simpleengine::Game::add_event(std::shared_ptr<simpleengine::Event> event) {
     events.push_back(event);
 }
 
+void simpleengine::Game::add_renderable(std::shared_ptr<simpleengine::Renderable> renderable_event) {
+    renderable_events.push_back(renderable_event);
+    
+    // Also push to normal events to trigger updates.
+    // Instead of this, we could instead loop renderable_events in the update function,
+    // but that would cause multiple loops.
+    events.push_back(renderable_event);
+}
+
+void simpleengine::Game::set_fps_limit(const int& fps_limit) {
+    this->fps_limit = fps_limit;
+}
+
+void simpleengine::Game::set_enable_vsync(const bool& enabled) {
+    this->enable_vsync = enabled;
+
+    this->update_enabled_vsync();
+}
+
+void simpleengine::Game::update_enabled_vsync() const {
+    if (enable_vsync) {
+        //glfwSwapInterval(1);
+    } else {
+        glfwSwapInterval(0);
+    }
+}
+
 void simpleengine::Game::update(const float& delta_time) {
     handle_input(delta_time);
 
@@ -83,7 +117,7 @@ void simpleengine::Game::update(const float& delta_time) {
 }
 
 void simpleengine::Game::handle_input(const float& delta_time) {
-
+    // TODO
 }
 
 void simpleengine::Game::render_window(const float& delta_time) {
@@ -93,17 +127,30 @@ void simpleengine::Game::render_window(const float& delta_time) {
 }
 
 void simpleengine::Game::render_items(const float& delta_time) {
-    for (const std::shared_ptr<Event>& event : events) {
-        //event->render(window);
+    for (const std::shared_ptr<Renderable>& renderable : renderable_events) {
+        renderable->render();
     }
 }
 
 float simpleengine::Game::get_delta_time() {
-    float current_frame_time = glfwGetTime();
-    float delta_time = current_frame_time - last_frame_time;
+    auto current_frame_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration delta_dur = current_frame_time - last_frame_time;
     last_frame_time = current_frame_time;
 
-    return delta_time;
+    return std::chrono::duration_cast<std::chrono::duration<float>>(delta_dur).count();
+}
+
+void simpleengine::Game::limit_framerate(const float& delta_time) const {
+    if (!enable_vsync && fps_limit >= 15) {
+        auto delta_time_duration = std::chrono::duration<float>(delta_time);
+        auto limit_duration = std::chrono::duration<float>(1 / ( (float) fps_limit / 2));
+
+        if (delta_time_duration < limit_duration) {
+            auto sleep_duration = limit_duration - delta_time_duration;
+
+            std::this_thread::sleep_for(sleep_duration);
+        }
+    }
 }
 
 int simpleengine::Game::run() {
@@ -111,16 +158,17 @@ int simpleengine::Game::run() {
         // Get delta time first thing
         float delta_time = get_delta_time();
 
-        // Update input
+        // Poll input events
         glfwPollEvents();
 
         update(delta_time);
-
         render_window(delta_time);
 
         // End draw
         glfwSwapBuffers(window);
         glFlush();
+        
+        limit_framerate(delta_time);
     }
 
     return 0;

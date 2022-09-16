@@ -1,10 +1,10 @@
 #pragma once
-
+ 
 #include "event/event.h"
 
-#include <memory>
-
 #include <GLFW/glfw3.h>
+
+#include <memory>
 
 namespace simpleengine {
     class Renderable : public simpleengine::Event {
@@ -14,6 +14,6 @@ namespace simpleengine {
         Renderable() = default;
         virtual ~Renderable() = default;
 
-        virtual void render(GLFWwindow* target) = 0;
+        virtual void render() = 0;
     };
 }

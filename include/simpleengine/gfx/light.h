@@ -23,7 +23,7 @@ namespace simpleengine::gfx {
             shader.unuse();
         }
 
-        virtual void render(GLFWwindow* target) override {
+        virtual void render() override {
 
         }
     };

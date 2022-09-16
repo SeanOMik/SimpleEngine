@@ -111,9 +111,5 @@ namespace simpleengine {
         virtual void update(const float& delta_time) {
 
         }
-
-        virtual void render(GLFWwindow* target) {
-            glUseProgram(program);
-        }
     };
 }

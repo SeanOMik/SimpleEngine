@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <string>
 #include <memory>
 #include <vector>
@@ -13,6 +14,7 @@
 #include <GLFW/glfw3.h>
 
 #include "event/event.h"
+#include "simpleengine/renderable.h"
 
 namespace simpleengine {
     class Game {
@@ -34,6 +36,9 @@ namespace simpleengine {
         void enable_gl_option(GLenum option) const;
 
         void add_event(std::shared_ptr<simpleengine::Event> event);
+        void add_renderable(std::shared_ptr<simpleengine::Renderable> renderable_event);
+        void set_fps_limit(const int& fps_limit);
+        void set_enable_vsync(const bool& enabled);
 
         void update(const float& delta_time);
         void handle_input(const float& delta_time);
@@ -52,12 +57,17 @@ namespace simpleengine {
 
         GLFWwindow* window;
         std::vector<std::shared_ptr<simpleengine::Event>> events;
+        std::vector<std::shared_ptr<simpleengine::Renderable>> renderable_events;
         const bool& window_resizeable;
+
+        // FPS related stuff
+        void update_enabled_vsync() const;
+        void limit_framerate(const float& delta_time) const; // Triggered at the end of a draw to help limit the FPS to `fps_limit`.
+        int fps_limit;
+        bool enable_vsync;
 
         float get_delta_time();
 
-        float last_frame_time;
-        /* float currentFrameTime;
-        float deltaTime; */
+        std::chrono::high_resolution_clock::time_point last_frame_time;
     };
 }

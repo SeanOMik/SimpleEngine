@@ -48,11 +48,7 @@ cmrc_add_resource_library(
 # Link dependencies
 target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
-if (WIN32)
-    target_link_libraries(simpleengine PUBLIC glm::glm)
-else()
-    target_link_libraries(simpleengine PUBLIC glm)
-endif()
+target_link_libraries(simpleengine PUBLIC ${GLM_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC soil2)
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
 target_link_libraries(simpleengine PRIVATE simpleengine_resources)

@@ -100,7 +100,7 @@ namespace simpleengine::gfx {
     }
 
     void Renderer::update(const float& delta_time) {
-        this->render(nullptr);
+        
     }
 
     void Renderer::initialize() {
@@ -115,7 +115,7 @@ namespace simpleengine::gfx {
         }
     }
 
-    void Renderer::render(GLFWwindow* target) {
+    void Renderer::render() {
         shader.use();
         
         for (auto& [handle, rendering] : rendering_models) {
