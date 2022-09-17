@@ -3,7 +3,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 project(SimpleEngine)
 
 include(cmrc/CMakeRC.cmake)
-include(CMake/Findsoil2.cmake)
+#include(CMake/Findsoil2.cmake)
 
 # Add some CMake options:
 option(SIMPLE_ENGINE_BUILD_EXAMPLES "Build example projects" ON)
@@ -20,13 +20,28 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
-if (WIN32)
-    find_package(soil2 CONFIG REQUIRED)
-else()
-    find_package(soil2 REQUIRED)
-endif()
+#if (WIN32)
+#    find_package(soil2 CONFIG REQUIRED)
+#else()
+#    find_package(soil2 REQUIRED)
+#endif()
 
 find_package(OpenGL REQUIRED)
+
+#include(FetchContent)
+#FetchContent_Declare(
+#  stbImage
+#  URL https://raw.githubusercontent.com/nothings/stb/5ba0baaa269b3fd681828e0e3b3ac0f1472eaf40/stb_image.h
+#  DOWNLOAD_NO_EXTRACT
+#)
+#FetchContent_MakeAvailable(stbImage)
+
+#include(ExternalProject)
+#ExternalProject_Add(stbImage
+#    URL               https://raw.githubusercontent.com/nothings/stb/5ba0baaa269b3fd681828e0e3b3ac0f1472eaf40/stb_image.h
+#    URL_HASH          MD5=d41d8cd98f00b204e9800998ecf8427e
+#    DOWNLOAD_NO_EXTRACT ON
+#)
 
 # Link sources
 file(GLOB_RECURSE source_list src/*.cpp)
@@ -49,7 +64,7 @@ cmrc_add_resource_library(
 target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
 target_link_libraries(simpleengine PUBLIC ${GLM_LIBRARIES})
-target_link_libraries(simpleengine PUBLIC soil2)
+#target_link_libraries(simpleengine PUBLIC soil2)
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
 target_link_libraries(simpleengine PRIVATE simpleengine_resources)
 

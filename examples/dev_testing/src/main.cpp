@@ -31,12 +31,6 @@
 #include <cmrc/cmrc.hpp>
 CMRC_DECLARE(resource_shaders);
 
-#ifdef __linux__
-#include <SOIL2.h>
-#else
-#include <SOIL2/SOIL2.h>
-#endif
-
 namespace se = simpleengine;
 
 class FPSCounterEvent : public se::Event {
@@ -179,7 +173,7 @@ int main(int argc, char *argv[]) {
     auto entity = std::make_shared<simpleengine::Entity>();
     se::gfx::Model model(material, "examples/dev_testing/resources/dragon.obj");
     entity->add_component<se::ModelComponent>(model);
-    entity->translate(5.f, 0.f, 0.f);
+    entity->translate(12.f, -4.f, 0.f);
 
     // Create a renderer and submit the entity into it.
     auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);

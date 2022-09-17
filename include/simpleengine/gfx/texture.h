@@ -12,12 +12,6 @@
 
 #include <glm/glm.hpp>
 
-#ifdef __linux__
-#include <SOIL2.h>
-#else
-#include <SOIL2/SOIL2.h>
-#endif
-
 #include <stdexcept>
 #include <vector>
 #include <iostream>
@@ -75,6 +69,7 @@ namespace simpleengine::gfx {
         Texture(std::vector<unsigned char> buffer, bool img_2d = true, bool mipmap = true);
 
         void bind() const;
+        void unbind() const;
 
         unsigned int get_texture_id() const;
     };
