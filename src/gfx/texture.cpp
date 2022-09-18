@@ -1,7 +1,7 @@
 #include "gfx/texture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb_image.h>
 
 namespace simpleengine::gfx {
     Texture::Texture(const char* path, bool img_2d, bool mipmap) {
@@ -30,7 +30,7 @@ namespace simpleengine::gfx {
             glGenerateMipmap(image_type);
         }
 
-        glBindTexture(image_type, 0);
+        unbind();
     }
 
     /**
@@ -67,7 +67,7 @@ namespace simpleengine::gfx {
             glGenerateMipmap(image_type);
         }
 
-        glBindTexture(image_type, 0);
+        unbind();
     }
 
     /**
