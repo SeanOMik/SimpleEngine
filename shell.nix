@@ -11,6 +11,7 @@ pkgs.mkShell {
     glew
     glfw
     glm
+    assimp
     (callPackage ./soil2.nix { })
   ];
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../gfx/model.h"
+#include "../../gfx/mesh.h"
 #include "../../event/event.h"
 
 #include <iostream>

@@ -1,9 +1,11 @@
 #include "simpleengine/camera.h"
-#include "simpleengine/ecs/component/model_componenet.h"
+#include "simpleengine/ecs/component/mesh_component.h"
+#include <simpleengine/ecs/component/model_component.h>
 #include "simpleengine/ecs/entity.h"
 #include "simpleengine/entity_manager.h"
 #include "simpleengine/gfx/light.h"
 #include "simpleengine/gfx/material.h"
+#include "simpleengine/gfx/mesh.h"
 #include "simpleengine/gfx/model.h"
 #include "simpleengine/gfx/renderer.h"
 #include "simpleengine/gfx/texture.h"
@@ -16,6 +18,7 @@
 #include <simpleengine/game.h>
 #include <simpleengine/vertex.h>
 #include <simpleengine/gfx/shaders/core_3d_shader.h>
+#include <simpleengine/gfx/model.h>
 
 //#include <simpleengine/scene.h>
 
@@ -166,13 +169,11 @@ int main(int argc, char *argv[]) {
 
     // Create the entity and add the model component to it.
     /* auto entity = std::make_shared<simpleengine::Entity>();
-    entity->add_component<se::ModelComponent>(cube_vertices, cube_indicies, material, true);
+    entity->add_component<se::MeshComponent>(cube_vertices, cube_indicies, material, true);
     entity->translate(3.5f, 0.f, 0.f); */
 
-    //auto entity = std::make_shared<se::gfx::M>(game.get_window(), core_shader, white_texture, "examples/dev_testing/resources/dragon.obj");
     auto entity = std::make_shared<simpleengine::Entity>();
-    se::gfx::Model model(material, "examples/dev_testing/resources/dragon.obj");
-    entity->add_component<se::ModelComponent>(model);
+    entity->add_component<se::ModelComponent>("examples/dev_testing/resources/dragon.obj");
     entity->translate(12.f, -4.f, 0.f);
 
     // Create a renderer and submit the entity into it.

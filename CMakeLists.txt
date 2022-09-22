@@ -3,7 +3,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 project(SimpleEngine)
 
 include(cmrc/CMakeRC.cmake)
-include (CMake/GetStbLibraries.cmake)
+include(CMake/GetStbLibraries.cmake)
 
 # Add some CMake options:
 option(SIMPLE_ENGINE_BUILD_EXAMPLES "Build example projects" ON)
@@ -20,16 +20,7 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
-
-# Get the stb header libraries.
-#include(FetchContent)
-#FetchContent_Declare(
-#    stb
-#    GIT_REPOSITORY https://github.com/nothings/stb.git
-#    GIT_TAG 8b5f1f37b5b75829fc72d38e7b5d4bcbf8a26d55
-#)
-#FetchContent_MakeAvailable(stb)
-#message("Downloaded stb library to: ${stb_SOURCE_DIR}")
+find_package(assimp REQUIRED)
 
 # Link sources
 file(GLOB_RECURSE source_list src/*.cpp)
@@ -53,12 +44,14 @@ target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
 target_link_libraries(simpleengine PUBLIC ${GLM_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
+target_link_libraries(simpleengine PUBLIC assimp)
 target_link_libraries(simpleengine PRIVATE simpleengine_resources)
+
 target_include_directories(simpleengine PUBLIC ${STB_INCLUDE_DIR})
 
 # Include some dependencies' include directories
-include_directories(${OPENGL_INCLUDE_DIR})
-include_directories(${GLM_INCLUDE_DIRS})
+target_include_directories(simpleengine PUBLIC ${OPENGL_INCLUDE_DIR})
+target_include_directories(simpleengine PUBLIC ${GLM_INCLUDE_DIRS})
 
 # Add examples as a target if the user has them enabled
 if (SIMPLE_ENGINE_BUILD_EXAMPLES)

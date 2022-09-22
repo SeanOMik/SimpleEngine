@@ -54,13 +54,11 @@ namespace simpleengine {
         }
 
         virtual void update(const float& delta_time) override {
-            std::cout << "Update entity" << std::endl;
-
             for (auto& component : components) {
                 component->update(delta_time);
             }
 
-            rotate_y(delta_time * 10);
+            rotate_y(delta_time * 10); // TODO: Remove
         }
 
         template<typename T>

@@ -5,6 +5,7 @@
 #include "texture.h"
 #include "shader.h"
 //#include "renderable.h"
+#include "mesh.h"
 #include "model.h"
 
 #include <unordered_map>
@@ -19,7 +20,7 @@ namespace simpleengine::gfx {
         class RenderingModel {
         public:
             std::shared_ptr<simpleengine::Entity> entity;
-            std::unordered_map<uint32_t, gfx::Model&> component_models;
+            std::unordered_map<uint32_t, gfx::Mesh&> component_models;
 
             RenderingModel(std::shared_ptr<simpleengine::Entity> entity) : entity(entity) {
 

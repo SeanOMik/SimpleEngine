@@ -15,7 +15,7 @@ namespace simpleengine::gfx {
         float shine;
         float reflectivity;
 
-        Material(Texture texture, float shine, float reflectivity, float specular_scalar, float ambient_scalar, float diffuse_scalar) :
+        Material(Texture texture, float shine = 1.f, float reflectivity = 0.f, float specular_scalar = 0.f, float ambient_scalar = 0.f, float diffuse_scalar = 0.f) :
                 texture(texture), ambient_scalar(ambient_scalar), diffuse_scalar(diffuse_scalar), specular_scalar(specular_scalar),
                 shine(shine), reflectivity(reflectivity) {
 

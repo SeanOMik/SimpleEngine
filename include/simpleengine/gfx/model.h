@@ -1,55 +1,33 @@
 #pragma once
 
-#include "shader.h"
-#include "../event/event.h"
-#include "vao.h"
-#include "vbo.h"
-#include "../vertex.h"
-#include "../renderable.h"
-#include "../transformable.h"
-#include "material.h"
+#include "mesh.h"
+#include "simpleengine/gfx/texture.h"
 
-#include <optional>
-#include <vector>
+#include <assimp/material.h>
+#include <assimp/mesh.h>
+#include <assimp/scene.h>
+
+//#include <assimp/mesh.h>
 
 namespace simpleengine::gfx {
     /**
-     * @brief A Model is a object that will be shown on the screen by a renderer.
+     * @brief A Model is a group of Meshes read from the 3D model file.
+     *
+     * The engine uses assimp, so all formats that it supports can be found here:
+     * https://github.com/assimp/assimp/blob/master/doc/Fileformats.md
      * 
      */
-    class Model : public simpleengine::Event, public simpleengine::Transformable {
+    class Model : public simpleengine::Transformable {
+    protected:
+        std::string model_directory; // May be needed
     public:
-        std::optional<Material> material;
-        std::vector<LitVertex> vertices;
-        std::vector<GLuint> indicies;
+        std::vector<gfx::Mesh> meshes;
 
-        // Buffer objects
-        gfx::VBO ebo;
-        gfx::VBO vbo;
-        gfx::VAO vao;
-
-        Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material);
-        Model(std::vector<LitVertex> vertices, std::vector<GLuint> indicies = std::vector<GLuint>(), std::optional<Material> material = std::nullopt);
-        Model(Material material, std::string filename);
-        Model(Material material, std::ifstream file_stream);
-
-        virtual void destroy() override;
-
-        virtual void update(const float& delta_time) override;
-
-        glm::vec3 compute_face_normal(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3);
-
-        /**
-         * @brief Calculate the normals of the model.
-         * 
-         * @note This **will** overwrite the existing normals.
-         *
-         */
-        void calculate_normals();
-
-    private:
-        void process_vertex(const std::vector<std::string>& vertex_data, const std::vector<glm::vec2>& in_textures,
-            const std::vector<glm::vec3>& in_normals, std::vector<GLuint>& out_indicies, 
-            std::vector<glm::vec2>& out_textures, std::vector<glm::vec3>& out_normals);
+        Model(std::string file_path);
+    
+        void load_model(std::string path);
+        void process_node(aiNode* node, const aiScene* scene);
+        gfx::Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
+        std::vector<Texture> load_material_textures(aiMaterial* material, aiTextureType* type, std::string type_name);
     };
 }

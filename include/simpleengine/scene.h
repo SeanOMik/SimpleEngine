@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/model.h"
+#include "gfx/mesh.h"
 #include "entity.h"
 #include "event/event.h"
 #include "renderable.h"

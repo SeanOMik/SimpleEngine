@@ -19,10 +19,12 @@
 namespace simpleengine::gfx {
     class Texture {
     private:
-        unsigned char* img_data;
+        unsigned char* img_data; // TODO Free this if its not used anymore
         unsigned int texture_id;
 
-        unsigned int image_type;
+        unsigned int image_type_gl;
+
+        Texture() = default;
     public:
         /**
          * @brief The type of the texture
@@ -36,8 +38,6 @@ namespace simpleengine::gfx {
         int height;
         int width;
         int channels;
-        float shine_damper = 1.f;
-        float reflectivity = 0.f;
         Type type;
 
         /**
@@ -47,7 +47,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(const char* path, bool img_2d = true, bool mipmap = true);
+        Texture(const char* path, Type type = Type::TexT_DIFFUSE, bool img_2d = true, bool mipmap = true);
 
         /**
          * @brief Construct a new Texture object from the loaded file buffer.
@@ -57,7 +57,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(const unsigned char *const buffer, int buffer_length, bool img_2d = true, bool mipmap = true);
+        Texture(const unsigned char *const buffer, int buffer_length, Type type = Type::TexT_DIFFUSE, bool img_2d = true, bool mipmap = true);
 
         /**
          * @brief Construct a new Texture object from the loaded file buffer.
@@ -66,7 +66,9 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(std::vector<unsigned char> buffer, bool img_2d = true, bool mipmap = true);
+        Texture(std::vector<unsigned char> buffer, Type type = Type::TexT_DIFFUSE, bool img_2d = true, bool mipmap = true);
+
+        static Texture white_texture();
 
         void bind() const;
         void unbind() const;

@@ -37,7 +37,6 @@ void main() {
         vec3 final_specular = calculate_specular(unit_normal, shine_damper, reflectivity);
         
         fs_color = vec4(diffuse, 1.f) * texture(u_textures[id], vs_texcoord) + vec4(final_specular, 1.f);
-        //fs_color = texture(u_textures[1], vs_texcoord);
     } else {
         fs_color = vec4(vs_color, 1.f); // We don't add any reflectivity to solid colored vectors.
     }

@@ -1,52 +1,17 @@
 #include "gfx/renderer.h"
 #include "ecs/component/component.h"
 #include "ecs/entity.h"
-#include "gfx/model.h"
+#include "gfx/mesh.h"
 #include "gfx/vao.h"
 #include "renderable.h"
 
-#include "ecs/component/model_componenet.h"
+#include "ecs/component/mesh_component.h"
+#include "ecs/component/model_component.h"
 
 #include <algorithm>
 
 namespace simpleengine::gfx {
-    void Renderer::RenderingModel::update_buffers() {
-        if (std::shared_ptr<ModelComponent> comp = entity->get_component<simpleengine::ModelComponent>()) {
-            auto iter = component_models.find(comp->get_handle());
-            if (iter == component_models.end()) {
-                std::cout << "Enabling buffer attributes for ModelComponent (" << comp->get_handle() << ")..." << std::endl;
-
-                //iter->second = comp->model;
-                gfx::Model& model = comp->model;
-                gfx::VBO& vbo = model.vbo;
-                gfx::VBO& ebo = model.ebo;
-                gfx::VAO& vao = model.vao;
-
-                vao.bind();
-                vbo.buffer(model.vertices.data(), 0, sizeof(LitVertex) * model.vertices.size());
-
-                if (!model.indicies.empty()) {
-                    ebo.buffer(model.indicies.data(), 0, model.indicies.size() * sizeof(GLuint));
-                }
-
-                // Enable VAO attributes
-                vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, position), false);
-                vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color), false);
-                vao.enable_attrib(vbo, 2, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, normal), false);
-                vao.enable_attrib(vbo, 3, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord), false);
-                vao.enable_attrib(vbo, 4, 1, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, texture_id), false);
-
-                glBindBuffer(GL_ARRAY_BUFFER, 0);
-                glBindVertexArray(0);
-
-                component_models.emplace(comp->get_handle(), model);
-
-                std::cout << "Enabled all buffer attributes for ModelComponent" << std::endl;
-            } else {
-                std::cout << "Already exists" << std::endl;
-            }
-        }
-    }
+    void create_mesh_buffers(std::shared_ptr<simpleengine::Component> comp, simpleengine::gfx::Mesh& mesh);
 
     void Renderer::RenderingModel::destroy_buffers() {
         std::cout << "Destroying entity models..." << std::endl;
@@ -119,13 +84,13 @@ namespace simpleengine::gfx {
         shader.use();
         
         for (auto& [handle, rendering] : rendering_models) {
-            if (rendering.component_models.size() > 0) {
+            if (rendering.component_models.size() >= 0) {
                 std::shared_ptr<Entity>& entity = rendering.entity;
 
                 shader.set_uniform_matrix_4f("transform_matrix", entity->transform_matrix, false);
-                
+
                 for (const auto& pair : rendering.component_models) {
-                    Model& model = pair.second;
+                    Mesh& model = pair.second;
                     std::optional<Material>& material = model.material;
 
                     shader.set_uniform_int("u_textures", 0, false);
@@ -150,5 +115,65 @@ namespace simpleengine::gfx {
         }
 
         shader.unuse();
+    }
+
+    void Renderer::RenderingModel::update_buffers() {
+        if (entity->has_component<simpleengine::MeshComponent>()) {
+            std::shared_ptr<MeshComponent> comp = entity->get_component<simpleengine::MeshComponent>();
+            auto iter = component_models.find(comp->get_handle());
+            if (iter == component_models.end()) {
+                std::cout << "Enabling buffer attributes for MeshComponent (" << comp->get_handle() << ")..." << std::endl;
+
+                //iter->second = comp->model;
+                gfx::Mesh& mesh = comp->model;
+                create_mesh_buffers(comp, mesh);
+                component_models.emplace(comp->get_handle(), mesh);
+
+                std::cout << "Enabled all buffer attributes for MeshComponent" << std::endl;
+            } else {
+                std::cout << "Already exists" << std::endl;
+            }
+        } else if (entity->has_component<simpleengine::ModelComponent>()) {
+            std::shared_ptr<ModelComponent> comp = entity->get_component<simpleengine::ModelComponent>();
+
+            auto iter = component_models.find(comp->get_handle());
+            if (iter == component_models.end()) {
+                std::cout << "Enabling buffer attributes for ModelComponent (" << comp->get_handle() << ")..." << std::endl;
+                
+                // Store all the model's meshes
+                for (auto& mesh : comp->model.meshes) {
+                    create_mesh_buffers(comp, mesh);
+
+                    component_models.emplace(comp->get_handle(), mesh);
+                }
+
+                std::cout << "Enabled all buffer attributes for ModelComponent" << std::endl;
+            } else {
+                std::cout << "Already exists" << std::endl;
+            }
+        }
+    }
+
+    void create_mesh_buffers(std::shared_ptr<Component> comp, gfx::Mesh& mesh) {
+        gfx::VBO& vbo = mesh.vbo;
+        gfx::VBO& ebo = mesh.ebo;
+        gfx::VAO& vao = mesh.vao;
+
+        vao.bind();
+        vbo.buffer(mesh.vertices.data(), 0, sizeof(LitVertex) * mesh.vertices.size());
+
+        if (!mesh.indicies.empty()) {
+            ebo.buffer(mesh.indicies.data(), 0, mesh.indicies.size() * sizeof(GLuint));
+        }
+
+        // Enable VAO attributes
+        vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, position), false);
+        vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color), false);
+        vao.enable_attrib(vbo, 2, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, normal), false);
+        vao.enable_attrib(vbo, 3, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord), false);
+        vao.enable_attrib(vbo, 4, 1, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, texture_id), false);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
     }
 }
