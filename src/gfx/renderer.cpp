@@ -9,6 +9,7 @@
 #include "ecs/component/model_component.h"
 
 #include <algorithm>
+#include <assimp/material.h>
 
 namespace simpleengine::gfx {
     void create_mesh_buffers(std::shared_ptr<simpleengine::Component> comp, simpleengine::gfx::Mesh& mesh);
@@ -99,9 +100,17 @@ namespace simpleengine::gfx {
                         shader.set_uniform_float("u_texture_shine", material->shine, false);
                         shader.set_uniform_float("u_texture_reflectivity", material->reflectivity, false);
 
-                        glActiveTexture(GL_TEXTURE0);
-                        glBindTextureUnit(0, material->texture.get_texture_id());
-                        material->texture.bind();
+                        int texture_count = 0;
+                        auto diffuse_maps = material->textures.find(aiTextureType_DIFFUSE);
+                        for (const auto& texture : diffuse_maps->second) {
+                            // We can only bind to 16 textures at a time (indexes are 0-15)
+                            if (texture_count >= 16) break;
+
+                            glActiveTexture(GL_TEXTURE0 + texture_count);
+                            glBindTextureUnit(texture_count, texture.get_texture_id());
+
+                            texture_count++;
+                        }
                     }
                     
                     model.vao.bind();

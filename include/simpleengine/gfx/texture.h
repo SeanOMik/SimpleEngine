@@ -8,7 +8,7 @@
 #include <gl/gl.h>
 #endif
 
-#include <GLFW/glfw3.h>
+#include <assimp/material.h>
 
 #include <glm/glm.hpp>
 
@@ -26,19 +26,10 @@ namespace simpleengine::gfx {
 
         Texture() = default;
     public:
-        /**
-         * @brief The type of the texture
-         * 
-         */
-        enum Type {
-            TexT_DIFFUSE,
-            TexT_SPECULAR
-        };
-
         int height;
         int width;
         int channels;
-        Type type;
+        aiTextureType type;
 
         /**
          * @brief Construct a new Texture object from a path.
@@ -47,7 +38,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(const char* path, Type type = Type::TexT_DIFFUSE, bool img_2d = true, bool mipmap = true);
+        Texture(const char* path, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool mipmap = true);
 
         /**
          * @brief Construct a new Texture object from the loaded file buffer.
@@ -57,7 +48,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(const unsigned char *const buffer, int buffer_length, Type type = Type::TexT_DIFFUSE, bool img_2d = true, bool mipmap = true);
+        Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool mipmap = true);
 
         /**
          * @brief Construct a new Texture object from the loaded file buffer.
@@ -66,7 +57,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(std::vector<unsigned char> buffer, Type type = Type::TexT_DIFFUSE, bool img_2d = true, bool mipmap = true);
+        Texture(std::vector<unsigned char> buffer, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool mipmap = true);
 
         static Texture white_texture();
 

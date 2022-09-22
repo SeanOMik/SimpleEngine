@@ -4,7 +4,7 @@
 #include <stb_image.h>
 
 namespace simpleengine::gfx {
-    Texture::Texture(const char* path, Type type, bool img_2d, bool mipmap): type(type) {
+    Texture::Texture(const char* path, aiTextureType type, bool img_2d, bool mipmap): type(type) {
         image_type_gl = img_2d ? GL_TEXTURE_2D : GL_TEXTURE_3D;
 
         glGenTextures(1, &texture_id);
@@ -12,7 +12,7 @@ namespace simpleengine::gfx {
 
         int linear_param = mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
-        glTexParameteri(image_type_gl, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+        glTexParameteri(image_type_gl, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(image_type_gl, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(image_type_gl, GL_TEXTURE_MIN_FILTER, linear_param);
         glTexParameteri(image_type_gl, GL_TEXTURE_MAG_FILTER, linear_param);
@@ -35,7 +35,7 @@ namespace simpleengine::gfx {
         unbind();
     }
 
-    Texture::Texture(const unsigned char *const buffer, int buffer_length, Type type, bool img_2d, bool mipmap): type(type) {
+    Texture::Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type, bool img_2d, bool mipmap): type(type) {
         image_type_gl = img_2d ? GL_TEXTURE_2D : GL_TEXTURE_3D;
 
         glGenTextures(1, &texture_id);
@@ -66,7 +66,7 @@ namespace simpleengine::gfx {
         unbind();
     }
 
-    Texture::Texture(std::vector<unsigned char> buffer, Type type, bool img_2d, bool mipmap) :
+    Texture::Texture(std::vector<unsigned char> buffer, aiTextureType type, bool img_2d, bool mipmap) :
         Texture(buffer.data(), buffer.size(), type, img_2d, mipmap) {
         
     }
@@ -86,7 +86,7 @@ namespace simpleengine::gfx {
         texture.width = width;
         texture.height = height;
         texture.channels = 4;
-        texture.type = Texture::Type::TexT_DIFFUSE;
+        texture.type = aiTextureType::aiTextureType_DIFFUSE;
         texture.img_data = data;
         
         glGenTextures(1, &texture.texture_id);

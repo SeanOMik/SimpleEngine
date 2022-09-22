@@ -24,6 +24,7 @@
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/fwd.hpp>
+#include <assimp/material.h>
 
 #include <memory>
 #include <chrono>
@@ -80,7 +81,7 @@ int main(int argc, char *argv[]) {
     auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(0.f, 1.f, -10.f), glm::vec3(1.f, 1.f, 1.f));
     game.add_event(light);
 
-    se::gfx::Texture white_texture("examples/dev_testing/resources/white_texture.png");
+    auto white_texture = se::gfx::Texture::white_texture();
     // white_texture.shine_damper = 10;
     //white_texture.reflectivity = 1;
     /* auto dragon = std::make_shared<se::objects_3d::Mesh>(game.get_window(), core_shader, white_texture, "examples/dev_testing/resources/dragon.obj");
@@ -165,11 +166,13 @@ int main(int argc, char *argv[]) {
         5, 6, 12, 12, 6, 13
     };
 
-    se::gfx::Material material(white_texture, 1.f, 0.f, 0.f, 0.f, 0.f);
+    std::unordered_map<aiTextureType, std::vector<se::gfx::Texture>> textures;
+    textures.emplace(white_texture.type, std::vector<se::gfx::Texture>{ white_texture });
+    se::gfx::Material white_material(textures, 1.f, 0.f, 0.f, 0.f, 0.f);
 
     // Create the entity and add the model component to it.
     /* auto entity = std::make_shared<simpleengine::Entity>();
-    entity->add_component<se::MeshComponent>(cube_vertices, cube_indicies, material, true);
+    entity->add_component<se::MeshComponent>(cube_vertices, cube_indicies, white_material, true);
     entity->translate(3.5f, 0.f, 0.f); */
 
     auto entity = std::make_shared<simpleengine::Entity>();

@@ -7,7 +7,11 @@
 #include <assimp/material.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
 #include <optional>
+#include <sstream>
+#include <unordered_map>
+#include <vector>
 
 namespace simpleengine::gfx {
     Model::Model(std::string file_path) {
@@ -77,38 +81,48 @@ namespace simpleengine::gfx {
             }
         }
 
-        std::optional<gfx::Material> op_mat;
+        // Create a default material and white texture.
+        auto white_texture = gfx::Texture::white_texture();
+        std::unordered_map<aiTextureType, std::vector<Texture>> default_textures;
+        default_textures.emplace(white_texture.type, std::vector<Texture>{ white_texture });
+        gfx::Material mat(default_textures, 1.f, 0.f, 0.f, 0.f, 0.f);
 
-        // TODO: Process material
         if(mesh->mMaterialIndex >= 0) {
             std::cout << "TODO: Process model materials!" << std::endl;
 
-            /* aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-            std::vector<Texture> diffuseMaps = load_material_textures(material, 
-                                                aiTextureType_DIFFUSE, "texture_diffuse");
+            std::unordered_map<aiTextureType, std::vector<Texture>> textures;
+            aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-            textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-            
-            std::vector<Texture> specularMaps = load_material_textures(material, 
-                                                aiTextureType_SPECULAR, "texture_specular");
-            textures.insert(textures.end(), specularMaps.begin(), specularMaps.end()); */
+            // Load Diffuse texture maps
+            std::vector<Texture> diffuse_maps = load_material_textures(material, aiTextureType_DIFFUSE);
+            if (!diffuse_maps.empty()) textures.emplace(aiTextureType_DIFFUSE, diffuse_maps);
+
+            // TODO Handle other types of texture maps
+
+            if (!textures.empty()) {
+                // TODO: Find a way to let the user set the scalars.
+                mat = Material(textures, 1.f, 0.f, 0.f, 0.f, 0.f);
+            }
         }
 
-        // TODO: After we start processing materials, this can be put in the else statement as a fallback.
-
-        auto white_texture = gfx::Texture::white_texture();
-        //gfx::Material mat(white_texture);
-
-        //gfx::Texture white_texture("examples/dev_testing/resources/white_texture.png");
-        gfx::Material mat(white_texture, 1.f, 0.f, 0.f, 0.f, 0.f);
-
-        op_mat = std::optional<gfx::Material>(mat);
-
-        //return Mesh(vertices, indices, textures);
-        return Mesh(vertices, indices, op_mat);
+        return Mesh(vertices, indices, mat);
     }
 
-    std::vector<Texture> Model::load_material_textures(aiMaterial* material, aiTextureType* type, std::string type_name) {
+    std::vector<Texture> Model::load_material_textures(aiMaterial* material, aiTextureType type) {
+        std::vector<Texture> textures;
 
+        for(int i = 0; i < material->GetTextureCount(type); i++) {
+            aiString texture_path;
+            material->GetTexture(type, i, &texture_path);
+
+            std::stringstream ss;
+            ss << model_directory << "/" << texture_path.C_Str();
+            std::string full_path = ss.str();
+
+            Texture texture(full_path.c_str(), type);
+            textures.emplace_back(texture);
+        }
+
+        return textures;
     }
 } // namespace simpleengine::gfx
