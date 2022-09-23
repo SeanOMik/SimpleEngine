@@ -38,7 +38,7 @@ namespace simpleengine::gfx {
         // process all the node's meshes (if any)
         for (int i = 0; i < node->mNumMeshes; i++) {
             aiMesh *mesh = scene->mMeshes[node->mMeshes[i]]; 
-            meshes.push_back(process_mesh(mesh, scene));			
+            meshes.push_back(process_mesh(mesh, scene));
         }
 
         // then do the same for each of its children

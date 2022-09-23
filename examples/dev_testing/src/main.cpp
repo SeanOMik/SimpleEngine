@@ -1,8 +1,9 @@
+#include "entt/entity/fwd.hpp"
 #include "simpleengine/camera.h"
 #include "simpleengine/ecs/component/mesh_component.h"
 #include <simpleengine/ecs/component/model_component.h>
+#include "simpleengine/ecs/component/transform_component.h"
 #include "simpleengine/ecs/entity.h"
-#include "simpleengine/entity_manager.h"
 #include "simpleengine/gfx/light.h"
 #include "simpleengine/gfx/material.h"
 #include "simpleengine/gfx/mesh.h"
@@ -19,6 +20,8 @@
 #include <simpleengine/vertex.h>
 #include <simpleengine/gfx/shaders/core_3d_shader.h>
 #include <simpleengine/gfx/model.h>
+
+#include <simpleengine/scene.h>
 
 //#include <simpleengine/scene.h>
 
@@ -170,25 +173,29 @@ int main(int argc, char *argv[]) {
     textures.emplace(white_texture.type, std::vector<se::gfx::Texture>{ white_texture });
     se::gfx::Material white_material(textures, 1.f, 0.f, 0.f, 0.f, 0.f);
 
+    // Create a renderer
+    auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
+    game.add_renderable(renderer);
+
+    // Create a Scene and give it the renderer
+    auto scene = std::make_shared<se::Scene>(renderer);
+    game.add_event(scene);
+
+    // Create an Entity in the Scene and add components to it.
+    se::ecs::Entity entity = scene->create_entity();
+    entity.add_component<se::ModelComponent>("examples/dev_testing/resources/dragon.obj");
+    auto& transform_comp = entity.add_component<se::TransformComponent>();
+    transform_comp.translate(12.f, -4.f, 0.f);
+    
+
     // Create the entity and add the model component to it.
     /* auto entity = std::make_shared<simpleengine::Entity>();
     entity->add_component<se::MeshComponent>(cube_vertices, cube_indicies, white_material, true);
     entity->translate(3.5f, 0.f, 0.f); */
 
-    auto entity = std::make_shared<simpleengine::Entity>();
+    /* auto entity = std::make_shared<simpleengine::Entity>();
     entity->add_component<se::ModelComponent>("examples/dev_testing/resources/dragon.obj");
-    entity->translate(12.f, -4.f, 0.f);
-
-    // Create a renderer and submit the entity into it.
-    auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
-    renderer->enable_debug();
-    renderer->submit_entity(entity);
-    game.add_renderable(renderer);
-
-    // Create an EntityManager, and submit the entity into it.
-    auto ecs_manager = std::make_shared<se::EntityManager>();
-    ecs_manager->submit_entity(entity);
-    game.add_event(ecs_manager);
+    entity->translate(12.f, -4.f, 0.f); */
 
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
     game.add_event(camera);

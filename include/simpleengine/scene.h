@@ -1,44 +1,32 @@
 #pragma once
 
+#include "entt/entity/fwd.hpp"
 #include "gfx/mesh.h"
-#include "entity.h"
 #include "event/event.h"
 #include "renderable.h"
+#include "simpleengine/gfx/renderer.h"
 
 #include <memory>
 
 #include <GLFW/glfw3.h>
 #include <vector>
 
+#include <entt/entt.hpp>
+
 namespace simpleengine {
+    namespace ecs {
+        class Entity;
+    }
+
     class Scene : public simpleengine::Event {
+    protected:
+        entt::registry registry;
+        std::shared_ptr<gfx::Renderer> renderer;
     public:
-        /**
-         * @brief A list of entities in this scene.
-         * 
-         */
-        std::vector<std::shared_ptr<Entity>> entities;
+        Scene(std::shared_ptr<gfx::Renderer> renderer);
 
-        /**
-         * @brief Models that don't belong to an entity.
-         * 
-         */
-        std::vector<std::shared_ptr<gfx::Model>> stray_models;
+        ecs::Entity create_entity();
 
-        Scene() = default;
-
-        void add_entity(std::shared_ptr<Entity> entity) {
-            entities.push_back(entity);
-        }
-
-        void add_stray_model(std::shared_ptr<gfx::Model> stray) {
-            stray_models.push_back(stray);
-        }
-
-        virtual void update(const float& delta_time) override {
-            for (auto& entity : entities) {
-                entity->update(delta_time);
-            }
-        }
+        virtual void update(const float& delta_time) override;
     };
 }

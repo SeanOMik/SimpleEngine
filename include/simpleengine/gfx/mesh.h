@@ -23,6 +23,7 @@ namespace simpleengine::gfx {
         std::vector<LitVertex> vertices;
         std::vector<GLuint> indicies;
 
+        bool are_buffers_created = false;
         gfx::VBO ebo;
         gfx::VBO vbo;
         gfx::VAO vao;
