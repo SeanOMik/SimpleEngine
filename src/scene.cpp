@@ -2,6 +2,7 @@
 #include "ecs/component/mesh_component.h"
 #include "ecs/component/model_component.h"
 #include "ecs/component/transform_component.h"
+#include "ecs/component/rotating_component.h"
 #include "ecs/entity.h"
 #include "gfx/renderer.h"
 
@@ -24,6 +25,10 @@ namespace simpleengine {
 
         registry.view<const TransformComponent, MeshComponent>().each([this](const TransformComponent& transform, MeshComponent& mesh_component) {
             renderer->queue_job(gfx::RenderingJob(mesh_component.mesh, transform.transform_matrix));
+        });
+
+        registry.view<TransformComponent, RotatingComponent>().each([this, &delta_time](TransformComponent& transform, RotatingComponent& rotating) {
+            transform.rotate(rotating.rate * delta_time, rotating.rotation_axis);
         });
     }
 }

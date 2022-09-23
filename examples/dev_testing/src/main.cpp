@@ -3,6 +3,7 @@
 #include "simpleengine/ecs/component/mesh_component.h"
 #include <simpleengine/ecs/component/model_component.h>
 #include "simpleengine/ecs/component/transform_component.h"
+#include <simpleengine/ecs/component/rotating_component.h>
 #include "simpleengine/ecs/entity.h"
 #include "simpleengine/gfx/light.h"
 #include "simpleengine/gfx/material.h"
@@ -184,6 +185,7 @@ int main(int argc, char *argv[]) {
     // Create an Entity in the Scene and add components to it.
     se::ecs::Entity entity = scene->create_entity();
     entity.add_component<se::ModelComponent>("examples/dev_testing/resources/dragon.obj");
+    entity.add_component<se::RotatingComponent>();
     auto& transform_comp = entity.add_component<se::TransformComponent>();
     transform_comp.translate(12.f, -4.f, 0.f);
     
