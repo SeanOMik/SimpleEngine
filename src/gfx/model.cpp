@@ -68,7 +68,6 @@ namespace simpleengine::gfx {
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             LitVertex vertex;
             vertex.color = glm::vec3(1.f);
-            vertex.texture_id = 0; // TODO
 
             simpleengine::Vectorf position(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
             vertex.position = position;

@@ -9,7 +9,8 @@ in mat4 vs_transform;
 in vec3 vs_to_light;
 in vec3 vs_to_camera;
 
-uniform sampler2D u_textures[16];
+const int SAMP_DIFFUSE = 0;
+uniform sampler2D u_samplers[16];
 uniform float u_texture_shine[16];
 uniform float u_texture_reflectivity[16];
 
@@ -29,12 +30,12 @@ void main() {
     vec3 diffuse = brightness * light_color;
 
     // Calculate the specular
-    float shine_damper = u_texture_shine[0];
-    float reflectivity = u_texture_reflectivity[0];
+    float shine_damper = u_texture_shine[SAMP_DIFFUSE];
+    float reflectivity = u_texture_reflectivity[SAMP_DIFFUSE];
     vec3 final_specular = calculate_specular(unit_normal, shine_damper, reflectivity);
     
     // Combine diffuse lighting, specular, and the texture into one color.
-    fs_color = vec4(diffuse, 1.f) * texture(u_textures[0], vs_texcoord) + vec4(final_specular, 1.f);
+    fs_color = vec4(diffuse, 1.f) * texture(u_samplers[SAMP_DIFFUSE], vs_texcoord) + vec4(final_specular, 1.f);
 }
 
 vec3 calculate_specular(vec3 unit_normal, float shine_damper, float reflectivity) {
