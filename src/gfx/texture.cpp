@@ -4,7 +4,7 @@
 #include <stb_image.h>
 
 namespace simpleengine::gfx {
-    Texture::Texture(const char* path, aiTextureType type, int flags): type(type) {
+    Texture::Texture(const char* path, aiTextureType type, int flags): type(type), path(path) {
         bool img_2d = flags & TextureFlags::TexFlags_IMG_2D;
         bool flip_vertically = flags & TextureFlags::TexFlags_FLIP_VERTICALLY;
         bool mipmap = flags & TextureFlags::TexFlags_MIPMAP;
@@ -23,7 +23,7 @@ namespace simpleengine::gfx {
 
         stbi_set_flip_vertically_on_load(flip_vertically);
 
-        // Read 4 channels (RGBA)   
+        // Read 4 channels (RGBA)
         img_data = stbi_load(path, &width, &height, &channels, 4);
         if(!img_data) {
             const char* failure = stbi_failure_reason();

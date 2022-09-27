@@ -73,8 +73,10 @@ namespace simpleengine::gfx {
             simpleengine::Vectorf position(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
             vertex.position = position;
 
-            glm::vec3 normal(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
-            vertex.normal = normal;
+            if (mesh->HasNormals()) {
+                glm::vec3 normal(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+                vertex.normal = normal;
+            }
 
             if (mesh->mTextureCoords[0]) {
                 glm::vec2 tex_coord(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
@@ -142,7 +144,13 @@ namespace simpleengine::gfx {
             }
         }
 
-        return Mesh(vertices, indices, mat);
+        Mesh se_mesh(vertices, indices, mat);
+
+        if (!mesh->HasNormals()) {
+            se_mesh.calculate_normals();
+        }
+
+        return se_mesh;
     }
 
     std::unordered_map<aiTextureType, std::vector<Texture>> load_all_textures(aiMaterial* material) {
