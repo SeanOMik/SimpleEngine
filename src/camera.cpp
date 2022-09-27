@@ -63,19 +63,19 @@ namespace simpleengine {
         }
 
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-            rotation.z += camera_speed;
+            rotation.z += camera_speed * .3;
         }
 
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            rotation.z -= camera_speed;
+            rotation.z -= camera_speed * .3;
         }
 
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            rotation.y -= camera_speed;
+            rotation.y -= camera_speed * .3;
         }
 
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            rotation.y += camera_speed;
+            rotation.y += camera_speed * .3;
         }
 
         // Limit the pitch of the camera.

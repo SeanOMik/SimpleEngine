@@ -1,6 +1,5 @@
 #pragma once
 
-#include "component.h"
 #include "../../gfx/model.h"
 
 #include <iostream>
@@ -8,10 +7,10 @@
 
 namespace simpleengine {
     /**
-     * @brief A Model is a object that will be shown on the screen by a renderer.
+     * @brief A component that contains a Model that will be rendered.
      * 
      */
-    class ModelComponent : public simpleengine::Component {
+    class ModelComponent {
     public:
         gfx::Model model;
 
@@ -19,12 +18,9 @@ namespace simpleengine {
 
         }
 
-        ModelComponent(std::string model_file_path) : model(model_file_path) {
+        ModelComponent(std::string model_file_path, int model_processing_flags = gfx::ModelProcessingFlags::MdlProcFlag_NONE,
+            int assimp_flags = 0) : model(model_file_path, model_processing_flags, assimp_flags) {
 
-        }
-
-        virtual void update(const float& delta_time) override {
-            
         }
     };
 }

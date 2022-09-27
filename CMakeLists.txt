@@ -4,6 +4,7 @@ project(SimpleEngine)
 
 include(cmrc/CMakeRC.cmake)
 include(CMake/GetStbLibraries.cmake)
+include(CMake/GetEnTT.cmake)
 
 # Add some CMake options:
 option(SIMPLE_ENGINE_BUILD_EXAMPLES "Build example projects" ON)
@@ -47,11 +48,11 @@ target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC assimp)
 target_link_libraries(simpleengine PRIVATE simpleengine_resources)
 
-target_include_directories(simpleengine PUBLIC ${STB_INCLUDE_DIR})
-
 # Include some dependencies' include directories
 target_include_directories(simpleengine PUBLIC ${OPENGL_INCLUDE_DIR})
 target_include_directories(simpleengine PUBLIC ${GLM_INCLUDE_DIRS})
+target_include_directories(simpleengine PUBLIC ${STB_INCLUDE_DIR})
+target_include_directories(simpleengine PUBLIC ${ENTT_INCLUDE_DIR})
 
 # Add examples as a target if the user has them enabled
 if (SIMPLE_ENGINE_BUILD_EXAMPLES)

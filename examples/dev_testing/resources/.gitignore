@@ -1,5 +1,2 @@
-*.blend
-*.obj
-*.png
-*.bin
-*.gltf
+*
+!shaders

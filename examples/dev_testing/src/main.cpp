@@ -1,8 +1,9 @@
 #include "simpleengine/camera.h"
 #include "simpleengine/ecs/component/mesh_component.h"
 #include <simpleengine/ecs/component/model_component.h>
+#include "simpleengine/ecs/component/transform_component.h"
+#include <simpleengine/ecs/component/rotating_component.h>
 #include "simpleengine/ecs/entity.h"
-#include "simpleengine/entity_manager.h"
 #include "simpleengine/gfx/light.h"
 #include "simpleengine/gfx/material.h"
 #include "simpleengine/gfx/mesh.h"
@@ -10,7 +11,6 @@
 #include "simpleengine/gfx/renderer.h"
 #include "simpleengine/gfx/texture.h"
 #include "simpleengine/vector.h"
-#include <GLFW/glfw3.h>
 #include <simpleengine/gfx/shader.h>
 #include <simpleengine/renderable.h>
 #include <simpleengine/event/event.h>
@@ -19,8 +19,7 @@
 #include <simpleengine/vertex.h>
 #include <simpleengine/gfx/shaders/core_3d_shader.h>
 #include <simpleengine/gfx/model.h>
-
-//#include <simpleengine/scene.h>
+#include <simpleengine/scene.h>
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/fwd.hpp>
@@ -166,29 +165,45 @@ int main(int argc, char *argv[]) {
         5, 6, 12, 12, 6, 13
     };
 
-    std::unordered_map<aiTextureType, std::vector<se::gfx::Texture>> textures;
-    textures.emplace(white_texture.type, std::vector<se::gfx::Texture>{ white_texture });
+    std::unordered_map<aiTextureType, std::vector<std::shared_ptr<se::gfx::Texture>>> textures;
+    textures.emplace(white_texture.type, std::vector<std::shared_ptr<se::gfx::Texture>>{ std::make_shared<se::gfx::Texture>(white_texture) });
     se::gfx::Material white_material(textures, 1.f, 0.f, 0.f, 0.f, 0.f);
+
+    // Create a renderer
+    auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
+    game.add_renderable(renderer);
+
+    // Create a Scene and give it the renderer
+    auto scene = std::make_shared<se::Scene>(renderer);
+    game.add_event(scene);
+
+    // Create an Entity in the Scene and add components to it.
+    se::ecs::Entity entity = scene->create_entity();
+    //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/dragon.obj");
+    //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/stall.obj");
+    
+    // Backpack model required vertically flipped texture coords.
+    auto& model_comp = entity.add_component<se::ModelComponent>("examples/dev_testing/resources/backpack/backpack.obj");
+    model_comp.model.vertically_flip_tex_coords();
+
+    //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/scientist/scientist.fbx");
+    //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/paradigm/paradigm.fbx");
+    //entity.add_component<se::RotatingComponent>();
+    auto& transform_comp = entity.add_component<se::TransformComponent>();
+    transform_comp.translate(15.f, -8.f, 0.f);
+    /* transform_comp.scale(0.1f);
+    transform_comp.rotate_z(-90.f);*/
+    transform_comp.rotate_x(-90.f);
+    
 
     // Create the entity and add the model component to it.
     /* auto entity = std::make_shared<simpleengine::Entity>();
     entity->add_component<se::MeshComponent>(cube_vertices, cube_indicies, white_material, true);
     entity->translate(3.5f, 0.f, 0.f); */
 
-    auto entity = std::make_shared<simpleengine::Entity>();
+    /* auto entity = std::make_shared<simpleengine::Entity>();
     entity->add_component<se::ModelComponent>("examples/dev_testing/resources/dragon.obj");
-    entity->translate(12.f, -4.f, 0.f);
-
-    // Create a renderer and submit the entity into it.
-    auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
-    renderer->enable_debug();
-    renderer->submit_entity(entity);
-    game.add_renderable(renderer);
-
-    // Create an EntityManager, and submit the entity into it.
-    auto ecs_manager = std::make_shared<se::EntityManager>();
-    ecs_manager->submit_entity(entity);
-    game.add_event(ecs_manager);
+    entity->translate(12.f, -4.f, 0.f); */
 
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
     game.add_event(camera);
