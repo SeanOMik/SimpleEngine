@@ -18,7 +18,8 @@ namespace simpleengine {
 
         }
 
-        ModelComponent(std::string model_file_path) : model(model_file_path) {
+        ModelComponent(std::string model_file_path, int model_processing_flags = gfx::ModelProcessingFlags::MdlProcFlag_NONE,
+            int assimp_flags = 0) : model(model_file_path, model_processing_flags, assimp_flags) {
 
         }
     };

@@ -4,7 +4,11 @@
 #include <stb_image.h>
 
 namespace simpleengine::gfx {
-    Texture::Texture(const char* path, aiTextureType type, bool img_2d, bool flip_vertically, bool mipmap): type(type) {
+    Texture::Texture(const char* path, aiTextureType type, int flags): type(type) {
+        bool img_2d = flags & TextureFlags::TexFlags_IMG_2D;
+        bool flip_vertically = flags & TextureFlags::TexFlags_FLIP_VERTICALLY;
+        bool mipmap = flags & TextureFlags::TexFlags_MIPMAP;
+
         image_type_gl = img_2d ? GL_TEXTURE_2D : GL_TEXTURE_3D;
 
         glGenTextures(1, &texture_id);
@@ -39,7 +43,11 @@ namespace simpleengine::gfx {
         unbind();
     }
 
-    Texture::Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type, bool img_2d, bool flip_vertically, bool mipmap): type(type) {
+    Texture::Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type, int flags): type(type) {
+        bool img_2d = flags & TextureFlags::TexFlags_IMG_2D;
+        bool flip_vertically = flags & TextureFlags::TexFlags_FLIP_VERTICALLY;
+        bool mipmap = flags & TextureFlags::TexFlags_MIPMAP;
+
         image_type_gl = img_2d ? GL_TEXTURE_2D : GL_TEXTURE_3D;
 
         glGenTextures(1, &texture_id);
@@ -74,8 +82,8 @@ namespace simpleengine::gfx {
         unbind();
     }
 
-    Texture::Texture(std::vector<unsigned char> buffer, aiTextureType type, bool img_2d, bool flip_vertically, bool mipmap) :
-        Texture(buffer.data(), buffer.size(), type, img_2d, mipmap) {
+    Texture::Texture(std::vector<unsigned char> buffer, aiTextureType type, int flags) :
+        Texture(buffer.data(), buffer.size(), type, flags) {
         
     }
 

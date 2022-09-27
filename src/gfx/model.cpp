@@ -14,15 +14,26 @@
 #include <vector>
 
 namespace simpleengine::gfx {
-    Model::Model(std::string file_path) {
+    Model::Model(std::string file_path, int model_processing_flags, int assimp_flags): model_processing_flags(model_processing_flags),
+            additional_assimp_flags(assimp_flags) {
         load_model(file_path);
+    }
+
+    void Model::post_process() {
+        if (model_processing_flags & ModelProcessingFlags::MdlProcFlag_FLIP_TEX_COORDS_VERTICALLY) {
+            vertically_flip_tex_coords();
+        }
+
+        if (model_processing_flags & ModelProcessingFlags::MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY) {
+            horizontally_flip_tex_coords();
+        }
     }
 
     void Model::load_model(std::string path) {
         Assimp::Importer importer;
 
         // assimp post processing options: http://assimp.sourceforge.net/lib_html/postprocess_8h.html
-        const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+        const aiScene *scene = importer.ReadFile(path, additional_assimp_flags | aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
@@ -33,6 +44,8 @@ namespace simpleengine::gfx {
 
         std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> processed_textures;
         process_node(processed_textures, scene->mRootNode, scene);
+
+        post_process();
     }
 
     void Model::process_node(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiNode* node, const aiScene* scene) {
@@ -164,7 +177,7 @@ namespace simpleengine::gfx {
             ss << model_directory << "/" << texture_path;
             std::string full_path = ss.str();
 
-            Texture texture(full_path.c_str(), type, true, true);
+            Texture texture(full_path.c_str(), type, /* TextureFlags::TexFlags_FLIP_VERTICALLY | */ TextureFlags::TexFlags_IMG_2D | TextureFlags::TexFlags_MIPMAP);
             texture.path = texture_path;
             textures.emplace_back(std::make_shared<Texture>(texture));
 
@@ -172,5 +185,21 @@ namespace simpleengine::gfx {
         }
 
         return textures;
+    }
+
+    void Model::vertically_flip_tex_coords() {
+        for (auto& mesh : meshes) {
+            for (auto& vertex : mesh.vertices) {
+                vertex.tex_coord.y *= -1;
+            }
+        }
+    }
+
+    void Model::horizontally_flip_tex_coords() {
+        for (auto& mesh : meshes) {
+            for (auto& vertex : mesh.vertices) {
+                vertex.tex_coord.x *= -1;
+            }
+        }
     }
 } // namespace simpleengine::gfx

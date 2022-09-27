@@ -181,7 +181,11 @@ int main(int argc, char *argv[]) {
     se::ecs::Entity entity = scene->create_entity();
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/dragon.obj");
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/stall.obj");
-    entity.add_component<se::ModelComponent>("examples/dev_testing/resources/backpack/backpack.obj");
+    
+    // Backpack model required vertically flipped texture coords.
+    auto& model_comp = entity.add_component<se::ModelComponent>("examples/dev_testing/resources/backpack/backpack.obj");
+    model_comp.model.vertically_flip_tex_coords();
+
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/scientist/scientist.fbx");
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/paradigm/paradigm.fbx");
     //entity.add_component<se::RotatingComponent>();

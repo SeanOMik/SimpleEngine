@@ -10,6 +10,12 @@
 //#include <assimp/mesh.h>
 
 namespace simpleengine::gfx {
+    enum ModelProcessingFlags : uint8_t {
+        MdlProcFlag_NONE = 0b00000000,
+        MdlProcFlag_FLIP_TEX_COORDS_VERTICALLY = 0b00000001,
+        MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY = 0b00000010,
+    };
+
     /**
      * @brief A Model is a group of Meshes read from the 3D model file.
      *
@@ -20,10 +26,12 @@ namespace simpleengine::gfx {
     class Model : public simpleengine::Transformable {
     protected:
         std::string model_directory; // May be needed
+        int additional_assimp_flags;
+        int model_processing_flags;
     public:
         std::vector<gfx::Mesh> meshes;
 
-        Model(std::string file_path);
+        Model(std::string file_path, int model_processing_flags = ModelProcessingFlags::MdlProcFlag_NONE, int assimp_flags = 0);
     
         void load_model(std::string path);
         void process_node(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiNode* node, const aiScene* scene);
@@ -31,5 +39,12 @@ namespace simpleengine::gfx {
 
         std::unordered_map<aiTextureType, std::vector<Texture>> load_all_textures(aiMaterial* material);
         std::vector<std::shared_ptr<Texture>> load_material_texture(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMaterial* material, aiTextureType type);
+
+    protected:
+        void post_process();
+    public:
+
+        void vertically_flip_tex_coords();
+        void horizontally_flip_tex_coords();
     };
 }
