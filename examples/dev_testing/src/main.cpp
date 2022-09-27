@@ -77,9 +77,6 @@ int main(int argc, char *argv[]) {
     // Load core shaders from SimpleEngine resources
     se::gfx::shaders::Core3dShader core_shader;
 
-    auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(0.f, 1.f, -10.f), glm::vec3(1.f, 1.f, 1.f));
-    game.add_event(light);
-
     auto white_texture = se::gfx::Texture::white_texture();
     // white_texture.shine_damper = 10;
     //white_texture.reflectivity = 1;
@@ -183,16 +180,20 @@ int main(int argc, char *argv[]) {
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/stall.obj");
     
     // Backpack model required vertically flipped texture coords.
-    auto& model_comp = entity.add_component<se::ModelComponent>("examples/dev_testing/resources/backpack/backpack.obj");
-    model_comp.model.vertically_flip_tex_coords();
+    /* auto& model_comp = entity.add_component<se::ModelComponent>("examples/dev_testing/resources/backpack/backpack.obj");
+    model_comp.model.vertically_flip_tex_coords(); */
+
+    //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/viper/viper.obj");
+    entity.add_component<se::ModelComponent>("examples/dev_testing/resources/halo/halo.fbx");
 
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/scientist/scientist.fbx");
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/paradigm/paradigm.fbx");
     //entity.add_component<se::RotatingComponent>();
     auto& transform_comp = entity.add_component<se::TransformComponent>();
-    transform_comp.translate(15.f, -8.f, 0.f);
-    /* transform_comp.scale(0.1f);
-    transform_comp.rotate_z(-90.f);*/
+    transform_comp.translate(7.f, -4.f, 0.f);
+    transform_comp.scale(0.05f);
+    //transform_comp.rotate_z(-90.f);
+    transform_comp.rotate_y(-90.f);
     transform_comp.rotate_x(-90.f);
     
 
@@ -207,6 +208,9 @@ int main(int argc, char *argv[]) {
 
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
     game.add_event(camera);
+
+    auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(-10.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+    game.add_event(light);
 
     auto fps_counter = std::make_shared<FPSCounterEvent>();
     game.add_event(fps_counter);

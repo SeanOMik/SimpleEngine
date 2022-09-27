@@ -4,7 +4,6 @@ in vec3 vs_position;
 in vec3 vs_color;
 in vec3 vs_normal;
 in vec2 vs_texcoord;
-flat in float vs_tex_id; // < 0 is reserved for solid colored objects.
 
 in mat4 vs_transform;
 in vec3 vs_to_light;
@@ -29,17 +28,13 @@ void main() {
     float brightness = max(dot_prod, 0.f);
     vec3 diffuse = brightness * light_color;
 
-    if (vs_tex_id > -1) {
-        int id = int(vs_tex_id);
-
-        float shine_damper = u_texture_shine[id];
-        float reflectivity = u_texture_reflectivity[id];
-        vec3 final_specular = calculate_specular(unit_normal, shine_damper, reflectivity);
-        
-        fs_color = vec4(diffuse, 1.f) * texture(u_textures[id], vs_texcoord) + vec4(final_specular, 1.f);
-    } else {
-        fs_color = vec4(vs_color, 1.f); // We don't add any reflectivity to solid colored vectors.
-    }
+    // Calculate the specular
+    float shine_damper = u_texture_shine[0];
+    float reflectivity = u_texture_reflectivity[0];
+    vec3 final_specular = calculate_specular(unit_normal, shine_damper, reflectivity);
+    
+    // Combine diffuse lighting, specular, and the texture into one color.
+    fs_color = vec4(diffuse, 1.f) * texture(u_textures[0], vs_texcoord) + vec4(final_specular, 1.f);
 }
 
 vec3 calculate_specular(vec3 unit_normal, float shine_damper, float reflectivity) {

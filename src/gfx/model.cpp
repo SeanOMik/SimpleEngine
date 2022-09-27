@@ -68,17 +68,19 @@ namespace simpleengine::gfx {
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             LitVertex vertex;
             vertex.color = glm::vec3(1.f);
-            vertex.texture_id = 0;
+            vertex.texture_id = 0; // TODO
 
             simpleengine::Vectorf position(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
             vertex.position = position;
 
+            // Only process normals if they exist.
             if (mesh->HasNormals()) {
                 glm::vec3 normal(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
                 vertex.normal = normal;
             }
 
-            if (mesh->mTextureCoords[0]) {
+            // Only process texture coords if they exist.
+            if (mesh->HasTextureCoords(0)) {
                 glm::vec2 tex_coord(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 
                 vertex.tex_coord = tex_coord;
