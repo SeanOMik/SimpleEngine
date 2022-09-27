@@ -26,8 +26,10 @@ namespace simpleengine::gfx {
         Model(std::string file_path);
     
         void load_model(std::string path);
-        void process_node(aiNode* node, const aiScene* scene);
-        gfx::Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
-        std::vector<Texture> load_material_textures(aiMaterial* material, aiTextureType type);
+        void process_node(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiNode* node, const aiScene* scene);
+        gfx::Mesh process_mesh(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMesh* mesh, const aiScene* scene);
+
+        std::unordered_map<aiTextureType, std::vector<Texture>> load_all_textures(aiMaterial* material);
+        std::vector<std::shared_ptr<Texture>> load_material_texture(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMaterial* material, aiTextureType type);
     };
 }

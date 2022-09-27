@@ -111,7 +111,7 @@ namespace simpleengine::gfx {
                     if (texture_count >= 16) break;
 
                     glActiveTexture(GL_TEXTURE0 + texture_count);
-                    glBindTextureUnit(texture_count, texture.get_texture_id());
+                    glBindTextureUnit(texture_count, texture->get_texture_id());
 
                     texture_count++;
                 }

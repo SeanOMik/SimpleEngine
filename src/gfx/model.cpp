@@ -31,28 +31,28 @@ namespace simpleengine::gfx {
 
         model_directory = path.substr(0, path.find_last_of('/'));
 
-        process_node(scene->mRootNode, scene);
+        std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> processed_textures;
+        process_node(processed_textures, scene->mRootNode, scene);
     }
 
-    void Model::process_node(aiNode* node, const aiScene* scene) {
+    void Model::process_node(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiNode* node, const aiScene* scene) {
         // process all the node's meshes (if any)
         for (int i = 0; i < node->mNumMeshes; i++) {
             aiMesh *mesh = scene->mMeshes[node->mMeshes[i]]; 
-            meshes.push_back(process_mesh(mesh, scene));
+            meshes.push_back(process_mesh(processed_textures, mesh, scene));
         }
 
         // then do the same for each of its children
         for (int i = 0; i < node->mNumChildren; i++) {
-            process_node(node->mChildren[i], scene);
+            process_node(processed_textures, node->mChildren[i], scene);
         }
     }
 
-    gfx::Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
+    gfx::Mesh Model::process_mesh(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMesh* mesh, const aiScene* scene) {
         std::vector<LitVertex> vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture> textures;
 
-        for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
+        for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             LitVertex vertex;
             vertex.color = glm::vec3(1.f);
             vertex.texture_id = 0;
@@ -63,7 +63,7 @@ namespace simpleengine::gfx {
             glm::vec3 normal(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
             vertex.normal = normal;
 
-            if(mesh->mTextureCoords[0]) {
+            if (mesh->mTextureCoords[0]) {
                 glm::vec2 tex_coord(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 
                 vertex.tex_coord = tex_coord;
@@ -83,18 +83,18 @@ namespace simpleengine::gfx {
 
         // Create a default material and white texture.
         auto white_texture = gfx::Texture::white_texture();
-        std::unordered_map<aiTextureType, std::vector<Texture>> default_textures;
-        default_textures.emplace(white_texture.type, std::vector<Texture>{ white_texture });
+        std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> default_textures;
+        default_textures.emplace(white_texture.type, std::vector<std::shared_ptr<Texture>>{ std::make_shared<Texture>(white_texture) });
         gfx::Material mat(default_textures, 1.f, 0.f, 0.f, 0.f, 0.f);
 
-        if(mesh->mMaterialIndex >= 0) {
+        if (mesh->mMaterialIndex >= 0) {
             std::cout << "TODO: Process model materials!" << std::endl;
 
-            std::unordered_map<aiTextureType, std::vector<Texture>> textures;
+            std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> textures;
             aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
             // Load Diffuse texture maps
-            std::vector<Texture> diffuse_maps = load_material_textures(material, aiTextureType_DIFFUSE);
+            std::vector<std::shared_ptr<Texture>> diffuse_maps = load_material_texture(processed_textures, material, aiTextureType_DIFFUSE);
             if (!diffuse_maps.empty()) textures.emplace(aiTextureType_DIFFUSE, diffuse_maps);
 
             // TODO Handle other types of texture maps
@@ -102,25 +102,73 @@ namespace simpleengine::gfx {
             if (!textures.empty()) {
                 // TODO: Find a way to let the user set the scalars.
                 mat = Material(textures, 1.f, 0.f, 0.f, 0.f, 0.f);
+
+                // Add `textures` into the `processed_textures` list.
+                for (const auto& pair : textures) {
+                    for (const auto& texture : pair.second) {
+                        bool contains = false;
+
+                        auto found = processed_textures.find(pair.first);
+                        if (found != processed_textures.end()) {
+                            for (const auto& processed_text : found->second) {
+                                if (processed_text->path == texture->path) {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+
+                            if (!contains) {
+                                //found->second
+                                found->second.emplace_back(texture);
+                            }
+                        } else {
+                            processed_textures.emplace(pair.first, std::vector<std::shared_ptr<Texture>>{ pair.second });
+                        }
+                    }
+                }
             }
         }
 
         return Mesh(vertices, indices, mat);
     }
 
-    std::vector<Texture> Model::load_material_textures(aiMaterial* material, aiTextureType type) {
-        std::vector<Texture> textures;
+    std::unordered_map<aiTextureType, std::vector<Texture>> load_all_textures(aiMaterial* material) {
+        // Load Diffuse texture maps
+        return {};
+    }
 
-        for(int i = 0; i < material->GetTextureCount(type); i++) {
-            aiString texture_path;
-            material->GetTexture(type, i, &texture_path);
+    std::vector<std::shared_ptr<Texture>> Model::load_material_texture(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMaterial* material, aiTextureType type) {
+        std::vector<std::shared_ptr<Texture>> textures;
+
+        for (int i = 0; i < material->GetTextureCount(type); i++) {
+            aiString texture_path_ai;
+            material->GetTexture(type, i, &texture_path_ai);
+            std::string texture_path = texture_path_ai.C_Str();
+
+            // If the texture has been read, we should skip it.
+            bool skip = false;
+            for (const auto& pair : processed_textures) {
+                if (pair.first == type) {
+                    for (const auto& texture : pair.second) {
+                        if (texture->path == texture_path) {
+                            textures.emplace_back(texture); // Push a copy of the texture for this Mesh.
+                            skip = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (skip) continue;
 
             std::stringstream ss;
-            ss << model_directory << "/" << texture_path.C_Str();
+            ss << model_directory << "/" << texture_path;
             std::string full_path = ss.str();
 
-            Texture texture(full_path.c_str(), type);
-            textures.emplace_back(texture);
+            Texture texture(full_path.c_str(), type, true, true);
+            texture.path = texture_path;
+            textures.emplace_back(std::make_shared<Texture>(texture));
+
+            std::cout << "Texture full path: " << full_path << ", texture_path: " << texture_path << std::endl;
         }
 
         return textures;

@@ -4,7 +4,7 @@
 #include <stb_image.h>
 
 namespace simpleengine::gfx {
-    Texture::Texture(const char* path, aiTextureType type, bool img_2d, bool mipmap): type(type) {
+    Texture::Texture(const char* path, aiTextureType type, bool img_2d, bool flip_vertically, bool mipmap): type(type) {
         image_type_gl = img_2d ? GL_TEXTURE_2D : GL_TEXTURE_3D;
 
         glGenTextures(1, &texture_id);
@@ -16,6 +16,8 @@ namespace simpleengine::gfx {
         glTexParameteri(image_type_gl, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(image_type_gl, GL_TEXTURE_MIN_FILTER, linear_param);
         glTexParameteri(image_type_gl, GL_TEXTURE_MAG_FILTER, linear_param);
+
+        stbi_set_flip_vertically_on_load(flip_vertically);
 
         // Read 4 channels (RGBA)   
         img_data = stbi_load(path, &width, &height, &channels, 4);
@@ -32,10 +34,12 @@ namespace simpleengine::gfx {
             glGenerateMipmap(image_type_gl);
         }
 
+        stbi_set_flip_vertically_on_load(false);
+
         unbind();
     }
 
-    Texture::Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type, bool img_2d, bool mipmap): type(type) {
+    Texture::Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type, bool img_2d, bool flip_vertically, bool mipmap): type(type) {
         image_type_gl = img_2d ? GL_TEXTURE_2D : GL_TEXTURE_3D;
 
         glGenTextures(1, &texture_id);
@@ -47,6 +51,8 @@ namespace simpleengine::gfx {
         glTexParameteri(image_type_gl, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(image_type_gl, GL_TEXTURE_MIN_FILTER, linear_param);
         glTexParameteri(image_type_gl, GL_TEXTURE_MAG_FILTER, linear_param);
+
+        stbi_set_flip_vertically_on_load(flip_vertically);
 
         // Read 4 channels (RGBA)
         img_data = stbi_load_from_memory(buffer, buffer_length, &width, &height, &channels, 4);
@@ -63,10 +69,12 @@ namespace simpleengine::gfx {
             glGenerateMipmap(image_type_gl);
         }
 
+        stbi_set_flip_vertically_on_load(false);
+
         unbind();
     }
 
-    Texture::Texture(std::vector<unsigned char> buffer, aiTextureType type, bool img_2d, bool mipmap) :
+    Texture::Texture(std::vector<unsigned char> buffer, aiTextureType type, bool img_2d, bool flip_vertically, bool mipmap) :
         Texture(buffer.data(), buffer.size(), type, img_2d, mipmap) {
         
     }

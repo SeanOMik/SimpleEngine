@@ -30,6 +30,7 @@ namespace simpleengine::gfx {
         int width;
         int channels;
         aiTextureType type;
+        std::string path;
 
         /**
          * @brief Construct a new Texture object from a path.
@@ -38,7 +39,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(const char* path, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool mipmap = true);
+        Texture(const char* path, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool flip_vertically = false, bool mipmap = true);
 
         /**
          * @brief Construct a new Texture object from the loaded file buffer.
@@ -48,7 +49,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool mipmap = true);
+        Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool flip_vertically = false, bool mipmap = true);
 
         /**
          * @brief Construct a new Texture object from the loaded file buffer.
@@ -57,7 +58,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(std::vector<unsigned char> buffer, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool mipmap = true);
+        Texture(std::vector<unsigned char> buffer, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, bool img_2d = true, bool flip_vertically = false, bool mipmap = true);
 
         static Texture white_texture();
 
