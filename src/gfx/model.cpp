@@ -101,7 +101,7 @@ namespace simpleengine::gfx {
         auto white_texture = gfx::Texture::white_texture();
         std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> default_textures;
         default_textures.emplace(white_texture.type, std::vector<std::shared_ptr<Texture>>{ std::make_shared<Texture>(white_texture) });
-        gfx::Material mat(default_textures, 1.f, 0.f, 0.f, 0.f, 0.f);
+        gfx::Material mat(default_textures);
 
         if (mesh->mMaterialIndex >= 0) {
             std::cout << "TODO: Process model materials!" << std::endl;
@@ -110,14 +110,25 @@ namespace simpleengine::gfx {
             aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
             // Load Diffuse texture maps
-            std::vector<std::shared_ptr<Texture>> diffuse_maps = load_material_texture(processed_textures, material, aiTextureType_DIFFUSE);
-            if (!diffuse_maps.empty()) textures.emplace(aiTextureType_DIFFUSE, diffuse_maps);
+            aiTextureType loading_type = aiTextureType_DIFFUSE;
+            std::vector<std::shared_ptr<Texture>> diffuse_maps = load_material_texture(processed_textures, material, loading_type);
+            if (!diffuse_maps.empty()) textures.emplace(loading_type, diffuse_maps);
+
+            // Load specular texture maps
+            loading_type = aiTextureType_SPECULAR;
+            std::vector<std::shared_ptr<Texture>> spec_maps = load_material_texture(processed_textures, material, loading_type);
+            if (!spec_maps.empty()) textures.emplace(loading_type, spec_maps);
+
+            // Load normals texture maps
+            loading_type = aiTextureType_NORMALS;
+            std::vector<std::shared_ptr<Texture>> normal_maps = load_material_texture(processed_textures, material, loading_type);
+            if (!normal_maps.empty()) textures.emplace(loading_type, normal_maps);
 
             // TODO Handle other types of texture maps
 
             if (!textures.empty()) {
                 // TODO: Find a way to let the user set the scalars.
-                mat = Material(textures, 1.f, 0.f, 0.f, 0.f, 0.f);
+                mat = Material(textures);
 
                 // Add `textures` into the `processed_textures` list.
                 for (const auto& pair : textures) {
@@ -186,7 +197,7 @@ namespace simpleengine::gfx {
             ss << model_directory << "/" << texture_path;
             std::string full_path = ss.str();
 
-            Texture texture(full_path.c_str(), type, /* TextureFlags::TexFlags_FLIP_VERTICALLY | */ TextureFlags::TexFlags_IMG_2D | TextureFlags::TexFlags_MIPMAP);
+            Texture texture(full_path.c_str(), type, TextureFlags::TexFlags_IMG_2D | TextureFlags::TexFlags_MIPMAP);
             texture.path = texture_path;
             textures.emplace_back(std::make_shared<Texture>(texture));
 

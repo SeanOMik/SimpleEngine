@@ -63,19 +63,19 @@ namespace simpleengine {
         }
 
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-            rotation.z += camera_speed * .3;
+            rotation.z += camera_speed * .4;
         }
 
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            rotation.z -= camera_speed * .3;
+            rotation.z -= camera_speed * .4;
         }
 
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            rotation.y -= camera_speed * .3;
+            rotation.y -= camera_speed * .4;
         }
 
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            rotation.y += camera_speed * .3;
+            rotation.y += camera_speed * .4;
         }
 
         // Limit the pitch of the camera.
@@ -96,8 +96,9 @@ namespace simpleengine {
         view_matrix = glm::lookAt(position, position + camera_front, camera_up);
 
         shader.use();
-        shader.set_uniform_matrix_4f("view_matrix", view_matrix, false);
-        shader.set_uniform_matrix_4f("projection_matrix", projection_matrix, false);
+        shader.set_uniform_float_vec3("u_view_pos", position, false);
+        shader.set_uniform_matrix_4f("u_view_matrix", view_matrix, false);
+        shader.set_uniform_matrix_4f("u_projection_matrix", projection_matrix, false);
         shader.unuse();
     }
 }

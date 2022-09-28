@@ -162,10 +162,6 @@ int main(int argc, char *argv[]) {
         5, 6, 12, 12, 6, 13
     };
 
-    std::unordered_map<aiTextureType, std::vector<std::shared_ptr<se::gfx::Texture>>> textures;
-    textures.emplace(white_texture.type, std::vector<std::shared_ptr<se::gfx::Texture>>{ std::make_shared<se::gfx::Texture>(white_texture) });
-    se::gfx::Material white_material(textures, 1.f, 0.f, 0.f, 0.f, 0.f);
-
     // Create a renderer
     auto renderer  = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader);
     game.add_renderable(renderer);
@@ -184,7 +180,7 @@ int main(int argc, char *argv[]) {
     model_comp.model.vertically_flip_tex_coords(); */
 
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/viper/viper.obj");
-    entity.add_component<se::ModelComponent>("examples/dev_testing/resources/halo/halo.fbx");
+    entity.add_component<se::ModelComponent>("examples/dev_testing/resources/halot/chief.fbx");
 
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/scientist/scientist.fbx");
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/paradigm/paradigm.fbx");

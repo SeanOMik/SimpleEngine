@@ -93,19 +93,39 @@ namespace simpleengine::gfx {
             RenderingJob& job = rendering_queue.front();
             Mesh& mesh = job.rendering_mesh;
 
-            shader.set_uniform_matrix_4f("transform_matrix", job.transform_mat, false);
+            shader.set_uniform_matrix_4f("u_transform_matrix", job.transform_mat, false);
 
             std::optional<Material>& material = mesh.material;
 
-            shader.set_uniform_int("u_textures", 0, false);
-
             if (material.has_value()) {
-                shader.set_uniform_float("u_texture_shine", material->shine, false);
-                shader.set_uniform_float("u_texture_reflectivity", material->reflectivity, false);
+                shader.set_uniform_float("u_material.ambient_strength", material->ambient_strength, false);
+                shader.set_uniform_float("u_material.diffuse_strength", material->diffuse_strength, false);
+                shader.set_uniform_float("u_material.specular_strength", material->specular_strength, false);
+                shader.set_uniform_float("u_material.shine_factor", material->shine_factor, false);
+                //shader.set_uniform_float("u_material.reflect_factor", .1f, false);
 
-                int texture_count = 0;
                 auto diffuse_maps = material->textures.find(aiTextureType_DIFFUSE);
-                for (const auto& texture : diffuse_maps->second) {
+                auto diffuse_map = diffuse_maps->second.front();
+
+                shader.set_uniform_int("u_material.diffuse", 0, false);
+
+                glActiveTexture(GL_TEXTURE0);
+                diffuse_map->bind();
+
+                auto specular_maps = material->textures.find(aiTextureType_SPECULAR);
+
+                
+                if (specular_maps != material->textures.end()) {
+                    auto spec = specular_maps->second.front();
+
+                    shader.set_uniform_int("u_material.specular_map", 1, false);
+
+                    glActiveTexture(GL_TEXTURE1);
+                    spec->bind();
+                }
+
+                //diffuse_map
+                /* for (const auto& texture : diffuse_maps->second) {
                     // We can only bind to 16 textures at a time (indexes are 0-15)
                     if (texture_count >= 16) break;
 
@@ -113,7 +133,7 @@ namespace simpleengine::gfx {
                     glBindTextureUnit(texture_count, texture->get_texture_id());
 
                     texture_count++;
-                }
+                } */
             }
             
             mesh.vao.bind();
