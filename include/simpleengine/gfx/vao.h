@@ -51,6 +51,10 @@ namespace simpleengine::gfx {
             glBindVertexArray(handle);
         }
 
+        void unbind() const {
+            glBindVertexArray(0);
+        }
+
         // TODO: Fix this.
         void enable_attrib(const VBO& vbo, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset, bool should_bind = true) const {
             if (should_bind) {

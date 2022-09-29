@@ -10,6 +10,7 @@
 
 #include <optional>
 #include <sstream>
+#include <stdexcept>
 #include <unordered_map>
 #include <vector>
 
@@ -27,13 +28,18 @@ namespace simpleengine::gfx {
         if (model_processing_flags & ModelProcessingFlags::MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY) {
             horizontally_flip_tex_coords();
         }
+
+        if (model_processing_flags & ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE) {
+            calculate_tangents();
+        }
     }
 
     void Model::load_model(std::string path) {
         Assimp::Importer importer;
 
         // assimp post processing options: http://assimp.sourceforge.net/lib_html/postprocess_8h.html
-        const aiScene *scene = importer.ReadFile(path, additional_assimp_flags | aiProcess_Triangulate | aiProcess_FlipUVs);
+        const aiScene *scene = importer.ReadFile(path, additional_assimp_flags | aiProcess_Triangulate | aiProcess_FlipUVs
+            | aiProcess_CalcTangentSpace);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
@@ -63,7 +69,7 @@ namespace simpleengine::gfx {
 
     gfx::Mesh Model::process_mesh(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMesh* mesh, const aiScene* scene) {
         std::vector<LitVertex> vertices;
-        std::vector<unsigned int> indices;
+        std::vector<unsigned int> indicies;
 
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             LitVertex vertex;
@@ -93,7 +99,7 @@ namespace simpleengine::gfx {
             aiFace face = mesh->mFaces[i];
 
             for (int j = 0; j < face.mNumIndices; j++) {
-                indices.push_back(face.mIndices[j]);
+                indicies.push_back(face.mIndices[j]);
             }
         }
 
@@ -121,8 +127,13 @@ namespace simpleengine::gfx {
 
             // Load normals texture maps
             loading_type = aiTextureType_NORMALS;
-            std::vector<std::shared_ptr<Texture>> normal_maps = load_material_texture(processed_textures, material, loading_type, TextureFlags::TexFlags_NO_COLOR);
-            if (!normal_maps.empty()) textures.emplace(loading_type, normal_maps);
+            std::vector<std::shared_ptr<Texture>> normal_maps = load_material_texture(processed_textures, material, loading_type, TextureFlags::TexFlags_RGB);
+            if (!normal_maps.empty()) { 
+                textures.emplace(loading_type, normal_maps);
+
+                // Force calculation of tangent space.
+                model_processing_flags |= MdlProcFlag_CALCULATE_TANGENT_SPACE;
+            }
 
             // TODO Handle other types of texture maps
 
@@ -156,7 +167,7 @@ namespace simpleengine::gfx {
             }
         }
 
-        Mesh se_mesh(vertices, indices, mat);
+        Mesh se_mesh(vertices, indicies, mat);
 
         if (!mesh->HasNormals()) {
             se_mesh.calculate_normals();
@@ -222,4 +233,50 @@ namespace simpleengine::gfx {
             }
         }
     }
+
+    void Model::calculate_tangents() {
+        for (auto& mesh : meshes) {
+            // TODO: Find a way to check if normals and UVs are set before calculating tangents
+            mesh.calculate_tangents();
+        }
+    }
+
+    /* std::vector<std::pair<simpleengine::Vectorf, simpleengine::Vectorf>> calculate_tangent_space(
+            std::vector<LitVertex> vertices, std::vector<unsigned int> indices) {
+
+        std::vector<std::pair<simpleengine::Vectorf, simpleengine::Vectorf>> tangents;
+        tangents.resize(vertices.size());
+
+        for (int i = 0; i < indices.size(); i += 3) {
+            int index0 = indices[i];
+            int index1 = indices[i+1];
+            int index2 = indices[i+2];
+
+            LitVertex& lit_vertex0 = vertices[index0];
+            LitVertex& lit_vertex1 = vertices[index1];
+            LitVertex& lit_vertex2 = vertices[index2];
+
+            glm::vec3 pos0 = lit_vertex0.position;
+            glm::vec3 pos1 = lit_vertex1.position;
+            glm::vec3 pos2 = lit_vertex2.position;
+
+            // Edges of the triangle : postion delta
+            glm::vec3 delta_pos1 = pos1 - pos0;
+            glm::vec3 delta_pos2 = pos2 - pos0;
+
+            // UV delta
+            glm::vec2 delta_uv1 = lit_vertex1.tex_coord - lit_vertex0.tex_coord;
+            glm::vec2 delta_uv2 = lit_vertex2.tex_coord - lit_vertex0.tex_coord;
+
+            float r = 1.0f / (delta_uv1.x * delta_uv2.y - delta_uv1.y * delta_uv2.x);
+            glm::vec3 tangent = (delta_pos1 * delta_uv2.y   - delta_pos2 * delta_uv1.y)*r;
+            glm::vec3 bitangent = (delta_pos2 * delta_uv1.x   - delta_pos1 * delta_uv2.x)*r;
+
+            tangents[0] = {tangent, bitangent};
+            tangents[1] = {tangent, bitangent};
+            tangents[2] = {tangent, bitangent};
+        }
+
+        return tangents;
+    } */
 } // namespace simpleengine::gfx

@@ -2,6 +2,7 @@
 
 #include "mesh.h"
 #include "simpleengine/gfx/texture.h"
+#include "../vector.h"
 
 #include <assimp/material.h>
 #include <assimp/mesh.h>
@@ -14,6 +15,7 @@ namespace simpleengine::gfx {
         MdlProcFlag_NONE = 0b00000000,
         MdlProcFlag_FLIP_TEX_COORDS_VERTICALLY = 0b00000001,
         MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY = 0b00000010,
+        MdlProcFlag_CALCULATE_TANGENT_SPACE = 0b00000100,
     };
 
     /**
@@ -39,12 +41,12 @@ namespace simpleengine::gfx {
 
         std::unordered_map<aiTextureType, std::vector<Texture>> load_all_textures(aiMaterial* material);
         std::vector<std::shared_ptr<Texture>> load_material_texture(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMaterial* material, aiTextureType type, TextureFlags texture_color);
-
     protected:
         void post_process();
     public:
 
         void vertically_flip_tex_coords();
         void horizontally_flip_tex_coords();
+        void calculate_tangents();
     };
 }

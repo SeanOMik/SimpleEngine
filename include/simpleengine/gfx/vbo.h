@@ -40,6 +40,10 @@ namespace simpleengine::gfx {
             glBindBuffer(type, handle);
         }
 
+        void unbind() const {
+            glBindBuffer(type, 0);
+        }
+
         void buffer(void *data, size_t offset, size_t size) {
             bind();
             glBufferData(type, size - offset, data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);

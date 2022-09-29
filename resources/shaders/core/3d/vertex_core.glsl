@@ -4,6 +4,9 @@ layout (location = 0) in vec3 vertex_position;
 layout (location = 1) in vec3 vertex_color;
 layout (location = 2) in vec3 vertex_normal;
 layout (location = 3) in vec2 vertex_texcoord;
+// TODO: Make these optional
+layout (location = 4) in vec3 vertex_tangent;
+layout (location = 5) in vec3 vertex_bitangent;
 
 out vec3 vs_position;
 out vec3 vs_color;
@@ -16,6 +19,11 @@ out mat4 vs_transform;
 out vec3 vs_view_pos;
 out vec3 vs_light_pos;
 out vec3 vs_frag_pos;
+
+out mat3 vs_tbn;
+
+out vec3 vs_tangent;
+out vec3 vs_bitangent;
 
 uniform mat4 u_transform_matrix;
 uniform mat4 u_view_matrix;
@@ -41,4 +49,13 @@ void main() {
     vs_light_pos = u_light_position;
     vs_frag_pos = vec3(u_transform_matrix * vec4(vertex_position, 1.f));
     vs_world_normal = mat3(transpose(inverse(u_transform_matrix))) * vertex_normal; // TODO: Do this calculation on the CPU then send to GPU via a uniform
+
+    // Calculate the TBN (Tangent, Bi-tangent, and normal matrix)
+    vec3 T = normalize(vec3(u_transform_matrix * vec4(vertex_tangent, 1.f)));
+    vec3 B = normalize(vec3(u_transform_matrix * vec4(vertex_bitangent, 1.f)));
+    vec3 N = normalize(vec3(u_transform_matrix * vec4(vertex_normal, 1.f)));
+    vs_tbn = mat3(T, B, N);
+
+    vs_tangent = vertex_tangent;
+    vs_bitangent = vertex_bitangent;
 }

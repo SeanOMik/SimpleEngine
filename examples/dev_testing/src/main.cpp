@@ -172,13 +172,14 @@ int main(int argc, char *argv[]) {
 
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/viper/viper.obj");
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/halot/chief.fbx");
-    entity.add_component<se::ModelComponent>("examples/dev_testing/resources/planks/planks.fbx");
+    //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/planks/planks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
+    entity.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
 
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/scientist/scientist.fbx");
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/paradigm/paradigm.fbx");
     // entity.add_component<se::RotatingComponent>();
     auto &transform_comp = entity.add_component<se::TransformComponent>();
-    transform_comp.translate(7.f, -4.f, 0.f);
+    transform_comp.translate(7.f, 0.f, 0.f);
     // transform_comp.scale(0.05f);
     // transform_comp.rotate_z(-90.f);
     // transform_comp.rotate_y(-90.f);

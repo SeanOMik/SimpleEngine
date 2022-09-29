@@ -12,6 +12,11 @@ in vec3 vs_view_pos;
 in vec3 vs_light_pos;
 in vec3 vs_frag_pos;
 
+in mat3 vs_tbn;
+
+in vec3 vs_tangent;
+in vec3 vs_bitangent;
+
 const int SAMP_DIFFUSE = 0;
 const int SAMP_SPECULAR = 1;
 
@@ -20,6 +25,9 @@ struct Material {
 
     bool has_specular_map;
     sampler2D specular_map;
+
+    // TODO: Make Optional
+    sampler2D normal_map;
 
     float ambient_strength;
     float diffuse_strength;
@@ -37,14 +45,12 @@ out vec4 fs_color;
 vec3 calculate_lighting();
 
 void main() {
-    
-    
-    // Combine diffuse lighting, specular, and the texture into one color.
-    //fs_color = vec4(diffuse, 1.f) * texture(u_material.diffuse, vs_texcoord) + vec4(final_specular, 1.f);
-
     vec3 lighting = calculate_lighting();
 
+
     fs_color = vec4(lighting, 1.f) * texture(u_material.diffuse, vs_texcoord);
+    //fs_color = vec4(vs_tangent, 1.f);
+    //fs_color = vec4(vs_bitangent, 1.f);
 }
 
 vec3 calculate_lighting() {
@@ -52,8 +58,14 @@ vec3 calculate_lighting() {
     //float ambient_strength = 0.1;
     vec3 ambient = u_material.ambient_strength * u_light_color;
 
+    // Apply the normal map to the lighting.
+    vec3 normal = vs_normal;
+    normal = texture(u_material.normal_map, vs_texcoord).rgb;
+    normal = normal * 2.0 - 1.0;
+    normal = normalize(vs_tbn * normal);
+
     // Diffuse
-    vec3 norm = normalize(vs_world_normal);
+    vec3 norm = normalize(normal);
     vec3 light_dir = normalize(vs_light_pos - vs_frag_pos);
     float diff = max(dot(norm, light_dir), 0.f);
     vec3 diffuse = (diff * u_material.diffuse_strength) * u_light_color;

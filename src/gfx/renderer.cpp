@@ -5,6 +5,7 @@
 
 #include "ecs/component/mesh_component.h"
 #include "ecs/component/model_component.h"
+#include "vector.h"
 
 #include <algorithm>
 #include <assimp/material.h>
@@ -60,8 +61,14 @@ namespace simpleengine::gfx {
             vao.enable_attrib(vbo, 2, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, normal), false);
             vao.enable_attrib(vbo, 3, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord), false);
 
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
+            rendering_mesh.tangent_vbo.buffer(rendering_mesh.tangents.data(), 0, rendering_mesh.tangents.size() * sizeof(Vectorf));
+            vao.enable_attrib(rendering_mesh.tangent_vbo, 4, 3, GL_FLOAT, sizeof(Vectorf), 0, false);
+
+            rendering_mesh.bitangent_vbo.buffer(rendering_mesh.bitangents.data(), 0, rendering_mesh.bitangents.size() * sizeof(Vectorf));
+            vao.enable_attrib(rendering_mesh.bitangent_vbo, 5, 3, GL_FLOAT, sizeof(Vectorf), 0, false);
+
+            vbo.unbind();
+            vao.unbind();
 
             rendering_mesh.are_buffers_created = true;
 
@@ -124,6 +131,21 @@ namespace simpleengine::gfx {
                     spec->bind();
                 } else {
                     shader.set_uniform_int("u_material.has_specular_map", 0, false);
+                }
+
+                // Apply the normal map if it exists
+                auto normal_maps = material->textures.find(aiTextureType_NORMALS);
+                if (normal_maps != material->textures.end()) {
+                    auto normal = normal_maps->second.front();
+
+                    //shader.set_uniform_int("u_material.has_normal_map", 1, false);
+                    shader.set_uniform_int("u_material.normal_map", 2, false);
+
+                    glActiveTexture(GL_TEXTURE2);
+                    normal->bind();
+                } else {
+                    //shader.set_uniform_int("u_material.has_normal_map", 0, false);
+                    std::cout << "No normal map for model!" << std::endl;
                 }
             }
             
