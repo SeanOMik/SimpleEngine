@@ -14,9 +14,6 @@ in vec3 vs_frag_pos;
 
 in mat3 vs_tbn;
 
-in vec3 vs_tangent;
-in vec3 vs_bitangent;
-
 const int SAMP_DIFFUSE = 0;
 const int SAMP_SPECULAR = 1;
 
@@ -49,8 +46,6 @@ void main() {
 
 
     fs_color = vec4(lighting, 1.f) * texture(u_material.diffuse, vs_texcoord);
-    //fs_color = vec4(vs_tangent, 1.f);
-    //fs_color = vec4(vs_bitangent, 1.f);
 }
 
 vec3 calculate_lighting() {

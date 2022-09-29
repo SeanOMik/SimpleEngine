@@ -22,9 +22,6 @@ out vec3 vs_frag_pos;
 
 out mat3 vs_tbn;
 
-out vec3 vs_tangent;
-out vec3 vs_bitangent;
-
 uniform mat4 u_transform_matrix;
 uniform mat4 u_view_matrix;
 uniform mat4 u_projection_matrix;
@@ -55,7 +52,4 @@ void main() {
     vec3 B = normalize(vec3(u_transform_matrix * vec4(vertex_bitangent, 1.f)));
     vec3 N = normalize(vec3(u_transform_matrix * vec4(vertex_normal, 1.f)));
     vs_tbn = mat3(T, B, N);
-
-    vs_tangent = vertex_tangent;
-    vs_bitangent = vertex_bitangent;
 }
