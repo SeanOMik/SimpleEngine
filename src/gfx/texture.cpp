@@ -1,4 +1,5 @@
 #include "gfx/texture.h"
+#include <stdexcept>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -8,6 +9,24 @@ namespace simpleengine::gfx {
         bool img_2d = flags & TextureFlags::TexFlags_IMG_2D;
         bool flip_vertically = flags & TextureFlags::TexFlags_FLIP_VERTICALLY;
         bool mipmap = flags & TextureFlags::TexFlags_MIPMAP;
+
+        // Get the color channel type for opengl, and get 
+        // the channel count for loading the texture with stb_image
+        int gl_color_channels;
+        int channel_count;
+        if (flags & TexFlags_RGBA) {
+            channel_count = 4;
+            gl_color_channels = GL_RGBA;
+        } else if (flags & TexFlags_RGB) {
+            channel_count = 3;
+            gl_color_channels = GL_RGB;
+        } else if (flags & TexFlags_NO_COLOR) {
+            channel_count = 1;
+            gl_color_channels = GL_RED;
+        } else {
+            std::cerr << "Texture color flag is missing!! Specify TexFlags_RGBA" << std::endl;
+            throw std::runtime_error("Texture color flag is missing!! Specify TexFlags_RGBA");
+        }
 
         image_type_gl = img_2d ? GL_TEXTURE_2D : GL_TEXTURE_3D;
 
@@ -23,8 +42,7 @@ namespace simpleengine::gfx {
 
         stbi_set_flip_vertically_on_load(flip_vertically);
 
-        // Read 4 channels (RGBA)
-        img_data = stbi_load(path, &width, &height, &channels, 4);
+        img_data = stbi_load(path, &width, &height, &channels, channel_count);
         if(!img_data) {
             const char* failure = stbi_failure_reason();
             std::cerr << "Failed to load texture! (" << failure << ")" << std::endl;
@@ -32,7 +50,7 @@ namespace simpleengine::gfx {
         }
         std::cout << "Loaded image with a width of " << width << "px, a height of " << height << "px and " << channels << " channels" << std::endl;
 
-        glTexImage2D(image_type_gl, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data);
+        glTexImage2D(image_type_gl, 0, gl_color_channels, width, height, 0, gl_color_channels, GL_UNSIGNED_BYTE, img_data);
         
         if (mipmap) {
             glGenerateMipmap(image_type_gl);
@@ -48,6 +66,24 @@ namespace simpleengine::gfx {
         bool flip_vertically = flags & TextureFlags::TexFlags_FLIP_VERTICALLY;
         bool mipmap = flags & TextureFlags::TexFlags_MIPMAP;
 
+        // Get the color channel type for opengl, and get 
+        // the channel count for loading the texture with stb_image
+        int gl_color_channels;
+        int channel_count;
+        if (flags & TexFlags_RGBA) {
+            channel_count = 4;
+            gl_color_channels = GL_RGBA;
+        } else if (flags & TexFlags_RGB) {
+            channel_count = 3;
+            gl_color_channels = GL_RGB;
+        } else if (flags & TexFlags_NO_COLOR) {
+            channel_count = 1;
+            gl_color_channels = GL_RED;
+        } else {
+            std::cerr << "Texture color flag is missing!! Specify TexFlags_RGBA" << std::endl;
+            throw std::runtime_error("Texture color flag is missing!! Specify TexFlags_RGBA");
+        }
+
         image_type_gl = img_2d ? GL_TEXTURE_2D : GL_TEXTURE_3D;
 
         glGenTextures(1, &texture_id);
@@ -62,8 +98,7 @@ namespace simpleengine::gfx {
 
         stbi_set_flip_vertically_on_load(flip_vertically);
 
-        // Read 4 channels (RGBA)
-        img_data = stbi_load_from_memory(buffer, buffer_length, &width, &height, &channels, 4);
+        img_data = stbi_load_from_memory(buffer, buffer_length, &width, &height, &channels, channel_count);
         if(!img_data) {
             const char* failure = stbi_failure_reason();
             std::cerr << "Failed to load texture! (" << failure << ")" << std::endl;
@@ -71,7 +106,7 @@ namespace simpleengine::gfx {
         }
         std::cout << "Loaded image with a width of " << width << "px, a height of " << height << "px and " << channels << " channels" << std::endl;
 
-        glTexImage2D(image_type_gl, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data);
+        glTexImage2D(image_type_gl, 0, gl_color_channels, width, height, 0, gl_color_channels, GL_UNSIGNED_BYTE, img_data);
         
         if (mipmap) {
             glGenerateMipmap(image_type_gl);
@@ -116,8 +151,6 @@ namespace simpleengine::gfx {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.img_data);
 
         texture.unbind();
-
-        
 
         return texture;
     }

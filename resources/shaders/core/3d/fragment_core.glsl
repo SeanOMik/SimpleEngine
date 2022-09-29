@@ -17,6 +17,8 @@ const int SAMP_SPECULAR = 1;
 
 struct Material {
     sampler2D diffuse;
+
+    bool has_specular_map;
     sampler2D specular_map;
 
     float ambient_strength;
@@ -63,7 +65,10 @@ vec3 calculate_lighting() {
     float spec = pow(max(dot(view_dir, reflect_dir), -0.f), 32 * u_material.shine_factor);
     vec3 specular = specular_strength * (spec * u_material.specular_strength) * u_light_color;
 
-    //specular = specular * vec3(texture(u_material.specular_map, vs_texcoord)); // TODO check if its set before applying it.
+    // Check if the specular map is set before trying to set it
+    if (u_material.has_specular_map) {
+        specular = specular * texture(u_material.specular_map, vs_texcoord).r;
+    }
 
     return ambient + diffuse + specular;
 }

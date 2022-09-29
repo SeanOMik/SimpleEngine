@@ -111,17 +111,17 @@ namespace simpleengine::gfx {
 
             // Load Diffuse texture maps
             aiTextureType loading_type = aiTextureType_DIFFUSE;
-            std::vector<std::shared_ptr<Texture>> diffuse_maps = load_material_texture(processed_textures, material, loading_type);
+            std::vector<std::shared_ptr<Texture>> diffuse_maps = load_material_texture(processed_textures, material, loading_type, TextureFlags::TexFlags_RGBA);
             if (!diffuse_maps.empty()) textures.emplace(loading_type, diffuse_maps);
 
             // Load specular texture maps
             loading_type = aiTextureType_SPECULAR;
-            std::vector<std::shared_ptr<Texture>> spec_maps = load_material_texture(processed_textures, material, loading_type);
+            std::vector<std::shared_ptr<Texture>> spec_maps = load_material_texture(processed_textures, material, loading_type, TextureFlags::TexFlags_NO_COLOR);
             if (!spec_maps.empty()) textures.emplace(loading_type, spec_maps);
 
             // Load normals texture maps
             loading_type = aiTextureType_NORMALS;
-            std::vector<std::shared_ptr<Texture>> normal_maps = load_material_texture(processed_textures, material, loading_type);
+            std::vector<std::shared_ptr<Texture>> normal_maps = load_material_texture(processed_textures, material, loading_type, TextureFlags::TexFlags_NO_COLOR);
             if (!normal_maps.empty()) textures.emplace(loading_type, normal_maps);
 
             // TODO Handle other types of texture maps
@@ -170,7 +170,7 @@ namespace simpleengine::gfx {
         return {};
     }
 
-    std::vector<std::shared_ptr<Texture>> Model::load_material_texture(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMaterial* material, aiTextureType type) {
+    std::vector<std::shared_ptr<Texture>> Model::load_material_texture(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMaterial* material, aiTextureType type, TextureFlags texture_color) {
         std::vector<std::shared_ptr<Texture>> textures;
 
         for (int i = 0; i < material->GetTextureCount(type); i++) {
@@ -197,7 +197,7 @@ namespace simpleengine::gfx {
             ss << model_directory << "/" << texture_path;
             std::string full_path = ss.str();
 
-            Texture texture(full_path.c_str(), type, TextureFlags::TexFlags_IMG_2D | TextureFlags::TexFlags_MIPMAP);
+            Texture texture(full_path.c_str(), type, Texture::default_flags_no_color | texture_color);
             texture.path = texture_path;
             textures.emplace_back(std::make_shared<Texture>(texture));
 

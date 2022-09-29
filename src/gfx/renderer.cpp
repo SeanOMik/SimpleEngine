@@ -112,28 +112,19 @@ namespace simpleengine::gfx {
                 glActiveTexture(GL_TEXTURE0);
                 diffuse_map->bind();
 
+                // Apply the specular map if it exists
                 auto specular_maps = material->textures.find(aiTextureType_SPECULAR);
-
-                
                 if (specular_maps != material->textures.end()) {
                     auto spec = specular_maps->second.front();
 
+                    shader.set_uniform_int("u_material.has_specular_map", 1, false);
                     shader.set_uniform_int("u_material.specular_map", 1, false);
 
                     glActiveTexture(GL_TEXTURE1);
                     spec->bind();
+                } else {
+                    shader.set_uniform_int("u_material.has_specular_map", 0, false);
                 }
-
-                //diffuse_map
-                /* for (const auto& texture : diffuse_maps->second) {
-                    // We can only bind to 16 textures at a time (indexes are 0-15)
-                    if (texture_count >= 16) break;
-
-                    glActiveTexture(GL_TEXTURE0 + texture_count);
-                    glBindTextureUnit(texture_count, texture->get_texture_id());
-
-                    texture_count++;
-                } */
             }
             
             mesh.vao.bind();
