@@ -172,7 +172,7 @@ int main(int argc, char *argv[]) {
 
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/viper/viper.obj");
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/halot/chief.fbx");
-    //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/planks/planks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
+    // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/planks/planks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
     entity.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
 
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/scientist/scientist.fbx");

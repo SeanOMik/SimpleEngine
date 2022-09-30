@@ -138,14 +138,13 @@ namespace simpleengine::gfx {
                 if (normal_maps != material->textures.end()) {
                     auto normal = normal_maps->second.front();
 
-                    //shader.set_uniform_int("u_material.has_normal_map", 1, false);
+                    shader.set_uniform_int("u_material.has_normal_map", 1, false);
                     shader.set_uniform_int("u_material.normal_map", 2, false);
 
                     glActiveTexture(GL_TEXTURE2);
                     normal->bind();
                 } else {
-                    //shader.set_uniform_int("u_material.has_normal_map", 0, false);
-                    std::cout << "No normal map for model!" << std::endl;
+                    shader.set_uniform_int("u_material.has_normal_map", 0, false);
                 }
             }
             

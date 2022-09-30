@@ -24,6 +24,7 @@ struct Material {
     sampler2D specular_map;
 
     // TODO: Make Optional
+    bool has_normal_map;
     sampler2D normal_map;
 
     float ambient_strength;
@@ -53,11 +54,14 @@ vec3 calculate_lighting() {
     //float ambient_strength = 0.1;
     vec3 ambient = u_material.ambient_strength * u_light_color;
 
-    // Apply the normal map to the lighting.
-    vec3 normal = vs_normal;
-    normal = texture(u_material.normal_map, vs_texcoord).rgb;
-    normal = normal * 2.0 - 1.0;
-    normal = normalize(vs_tbn * normal);
+    vec3 normal = vs_world_normal;
+
+    // Check if the normal map is set before trying to apply it.
+    if (u_material.has_normal_map) {
+        normal = texture(u_material.normal_map, vs_texcoord).rgb;
+        normal = normal * 2.0 - 1.0;
+        normal = normalize(vs_tbn * normal);
+    }
 
     // Diffuse
     vec3 norm = normalize(normal);
@@ -72,7 +76,7 @@ vec3 calculate_lighting() {
     float spec = pow(max(dot(view_dir, reflect_dir), -0.f), 32 * u_material.shine_factor);
     vec3 specular = specular_strength * (spec * u_material.specular_strength) * u_light_color;
 
-    // Check if the specular map is set before trying to set it
+    // Check if the specular map is set before trying to apply it.
     if (u_material.has_specular_map) {
         specular = specular * texture(u_material.specular_map, vs_texcoord).r;
     }
