@@ -25,22 +25,16 @@ namespace simpleengine::gfx {
         std::vector<GLuint> indicies;
 
         std::vector<simpleengine::Vectorf> tangents;
-        std::vector<simpleengine::Vectorf> bitangents;
+        gfx::VBO tangent_vbo;
 
         bool are_buffers_created = false;
         gfx::VBO ebo;
         gfx::VBO vbo;
         gfx::VAO vao;
 
-        gfx::VBO tangent_vbo;
-        //gfx::VAO tangent_vao;
-
-        gfx::VBO bitangent_vbo;
-        //gfx::VAO bitangent_vao;
-
         Mesh(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material);
         Mesh(std::vector<LitVertex> vertices, std::vector<GLuint> indicies = std::vector<GLuint>(), std::optional<Material> material = std::nullopt);
-        Mesh(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material, gfx::VBO ebo, gfx::VBO vbo, gfx::VAO vao, gfx::VBO tangent_vbo, gfx::VBO bitangent_vbo);
+        Mesh(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material, gfx::VBO ebo, gfx::VBO vbo, gfx::VAO vao, gfx::VBO tangent_vbo);
 
         virtual void destroy() override;
 

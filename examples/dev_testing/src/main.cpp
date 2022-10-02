@@ -179,7 +179,7 @@ int main(int argc, char *argv[]) {
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/paradigm/paradigm.fbx");
     // entity.add_component<se::RotatingComponent>();
     auto &transform_comp = entity.add_component<se::TransformComponent>();
-    transform_comp.translate(7.f, 0.f, 0.f);
+    transform_comp.translate(4.f, 0.f, 0.f);
     // transform_comp.scale(0.05f);
     // transform_comp.rotate_z(-90.f);
     // transform_comp.rotate_y(-90.f);
@@ -197,7 +197,7 @@ int main(int argc, char *argv[]) {
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
     game.add_event(camera);
 
-    auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(-10.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+    auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
     game.add_event(light);
 
     auto fps_counter = std::make_shared<FPSCounterEvent>();

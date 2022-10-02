@@ -28,18 +28,17 @@ namespace simpleengine::gfx {
         if (model_processing_flags & ModelProcessingFlags::MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY) {
             horizontally_flip_tex_coords();
         }
-
-        if (model_processing_flags & ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE) {
-            calculate_tangents();
-        }
     }
 
     void Model::load_model(std::string path) {
         Assimp::Importer importer;
 
+        if (model_processing_flags & ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE) {
+            additional_assimp_flags |= aiProcess_CalcTangentSpace;
+        }
+
         // assimp post processing options: http://assimp.sourceforge.net/lib_html/postprocess_8h.html
-        const aiScene *scene = importer.ReadFile(path, additional_assimp_flags | aiProcess_Triangulate | aiProcess_FlipUVs
-            | aiProcess_CalcTangentSpace);
+        const aiScene *scene = importer.ReadFile(path, additional_assimp_flags | aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
@@ -70,6 +69,7 @@ namespace simpleengine::gfx {
     gfx::Mesh Model::process_mesh(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMesh* mesh, const aiScene* scene) {
         std::vector<LitVertex> vertices;
         std::vector<unsigned int> indicies;
+        std::vector<Vectorf> tangents;
 
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             LitVertex vertex;
@@ -89,6 +89,10 @@ namespace simpleengine::gfx {
                 glm::vec2 tex_coord(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 
                 vertex.tex_coord = tex_coord;
+            }
+
+            if (mesh->HasTangentsAndBitangents()) {
+                tangents.emplace_back(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
             }
 
             vertices.push_back(vertex);
@@ -171,6 +175,10 @@ namespace simpleengine::gfx {
 
         if (!mesh->HasNormals()) {
             se_mesh.calculate_normals();
+        }
+
+        if (mesh->HasTangentsAndBitangents()) {
+            se_mesh.tangents = tangents;
         }
 
         return se_mesh;

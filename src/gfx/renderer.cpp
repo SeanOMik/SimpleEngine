@@ -64,9 +64,6 @@ namespace simpleengine::gfx {
             rendering_mesh.tangent_vbo.buffer(rendering_mesh.tangents.data(), 0, rendering_mesh.tangents.size() * sizeof(Vectorf));
             vao.enable_attrib(rendering_mesh.tangent_vbo, 4, 3, GL_FLOAT, sizeof(Vectorf), 0, false);
 
-            rendering_mesh.bitangent_vbo.buffer(rendering_mesh.bitangents.data(), 0, rendering_mesh.bitangents.size() * sizeof(Vectorf));
-            vao.enable_attrib(rendering_mesh.bitangent_vbo, 5, 3, GL_FLOAT, sizeof(Vectorf), 0, false);
-
             vbo.unbind();
             vao.unbind();
 

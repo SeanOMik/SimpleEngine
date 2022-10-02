@@ -32,7 +32,7 @@ namespace simpleengine::gfx {
          */
         float shine_factor;
 
-        Material(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> textures, float shine = 1.f, float specular_scalar = 1.f, float ambient_scalar = 0.2f, float diffuse_scalar = 1.f) :
+        Material(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> textures, float shine = 1.f, float specular_scalar = 1.f, float ambient_scalar = 1.f, float diffuse_scalar = 1.f) :
                 textures(textures), ambient_strength(ambient_scalar), diffuse_strength(diffuse_scalar), specular_strength(specular_scalar),
                 shine_factor(shine) {
 

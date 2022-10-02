@@ -12,7 +12,11 @@ in vec3 vs_view_pos;
 in vec3 vs_light_pos;
 in vec3 vs_frag_pos;
 
-in mat3 vs_tbn;
+//in mat3 vs_tbn;
+
+in vec3 vs_tangent_light_pos;
+in vec3 vs_tangent_view_pos;
+in vec3 vs_tangent_frag_pos;
 
 const int SAMP_DIFFUSE = 0;
 const int SAMP_SPECULAR = 1;
@@ -50,32 +54,34 @@ void main() {
 }
 
 vec3 calculate_lighting() {
-    // Ambient
-    //float ambient_strength = 0.1;
-    vec3 ambient = u_material.ambient_strength * u_light_color;
-
-    vec3 normal = vs_world_normal;
-
+    vec3 normal = vec3(0.f, 0.f, 1.f); // default tangent-space normal
+    
     // Check if the normal map is set before trying to apply it.
     if (u_material.has_normal_map) {
         normal = texture(u_material.normal_map, vs_texcoord).rgb;
-        normal = normal * 2.0 - 1.0;
-        normal = normalize(vs_tbn * normal);
+
+        // transform normal vector to range [-1,1]
+        normal = normalize(normal * 2.f - 1.f);  // this normal is in tangent space
     }
-
-    // Diffuse
-    vec3 norm = normalize(normal);
-    vec3 light_dir = normalize(vs_light_pos - vs_frag_pos);
-    float diff = max(dot(norm, light_dir), 0.f);
-    vec3 diffuse = (diff * u_material.diffuse_strength) * u_light_color;
-
-    // Specular
-    float specular_strength = 0.5;
-    vec3 view_dir = normalize(vs_view_pos - vs_frag_pos);
-    vec3 reflect_dir = reflect(-light_dir, norm);
-    float spec = pow(max(dot(view_dir, reflect_dir), -0.f), 32 * u_material.shine_factor);
-    vec3 specular = specular_strength * (spec * u_material.specular_strength) * u_light_color;
-
+   
+    // Get diffuse color
+    vec3 diffuse_map = texture(u_material.diffuse, vs_texcoord).rgb;
+    
+    // Ambient lighting
+    vec3 ambient = 0.1f * u_material.ambient_strength * diffuse_map;
+    
+    // Diffuse lighting
+    vec3 light_dir = normalize(vs_tangent_light_pos - vs_tangent_frag_pos);
+    float diff = max(dot(light_dir, normal), 0.f);
+    vec3 diffuse = diff * u_material.diffuse_strength * diffuse_map;
+    
+    // Specular lighting
+    vec3 view_dir = normalize(vs_tangent_view_pos - vs_tangent_frag_pos);
+    vec3 reflect_dir = reflect(-light_dir, normal);
+    vec3 halfway_dir = normalize(light_dir + view_dir);  
+    float spec = pow(max(dot(normal, halfway_dir), 0.f), 32.f * u_material.shine_factor);
+    vec3 specular = vec3(0.2f * u_material.specular_strength) * spec;
+    
     // Check if the specular map is set before trying to apply it.
     if (u_material.has_specular_map) {
         specular = specular * texture(u_material.specular_map, vs_texcoord).r;
