@@ -26,22 +26,21 @@ namespace simpleengine {
         glm::vec3 color;
         glm::vec2 tex_coord;
         glm::vec3 normal;
-        float texture_id = -1.f;
 
         LitVertex() = default;
 
         LitVertex(simpleengine::Vectorf position, glm::vec3 color, glm::vec2 tex_coord, int texture_id = -1.f) :
-                position(position), color(color), tex_coord(tex_coord), normal(glm::vec3(0.f)), texture_id((float) texture_id) {
+                position(position), color(color), tex_coord(tex_coord), normal(glm::vec3(0.f)) {
             
         }
 
         LitVertex(simpleengine::Vectorf position, glm::vec3 color, glm::vec2 tex_coord, glm::vec3 normal, int texture_id = -1.f) :
-                position(position), color(color), tex_coord(tex_coord), normal(normal), texture_id((float) texture_id) {
+                position(position), color(color), tex_coord(tex_coord), normal(normal) {
             
         }
 
         LitVertex(simpleengine::Vectorf position, glm::vec2 tex_coord, glm::vec3 normal, int texture_id = -1.f) :
-                position(position), color(glm::vec3(1.f)), tex_coord(tex_coord), normal(normal), texture_id((float) texture_id) {
+                position(position), color(glm::vec3(1.f)), tex_coord(tex_coord), normal(normal) {
             
         }
     };

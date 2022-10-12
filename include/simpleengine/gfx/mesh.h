@@ -8,6 +8,7 @@
 #include "../renderable.h"
 #include "../transformable.h"
 #include "material.h"
+#include "../vector.h"
 
 #include <optional>
 #include <vector>
@@ -23,6 +24,9 @@ namespace simpleengine::gfx {
         std::vector<LitVertex> vertices;
         std::vector<GLuint> indicies;
 
+        std::vector<simpleengine::Vectorf> tangents;
+        gfx::VBO tangent_vbo;
+
         bool are_buffers_created = false;
         gfx::VBO ebo;
         gfx::VBO vbo;
@@ -30,7 +34,7 @@ namespace simpleengine::gfx {
 
         Mesh(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material);
         Mesh(std::vector<LitVertex> vertices, std::vector<GLuint> indicies = std::vector<GLuint>(), std::optional<Material> material = std::nullopt);
-        Mesh(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material, gfx::VBO ebo, gfx::VBO vbo, gfx::VAO vao);
+        Mesh(std::vector<LitVertex> vertices, std::vector<GLuint> indicies, Material material, gfx::VBO ebo, gfx::VBO vbo, gfx::VAO vao, gfx::VBO tangent_vbo);
 
         virtual void destroy() override;
 
@@ -45,5 +49,12 @@ namespace simpleengine::gfx {
          *
          */
         void calculate_normals();
+
+        /**
+         * @brief Calculate tangents and bi-tangents (tangent space) for the model.
+         * 
+         * @note This **will** overwrite the existing tangents and bi-tangents.
+         */
+        void calculate_tangents();
     };
 }

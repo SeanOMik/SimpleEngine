@@ -18,8 +18,8 @@ namespace simpleengine::gfx {
 
         virtual void update(const float& delta_time) override {
             shader.use();
-            shader.set_uniform_float_vec3("light_position", position, false);
-            shader.set_uniform_float_vec3("light_color", color, false);
+            shader.set_uniform_float_vec3("u_light_position", position, false);
+            shader.set_uniform_float_vec3("u_light_color", color, false);
             shader.unuse();
         }
 

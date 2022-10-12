@@ -21,7 +21,7 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(assimp REQUIRED)
+find_package(assimp CONFIG REQUIRED)
 
 # Link sources
 file(GLOB_RECURSE source_list src/*.cpp)
@@ -45,7 +45,14 @@ target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
 target_link_libraries(simpleengine PUBLIC ${GLM_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
-target_link_libraries(simpleengine PUBLIC assimp)
+if(WIN32)
+    target_link_libraries(simpleengine PUBLIC assimp::assimp)
+else()
+    target_link_libraries(simpleengine PUBLIC assimp)
+endif()
+
+# Link resources
+target_link_libraries(simpleengine PUBLIC cmrc::base)
 target_link_libraries(simpleengine PRIVATE simpleengine_resources)
 
 # Include some dependencies' include directories

@@ -1,4 +1,5 @@
 #include "gfx/texture.h"
+#include <stdexcept>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -23,8 +24,7 @@ namespace simpleengine::gfx {
 
         stbi_set_flip_vertically_on_load(flip_vertically);
 
-        // Read 4 channels (RGBA)
-        img_data = stbi_load(path, &width, &height, &channels, 4);
+        unsigned char*img_data = stbi_load(path, &width, &height, &channels, 0);
         if(!img_data) {
             const char* failure = stbi_failure_reason();
             std::cerr << "Failed to load texture! (" << failure << ")" << std::endl;
@@ -32,13 +32,27 @@ namespace simpleengine::gfx {
         }
         std::cout << "Loaded image with a width of " << width << "px, a height of " << height << "px and " << channels << " channels" << std::endl;
 
-        glTexImage2D(image_type_gl, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data);
+        // Get the color type
+        int color_format = 0;
+        if (channels == 1) {
+            color_format = GL_RED;
+        } else if (channels == 3) {
+            color_format = GL_RGB;
+        } else if (channels == 4) {
+            color_format = GL_RGBA;
+        } else {
+            std::cerr << "Unknown texture color format with " << channels << " channels!" << std::endl;
+            throw std::runtime_error("Unknown texture color format!");
+        }
+
+        glTexImage2D(image_type_gl, 0, color_format, width, height, 0, color_format, GL_UNSIGNED_BYTE, img_data);
         
         if (mipmap) {
             glGenerateMipmap(image_type_gl);
         }
 
         stbi_set_flip_vertically_on_load(false);
+        stbi_image_free(img_data);
 
         unbind();
     }
@@ -62,8 +76,7 @@ namespace simpleengine::gfx {
 
         stbi_set_flip_vertically_on_load(flip_vertically);
 
-        // Read 4 channels (RGBA)
-        img_data = stbi_load_from_memory(buffer, buffer_length, &width, &height, &channels, 4);
+        unsigned char* img_data = stbi_load_from_memory(buffer, buffer_length, &width, &height, &channels, 0);
         if(!img_data) {
             const char* failure = stbi_failure_reason();
             std::cerr << "Failed to load texture! (" << failure << ")" << std::endl;
@@ -71,13 +84,27 @@ namespace simpleengine::gfx {
         }
         std::cout << "Loaded image with a width of " << width << "px, a height of " << height << "px and " << channels << " channels" << std::endl;
 
-        glTexImage2D(image_type_gl, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data);
+        // Get the color type
+        int color_format = 0;
+        if (channels == 1) {
+            color_format = GL_RED;
+        } else if (channels == 3) {
+            color_format = GL_RGB;
+        } else if (channels == 4) {
+            color_format = GL_RGBA;
+        } else {
+            std::cerr << "Unknown texture color format with " << channels << " channels!" << std::endl;
+            throw std::runtime_error("Unknown texture color format!");
+        }
+
+        glTexImage2D(image_type_gl, 0, color_format, width, height, 0, color_format, GL_UNSIGNED_BYTE, img_data);
         
         if (mipmap) {
             glGenerateMipmap(image_type_gl);
         }
 
         stbi_set_flip_vertically_on_load(false);
+        stbi_image_free(img_data);
 
         unbind();
     }
@@ -103,7 +130,6 @@ namespace simpleengine::gfx {
         texture.height = height;
         texture.channels = 4;
         texture.type = aiTextureType::aiTextureType_DIFFUSE;
-        texture.img_data = data;
         
         glGenTextures(1, &texture.texture_id);
         texture.bind();
@@ -113,11 +139,11 @@ namespace simpleengine::gfx {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.img_data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
         texture.unbind();
 
-        
+        free(data);
 
         return texture;
     }

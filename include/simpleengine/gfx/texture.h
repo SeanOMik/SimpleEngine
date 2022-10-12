@@ -23,17 +23,30 @@ namespace simpleengine::gfx {
         TexFlags_FLIP_VERTICALLY = 0b00000010,
         TexFlags_FLIP_HORIZONTALLY = 0b00000100,
         TexFlags_MIPMAP = 0b00001000,
+        /* TexFlags_NO_COLOR = 0b00010000,
+        TexFlags_RGB = 0b00100000,
+        TexFlags_RGBA = 0b01000000, */
     };
 
     class Texture {
     private:
-        unsigned char* img_data; // TODO Free this if its not used anymore
+        //unsigned char* img_data; // TODO Free this if its not used anymore
         unsigned int texture_id;
 
         unsigned int image_type_gl;
 
         Texture() = default;
     public:
+        /**
+         * @brief The default Texture flags including the color.
+         *
+         * The default flags are `TexFlags_IMG_2D | TexFlags_MIPMAP`
+         *
+         * @see simpleengine::gfx::Texture::default_flags_no_color
+         * 
+         */
+        static constexpr int default_flags = TexFlags_IMG_2D | TexFlags_MIPMAP;
+
         int height;
         int width;
         int channels;
@@ -47,8 +60,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(const char* path, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, int flags = TextureFlags::TexFlags_IMG_2D | 
-            TextureFlags::TexFlags_MIPMAP);
+        Texture(const char* path, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, int flags = Texture::default_flags);
 
         /**
          * @brief Construct a new Texture object from the loaded file buffer.
@@ -58,8 +70,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, int flags = TextureFlags::TexFlags_IMG_2D | 
-            TextureFlags::TexFlags_MIPMAP);
+        Texture(const unsigned char *const buffer, int buffer_length, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, int flags = Texture::default_flags);
 
         /**
          * @brief Construct a new Texture object from the loaded file buffer.
@@ -68,8 +79,7 @@ namespace simpleengine::gfx {
          * @param img_2d Whether or not the texture is 2D.
          * @param mipmap Whether or not to generate mipmaps for this texture.
          */
-        Texture(std::vector<unsigned char> buffer, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, int flags = TextureFlags::TexFlags_IMG_2D | 
-            TextureFlags::TexFlags_MIPMAP);
+        Texture(std::vector<unsigned char> buffer, aiTextureType type = aiTextureType::aiTextureType_DIFFUSE, int flags = Texture::default_flags);
 
         static Texture white_texture();
 
