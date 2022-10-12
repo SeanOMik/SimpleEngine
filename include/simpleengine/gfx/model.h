@@ -16,6 +16,7 @@ namespace simpleengine::gfx {
         MdlProcFlag_FLIP_TEX_COORDS_VERTICALLY = 0b00000001,
         MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY = 0b00000010,
         MdlProcFlag_CALCULATE_TANGENT_SPACE = 0b00000100,
+        MdlProcFlag_TRANSPARENT = 0b00001000,
     };
 
     /**
@@ -40,7 +41,7 @@ namespace simpleengine::gfx {
         gfx::Mesh process_mesh(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMesh* mesh, const aiScene* scene);
 
         std::unordered_map<aiTextureType, std::vector<Texture>> load_all_textures(aiMaterial* material);
-        std::vector<std::shared_ptr<Texture>> load_material_texture(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMaterial* material, aiTextureType type, TextureFlags texture_color);
+        std::vector<std::shared_ptr<Texture>> load_material_texture(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>>& processed_textures, aiMaterial* material, aiTextureType type);
     protected:
         void post_process();
     public:

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rendering_type.h"
 #include "texture.h"
 
 #include <assimp/material.h>
@@ -10,6 +11,9 @@
 namespace simpleengine::gfx {
     class Material {
     public:
+        RenderingType rendering_type;
+
+        // TODO: Only one of each texture type.
         std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> textures;
 
         float ambient_strength;
@@ -32,9 +36,9 @@ namespace simpleengine::gfx {
          */
         float shine_factor;
 
-        Material(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> textures, float shine = 1.f, float specular_scalar = 1.f, float ambient_scalar = 1.f, float diffuse_scalar = 1.f) :
-                textures(textures), ambient_strength(ambient_scalar), diffuse_strength(diffuse_scalar), specular_strength(specular_scalar),
-                shine_factor(shine) {
+        Material(std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> textures, RenderingType rendering_type, float shine = 1.f,
+                float specular_scalar = 1.f, float ambient_scalar = 1.f, float diffuse_scalar = 1.f) : textures(textures), rendering_type(rendering_type),
+                ambient_strength(ambient_scalar), diffuse_strength(diffuse_scalar), specular_strength(specular_scalar), shine_factor(shine) {
 
         }
     };

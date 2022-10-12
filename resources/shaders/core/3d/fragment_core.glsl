@@ -47,8 +47,13 @@ out vec4 fs_color;
 vec3 calculate_lighting();
 
 void main() {
-    vec3 lighting = calculate_lighting();
+    // Skip completely transparent fragments.
+    /* vec4 diffuse = texture(u_material.diffuse, vs_texcoord);
+    if (diffuse.a < 0.1) {
+        discard;
+    } */
 
+    vec3 lighting = calculate_lighting();
 
     fs_color = vec4(lighting, 1.f) * texture(u_material.diffuse, vs_texcoord);
 }

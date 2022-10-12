@@ -23,14 +23,14 @@ namespace simpleengine::gfx {
         TexFlags_FLIP_VERTICALLY = 0b00000010,
         TexFlags_FLIP_HORIZONTALLY = 0b00000100,
         TexFlags_MIPMAP = 0b00001000,
-        TexFlags_NO_COLOR = 0b00010000,
+        /* TexFlags_NO_COLOR = 0b00010000,
         TexFlags_RGB = 0b00100000,
-        TexFlags_RGBA = 0b01000000,
+        TexFlags_RGBA = 0b01000000, */
     };
 
     class Texture {
     private:
-        unsigned char* img_data; // TODO Free this if its not used anymore
+        //unsigned char* img_data; // TODO Free this if its not used anymore
         unsigned int texture_id;
 
         unsigned int image_type_gl;
@@ -38,24 +38,14 @@ namespace simpleengine::gfx {
         Texture() = default;
     public:
         /**
-         * @brief The default Texture flags not including the color.
-         *
-         * The default flags are `TexFlags_IMG_2D | TexFlags_MIPMAP`
-         *
-         * @see simpleengine::gfx::Texture::default_flags
-         * 
-         */
-        static constexpr int default_flags_no_color = TexFlags_IMG_2D | TexFlags_MIPMAP;
-
-        /**
          * @brief The default Texture flags including the color.
          *
-         * The default flags are `TexFlags_IMG_2D | TexFlags_MIPMAP | TexFlags_RGBA`
+         * The default flags are `TexFlags_IMG_2D | TexFlags_MIPMAP`
          *
          * @see simpleengine::gfx::Texture::default_flags_no_color
          * 
          */
-        static constexpr int default_flags = default_flags_no_color | TexFlags_RGBA;
+        static constexpr int default_flags = TexFlags_IMG_2D | TexFlags_MIPMAP;
 
         int height;
         int width;

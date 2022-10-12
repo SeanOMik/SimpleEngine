@@ -51,6 +51,8 @@ else()
     target_link_libraries(simpleengine PUBLIC assimp)
 endif()
 
+# Link resources
+target_link_libraries(simpleengine PUBLIC cmrc::base)
 target_link_libraries(simpleengine PRIVATE simpleengine_resources)
 
 # Include some dependencies' include directories
