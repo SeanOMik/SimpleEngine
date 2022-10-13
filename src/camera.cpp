@@ -96,9 +96,9 @@ namespace simpleengine {
         view_matrix = glm::lookAt(position, position + camera_front, camera_up);
 
         shader.use();
-        shader.set_uniform_float_vec3("u_view_pos", position, false);
-        shader.set_uniform_matrix_4f("u_view_matrix", view_matrix, false);
-        shader.set_uniform_matrix_4f("u_projection_matrix", projection_matrix, false);
+        shader.set_uniform_float_vec3("u_view_pos", position);
+        shader.set_uniform_matrix_4f("u_view_matrix", view_matrix);
+        shader.set_uniform_matrix_4f("u_projection_matrix", projection_matrix);
         shader.unuse();
     }
 }

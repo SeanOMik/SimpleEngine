@@ -26,6 +26,10 @@ namespace simpleengine::gfx {
     private:
         GLFWwindow* window;
     protected:
+        bool is_initialized = false;
+
+        void check_if_initialized();
+
     public:
         std::queue<RenderingJob> transparent_render_queue;
         std::queue<RenderingJob> other_render_queue;

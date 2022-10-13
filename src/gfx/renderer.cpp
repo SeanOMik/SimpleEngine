@@ -11,8 +11,8 @@
 #include <assimp/material.h>
 #include <functional>
 #include <glm/geometric.hpp>
+#include <stdexcept>
 
-// TODO: Check if initialized before trying to do stuff
 namespace simpleengine::gfx {
     void create_mesh_buffers(simpleengine::gfx::Mesh &mesh);
 
@@ -30,6 +30,13 @@ namespace simpleengine::gfx {
 
         fprintf(stderr, "%s type = 0x%x, severity = 0x%x, message = %s\n",
                 (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
+    }
+
+    void Renderer::check_if_initialized() {
+        if (!is_initialized) {
+            std::cerr << "Renderer is not initialized!" << std::endl;
+            throw std::runtime_error("Renderer is not initialized!");
+        }
     }
 
     void Renderer::enable_debug() {
@@ -83,14 +90,14 @@ namespace simpleengine::gfx {
             }
 
             // Enable VAO attributes
-            vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, position), false);
-            vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color), false);
-            vao.enable_attrib(vbo, 2, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, normal), false);
-            vao.enable_attrib(vbo, 3, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord), false);
+            vao.enable_attrib(vbo, 0, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, position));
+            vao.enable_attrib(vbo, 1, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, color));
+            vao.enable_attrib(vbo, 2, 3, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, normal));
+            vao.enable_attrib(vbo, 3, 2, GL_FLOAT, sizeof(LitVertex), offsetof(LitVertex, tex_coord));
 
             rendering_mesh->tangent_vbo.buffer(rendering_mesh->tangents.data(), 0,
                                                rendering_mesh->tangents.size() * sizeof(Vectorf));
-            vao.enable_attrib(rendering_mesh->tangent_vbo, 4, 3, GL_FLOAT, sizeof(Vectorf), 0, false);
+            vao.enable_attrib(rendering_mesh->tangent_vbo, 4, 3, GL_FLOAT, sizeof(Vectorf), 0);
 
             vbo.unbind();
             vao.unbind();
@@ -101,7 +108,9 @@ namespace simpleengine::gfx {
         }
     }
 
-    void Renderer::update(const float &delta_time) {}
+    void Renderer::update(const float &delta_time) {
+        check_if_initialized();
+    }
 
     void Renderer::initialize() {
         glEnable(GL_DEPTH_TEST);
@@ -110,6 +119,8 @@ namespace simpleengine::gfx {
         glCullFace(GL_BACK);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        this->is_initialized = true;
 
         std::cout << "Base Renderer initialized" << std::endl;
     }
@@ -125,21 +136,21 @@ namespace simpleengine::gfx {
     bool Renderer::render_job(const RenderingJob &job) {
         Mesh *mesh = job.rendering_mesh;
 
-        shader.set_uniform_matrix_4f("u_transform_matrix", job.transform_mat, false);
+        shader.set_uniform_matrix_4f("u_transform_matrix", job.transform_mat);
 
         std::optional<Material> &material = mesh->material;
 
         if (material.has_value()) {
-            shader.set_uniform_float("u_material.ambient_strength", material->ambient_strength, false);
-            shader.set_uniform_float("u_material.diffuse_strength", material->diffuse_strength, false);
-            shader.set_uniform_float("u_material.specular_strength", material->specular_strength, false);
-            shader.set_uniform_float("u_material.shine_factor", material->shine_factor, false);
-            // shader.set_uniform_float("u_material.reflect_factor", .1f, false);
+            shader.set_uniform_float("u_material.ambient_strength", material->ambient_strength);
+            shader.set_uniform_float("u_material.diffuse_strength", material->diffuse_strength);
+            shader.set_uniform_float("u_material.specular_strength", material->specular_strength);
+            shader.set_uniform_float("u_material.shine_factor", material->shine_factor);
+            // shader.set_uniform_float("u_material.reflect_factor", .1f);
 
             auto diffuse_maps = material->textures.find(aiTextureType_DIFFUSE);
             auto diffuse_map = diffuse_maps->second.front();
 
-            shader.set_uniform_int("u_material.diffuse", 0, false);
+            shader.set_uniform_int("u_material.diffuse", 0);
 
             glActiveTexture(GL_TEXTURE0);
             diffuse_map->bind();
@@ -149,13 +160,13 @@ namespace simpleengine::gfx {
             if (specular_maps != material->textures.end()) {
                 auto spec = specular_maps->second.front();
 
-                shader.set_uniform_int("u_material.has_specular_map", 1, false);
-                shader.set_uniform_int("u_material.specular_map", 1, false);
+                shader.set_uniform_int("u_material.has_specular_map", 1);
+                shader.set_uniform_int("u_material.specular_map", 1);
 
                 glActiveTexture(GL_TEXTURE1);
                 spec->bind();
             } else {
-                shader.set_uniform_int("u_material.has_specular_map", 0, false);
+                shader.set_uniform_int("u_material.has_specular_map", 0);
             }
 
             // Apply the normal map if it exists
@@ -163,13 +174,13 @@ namespace simpleengine::gfx {
             if (normal_maps != material->textures.end()) {
                 auto normal = normal_maps->second.front();
 
-                shader.set_uniform_int("u_material.has_normal_map", 1, false);
-                shader.set_uniform_int("u_material.normal_map", 2, false);
+                shader.set_uniform_int("u_material.has_normal_map", 1);
+                shader.set_uniform_int("u_material.normal_map", 2);
 
                 glActiveTexture(GL_TEXTURE2);
                 normal->bind();
             } else {
-                shader.set_uniform_int("u_material.has_normal_map", 0, false);
+                shader.set_uniform_int("u_material.has_normal_map", 0);
             }
         }
 
@@ -184,8 +195,6 @@ namespace simpleengine::gfx {
     }
 
     void Renderer::render_job_queue(std::queue<RenderingJob> &rendering_queue) {
-        shader.use();
-
         while (!rendering_queue.empty()) {
             // Get the job from the queue, we'll remove it after we render.
             RenderingJob &job = rendering_queue.front();
@@ -197,25 +206,21 @@ namespace simpleengine::gfx {
                 rendering_queue.pop();
             }
         }
-
-        shader.unuse();
     }
 
     void Renderer::render_job_queue(std::map<float, RenderingJob, std::greater<>>& rendering_queue) {
-        shader.use();
-
         // Render each job then clear the queue
         for (const auto& it : rendering_queue) {
             this->render_job(it.second);
         }
         rendering_queue.clear();
-
-        shader.unuse();
     }
 
     void Renderer::render() {
-        // Render other (opaque) objects first
-        this->render_job_queue(other_render_queue);
+        check_if_initialized();
+
+        // Render other (opaque) objects first 
+        render_job_queue(other_render_queue);
 
         // Render transparent objects
         std::map<float, RenderingJob, std::greater<>> transparent_jobs;
@@ -228,6 +233,6 @@ namespace simpleengine::gfx {
 
             transparent_render_queue.pop();
         }
-        this->render_job_queue(transparent_jobs);
+        render_job_queue(transparent_jobs);
     }
 } // namespace simpleengine::gfx

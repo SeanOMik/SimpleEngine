@@ -39,6 +39,9 @@ namespace simpleengine::gfx {
     };
 
     class Shader {
+    private:
+        static GLuint inuse_program;
+        //static GLuint inuse_shader;
     public:
         GLuint program;
         GLuint shader;
@@ -92,7 +95,7 @@ namespace simpleengine::gfx {
          * @brief Un-use the shader program by using the id of "0".
          * 
          */
-        static void unuse();
+        void unuse();
 
         /**
          * @brief Attach the shader to a program. No need to call this if its already attached once.
@@ -181,73 +184,73 @@ namespace simpleengine::gfx {
          */
         GLdouble get_uniform_double(const char* uniform_name) const;
 
-        void set_uniform_float(GLint location, GLfloat fl, bool bind_shader = true);
-        void set_uniform_float(const char* uniform_name, GLfloat fl, bool bind_shader = true);
+        void set_uniform_float(GLint location, GLfloat fl);
+        void set_uniform_float(const char* uniform_name, GLfloat fl);
 
-        void set_uniform_float_array(GLint location, int count, GLfloat* arr, bool bind_shader = true);
-        void set_uniform_float_array(const char* uniform_name, int count, GLfloat* arr, bool bind_shader = true);
+        void set_uniform_float_array(GLint location, int count, GLfloat* arr);
+        void set_uniform_float_array(const char* uniform_name, int count, GLfloat* arr);
  
-        void set_uniform_float_vec2(GLint location, glm::vec2 vec, bool bind_shader = true);
-        void set_uniform_float_vec2(const char* uniform_name, glm::vec2 vec, bool bind_shader = true);
+        void set_uniform_float_vec2(GLint location, glm::vec2 vec);
+        void set_uniform_float_vec2(const char* uniform_name, glm::vec2 vec);
 
-        void set_uniform_float_vec3(GLint location, glm::vec3 vec, bool bind_shader = true);
-        void set_uniform_float_vec3(const char* uniform_name, glm::vec3 vec, bool bind_shader = true);
+        void set_uniform_float_vec3(GLint location, glm::vec3 vec);
+        void set_uniform_float_vec3(const char* uniform_name, glm::vec3 vec);
         
-        void set_uniform_float_vec4(GLint location, glm::vec4 vec, bool bind_shader = true);
-        void set_uniform_float_vec4(const char* uniform_name, glm::vec4 vec, bool bind_shader = true);
+        void set_uniform_float_vec4(GLint location, glm::vec4 vec);
+        void set_uniform_float_vec4(const char* uniform_name, glm::vec4 vec);
         
-        void set_uniform_int(GLint location, GLint i, bool bind_shader = true);
-        void set_uniform_int(const char* uniform_name, GLint i, bool bind_shader = true);
+        void set_uniform_int(GLint location, GLint i);
+        void set_uniform_int(const char* uniform_name, GLint i);
 
-        void set_uniform_int_array(GLint location, int count, GLint* arr, bool bind_shader = true);
-        void set_uniform_int_array(const char* uniform_name, int count, GLint* arr, bool bind_shader = true);
+        void set_uniform_int_array(GLint location, int count, GLint* arr);
+        void set_uniform_int_array(const char* uniform_name, int count, GLint* arr);
         
-        void set_uniform_int_vec2(GLint location, glm::ivec2 vec, bool bind_shader = true);
-        void set_uniform_int_vec2(const char* uniform_name, glm::ivec2 vec, bool bind_shader = true);
+        void set_uniform_int_vec2(GLint location, glm::ivec2 vec);
+        void set_uniform_int_vec2(const char* uniform_name, glm::ivec2 vec);
         
-        void set_uniform_int_vec3(GLint location, glm::ivec3 vec, bool bind_shader = true);
-        void set_uniform_int_vec3(const char* uniform_name, glm::ivec3 vec, bool bind_shader = true);
+        void set_uniform_int_vec3(GLint location, glm::ivec3 vec);
+        void set_uniform_int_vec3(const char* uniform_name, glm::ivec3 vec);
         
-        void set_uniform_int_vec4(GLint location, glm::ivec4 vec, bool bind_shader = true);
-        void set_uniform_int_vec4(const char* uniform_name, glm::ivec4 vec, bool bind_shader = true);
+        void set_uniform_int_vec4(GLint location, glm::ivec4 vec);
+        void set_uniform_int_vec4(const char* uniform_name, glm::ivec4 vec);
         
-        void set_uniform_uint(GLint location, GLuint ui, bool bind_shader = true);
-        void set_uniform_uint(const char* uniform_name, GLuint ui, bool bind_shader = true);
+        void set_uniform_uint(GLint location, GLuint ui);
+        void set_uniform_uint(const char* uniform_name, GLuint ui);
         
-        void set_uniform_uint_vec2(GLint location, glm::uvec2 vec, bool bind_shader = true);
-        void set_uniform_uint_vec2(const char* uniform_name, glm::uvec2 vec, bool bind_shader = true);
+        void set_uniform_uint_vec2(GLint location, glm::uvec2 vec);
+        void set_uniform_uint_vec2(const char* uniform_name, glm::uvec2 vec);
         
-        void set_uniform_uint_vec3(GLint location, glm::uvec3 vec, bool bind_shader = true);
-        void set_uniform_uint_vec3(const char* uniform_name, glm::uvec3 vec, bool bind_shader = true);
+        void set_uniform_uint_vec3(GLint location, glm::uvec3 vec);
+        void set_uniform_uint_vec3(const char* uniform_name, glm::uvec3 vec);
         
-        void set_uniform_uint_vec4(GLint location, glm::uvec4 vec, bool bind_shader = true);
-        void set_uniform_uint_vec4(const char* uniform_name, glm::uvec4 vec, bool bind_shader = true);
+        void set_uniform_uint_vec4(GLint location, glm::uvec4 vec);
+        void set_uniform_uint_vec4(const char* uniform_name, glm::uvec4 vec);
 
-        void set_uniform_matrix_2f(GLint location, glm::mat2 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_2f(const char* uniform_name, glm::mat2 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_2f(GLint location, glm::mat2 mat, bool transpose = false);
+        void set_uniform_matrix_2f(const char* uniform_name, glm::mat2 mat, bool transpose = false);
  
-        void set_uniform_matrix_3f(GLint location, glm::mat3 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_3f(const char* uniform_name, glm::mat3 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_3f(GLint location, glm::mat3 mat, bool transpose = false);
+        void set_uniform_matrix_3f(const char* uniform_name, glm::mat3 mat, bool transpose = false);
         
-        void set_uniform_matrix_4f(GLint location, glm::mat4 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_4f(const char* uniform_name, glm::mat4 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_4f(GLint location, glm::mat4 mat, bool transpose = false);
+        void set_uniform_matrix_4f(const char* uniform_name, glm::mat4 mat, bool transpose = false);
         
-        void set_uniform_matrix_2x3f(GLint location, glm::mat2x3 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_2x3f(const char* uniform_name, glm::mat2x3 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_2x3f(GLint location, glm::mat2x3 mat, bool transpose = false);
+        void set_uniform_matrix_2x3f(const char* uniform_name, glm::mat2x3 mat, bool transpose = false);
         
-        void set_uniform_matrix_3x2f(GLint location, glm::mat3x2 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_3x2f(const char* uniform_name, glm::mat3x2 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_3x2f(GLint location, glm::mat3x2 mat, bool transpose = false);
+        void set_uniform_matrix_3x2f(const char* uniform_name, glm::mat3x2 mat, bool transpose = false);
         
-        void set_uniform_matrix_2x4f(GLint location, glm::mat2x4 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_2x4f(const char* uniform_name, glm::mat2x4 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_2x4f(GLint location, glm::mat2x4 mat, bool transpose = false);
+        void set_uniform_matrix_2x4f(const char* uniform_name, glm::mat2x4 mat, bool transpose = false);
         
-        void set_uniform_matrix_4x2f(GLint location, glm::mat4x2 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_4x2f(const char* uniform_name, glm::mat4x2 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_4x2f(GLint location, glm::mat4x2 mat, bool transpose = false);
+        void set_uniform_matrix_4x2f(const char* uniform_name, glm::mat4x2 mat, bool transpose = false);
         
-        void set_uniform_matrix_3x4f(GLint location, glm::mat2x4 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_3x4f(const char* uniform_name, glm::mat3x4 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_3x4f(GLint location, glm::mat2x4 mat, bool transpose = false);
+        void set_uniform_matrix_3x4f(const char* uniform_name, glm::mat3x4 mat, bool transpose = false);
         
-        void set_uniform_matrix_4x3f(GLint location, glm::mat4x3 mat, bool bind_shader = true, bool transpose = false);
-        void set_uniform_matrix_4x3f(const char* uniform_name, glm::mat4x3 mat, bool bind_shader = true, bool transpose = false);
+        void set_uniform_matrix_4x3f(GLint location, glm::mat4x3 mat, bool transpose = false);
+        void set_uniform_matrix_4x3f(const char* uniform_name, glm::mat4x3 mat, bool transpose = false);
     };
 }
