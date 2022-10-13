@@ -26,8 +26,7 @@ struct Material {
 
     bool has_specular_map;
     sampler2D specular_map;
-
-    // TODO: Make Optional
+    
     bool has_normal_map;
     sampler2D normal_map;
 

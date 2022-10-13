@@ -78,7 +78,6 @@ int main(int argc, char *argv[]) {
 
     se::ecs::Entity other_e = scene->create_entity();
     other_e.add_component<se::ModelComponent>("examples/dev_testing/resources/transparent_window.fbx",
-        se::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE |
         se::gfx::ModelProcessingFlags::MdlProcFlag_TRANSPARENT);
     auto &other_transform = other_e.add_component<se::TransformComponent>();
     other_transform.translate(5.f, 0.5f, 1.f);
@@ -89,15 +88,13 @@ int main(int argc, char *argv[]) {
     // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/planks/planks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
     //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
     entity.add_component<se::ModelComponent>("examples/dev_testing/resources/transparent_window.fbx", 
-        se::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE |
         se::gfx::ModelProcessingFlags::MdlProcFlag_TRANSPARENT);
 
     auto &transform_comp = entity.add_component<se::TransformComponent>();
     transform_comp.translate(4.f, 0.f, 0.f);
 
     se::ecs::Entity brick_e = scene->create_entity();
-    brick_e.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx",
-        se::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
+    brick_e.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx");
     auto &brick_transf = brick_e.add_component<se::TransformComponent>();
     brick_transf.translate(6.f, -0.5f, 1.f);
 

@@ -15,8 +15,7 @@ namespace simpleengine::gfx {
         MdlProcFlag_NONE = 0x0,
         MdlProcFlag_FLIP_TEX_COORDS_VERTICALLY = 0x1,
         MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY = 0x2,
-        MdlProcFlag_CALCULATE_TANGENT_SPACE = 0x4,
-        MdlProcFlag_TRANSPARENT = 0x8,
+        MdlProcFlag_TRANSPARENT = 0x4,
     };
 
     /**
