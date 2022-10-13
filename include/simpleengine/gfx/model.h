@@ -11,12 +11,12 @@
 //#include <assimp/mesh.h>
 
 namespace simpleengine::gfx {
-    enum ModelProcessingFlags : uint8_t {
-        MdlProcFlag_NONE = 0b00000000,
-        MdlProcFlag_FLIP_TEX_COORDS_VERTICALLY = 0b00000001,
-        MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY = 0b00000010,
-        MdlProcFlag_CALCULATE_TANGENT_SPACE = 0b00000100,
-        MdlProcFlag_TRANSPARENT = 0b00001000,
+    enum ModelProcessingFlags {
+        MdlProcFlag_NONE = 0x0,
+        MdlProcFlag_FLIP_TEX_COORDS_VERTICALLY = 0x1,
+        MdlProcFlag_FLIP_TEX_COORDS_HORIZONTALLY = 0x2,
+        MdlProcFlag_CALCULATE_TANGENT_SPACE = 0x4,
+        MdlProcFlag_TRANSPARENT = 0x8,
     };
 
     /**

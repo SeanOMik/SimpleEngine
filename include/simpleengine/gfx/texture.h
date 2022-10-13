@@ -18,14 +18,11 @@
 #include <iostream>
 
 namespace simpleengine::gfx {
-    enum TextureFlags : uint8_t {
-        TexFlags_IMG_2D = 0b00000001,
-        TexFlags_FLIP_VERTICALLY = 0b00000010,
-        TexFlags_FLIP_HORIZONTALLY = 0b00000100,
-        TexFlags_MIPMAP = 0b00001000,
-        /* TexFlags_NO_COLOR = 0b00010000,
-        TexFlags_RGB = 0b00100000,
-        TexFlags_RGBA = 0b01000000, */
+    enum TextureFlags {
+        TexFlags_IMG_2D = 0x1,
+        TexFlags_FLIP_VERTICALLY = 0x2,
+        TexFlags_FLIP_HORIZONTALLY = 0x4,
+        TexFlags_MIPMAP = 0x8
     };
 
     class Texture {
