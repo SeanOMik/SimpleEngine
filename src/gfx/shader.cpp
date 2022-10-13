@@ -100,6 +100,11 @@ namespace simpleengine::gfx {
         glDeleteShader(shader);
     }
 
+    void Shader::delete_program() {
+        unuse();
+        glDeleteProgram(program);
+    }
+
     void Shader::use() const {
         if (Shader::inuse_program != program) {
             glUseProgram(program);

@@ -86,6 +86,12 @@ namespace simpleengine::gfx {
         void delete_shader();
 
         /**
+         * @brief Delete the shader program.
+         * 
+         */
+        void delete_program();
+
+        /**
          * @brief Use the shader program.
          * 
          */

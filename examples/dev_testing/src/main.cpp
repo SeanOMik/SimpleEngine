@@ -105,8 +105,10 @@ int main(int argc, char *argv[]) {
     game.set_enable_vsync(true);
     // game.set_fps_limit(120);
     int res = game.run();
+    std::cout << "Engine result: " << res << std::endl;
 
     renderer->destroy();
+    scene->destroy();
 
     return res;
 }

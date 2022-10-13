@@ -28,5 +28,7 @@ namespace simpleengine {
         ecs::Entity create_entity();
 
         virtual void update(const float& delta_time) override;
+
+        virtual void destroy() override;
     };
 }

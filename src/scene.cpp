@@ -41,4 +41,17 @@ namespace simpleengine {
             transform.rotate(rotating.rate * delta_time, rotating.rotation_axis);
         });
     }
+
+    void Scene::destroy() {
+        std::cout << "Destroying Scene..." << std::endl;
+        registry.view<ModelComponent>().each([this](ModelComponent& model_component) {
+            for (auto& mesh : model_component.model.meshes) {
+                mesh.destroy();
+            }
+        });
+
+        registry.view<MeshComponent>().each([this](MeshComponent& mesh_component) {
+            mesh_component.mesh.destroy();
+        });
+    }
 }

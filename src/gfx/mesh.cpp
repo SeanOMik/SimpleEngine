@@ -44,6 +44,7 @@ namespace simpleengine::gfx {
         this->ebo.destroy();
         this->vbo.destroy();
         this->vao.destroy();
+        this->tangent_vbo.destroy();
     }
 
     void Mesh::update(const float& delta_time) {

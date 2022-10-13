@@ -128,6 +128,8 @@ namespace simpleengine::gfx {
     void Renderer::destroy() {
         std::cout << "Destroying renderer..." << std::endl;
 
+        shader.delete_program();
+
         /* for (auto& [handle, rendering] : rendering_models) {
             rendering.destroy_buffers();
         } */
