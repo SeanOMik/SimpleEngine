@@ -19,7 +19,7 @@
 
 simpleengine::Game::Game(int w, int h, const std::string& window_name, const int& gl_profile, const int& major_version,
         const int& minor_version, const bool& resizeable, const int& forward_compat) : window_resizeable(resizeable),
-        enable_vsync(true), fps_limit(-1) {
+        tps_accumulator(0.f) {
     initialize(gl_profile, major_version, minor_version, window_resizeable, forward_compat);
 
     // Create a window
@@ -45,6 +45,8 @@ simpleengine::Game::Game(int w, int h, const std::string& window_name, const int
     }
 
     enable_default_gl_options();
+
+    last_frame_time = std::chrono::high_resolution_clock::now();
 }
 
 void simpleengine::Game::enable_default_gl_options() const {
@@ -105,6 +107,10 @@ void simpleengine::Game::update_enabled_vsync() const {
     }
 }
 
+void simpleengine::Game::handle_input(const float& delta_time) {
+    // TODO
+}
+
 void simpleengine::Game::update(const float& delta_time) {
     handle_input(delta_time);
 
@@ -114,19 +120,15 @@ void simpleengine::Game::update(const float& delta_time) {
     }
 }
 
-void simpleengine::Game::handle_input(const float& delta_time) {
-    // TODO
-}
-
-void simpleengine::Game::render_window(const float& delta_time) {
+void simpleengine::Game::render_window(const float& interpolate_alpha, const float& delta_time) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    render_items(delta_time);
+    render_items(interpolate_alpha, delta_time);
 }
 
-void simpleengine::Game::render_items(const float& delta_time) {
+void simpleengine::Game::render_items(const float& interpolate_alpha, const float& delta_time) {
     for (const std::shared_ptr<Renderable>& renderable : renderable_events) {
-        renderable->render();
+        renderable->render(interpolate_alpha, delta_time);
     }
 }
 
@@ -155,12 +157,24 @@ int simpleengine::Game::run() {
     while (!glfwWindowShouldClose(window)) {
         // Get delta time first thing
         float delta_time = get_delta_time();
+        //std::cout << "Delta time: " << delta_time << std::endl;
 
         // Poll input events
         glfwPollEvents();
 
-        update(delta_time);
-        render_window(delta_time);
+        const double max_delta_time = 0.5;
+
+        tps_accumulator += delta_time;
+
+        while (tps_accumulator >= max_delta_time) {
+            update(max_delta_time);
+
+            tps_accumulator -= max_delta_time;
+        }
+
+        const double interpolate_alpha = tps_accumulator / max_delta_time;
+        
+        render_window(interpolate_alpha, delta_time);
 
         // End draw
         glfwSwapBuffers(window);

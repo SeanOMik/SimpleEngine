@@ -10,10 +10,21 @@
 #include <glm/glm.hpp>
 
 namespace simpleengine {
+    namespace gfx {
+        class Renderer;
+    }
+
     class Camera : public simpleengine::Event {
+    friend gfx::Renderer;
     private:
         GLFWwindow* window;
+
+        glm::vec3 last_position;
+        glm::vec3 last_rotation;
+        glm::mat4 last_view_matrix;
+        glm::vec3 last_camera_front;
     public:
+
         glm::vec3 position;
         glm::vec3 rotation;
         gfx::Shader shader;

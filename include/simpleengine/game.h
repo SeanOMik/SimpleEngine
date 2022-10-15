@@ -42,8 +42,8 @@ namespace simpleengine {
 
         void update(const float& delta_time);
         void handle_input(const float& delta_time);
-        void render_window(const float& delta_time);
-        void render_items(const float& delta_time);
+        void render_window(const float& interpolate_alpha, const float& delta_time);
+        void render_items(const float& interpolate_alpha, const float& delta_time);
         void exit();
         int run();
 
@@ -63,8 +63,13 @@ namespace simpleengine {
         // FPS related stuff
         void update_enabled_vsync() const;
         void limit_framerate(const float& delta_time) const; // Triggered at the end of a draw to help limit the FPS to `fps_limit`.
-        int fps_limit;
-        bool enable_vsync;
+        int fps_limit = -1;
+        bool enable_vsync = true;
+
+        int max_engine_tps = 60; // The maximum engine TPS
+        double tps_accumulator = 0.f;
+        //int engine_ticks_second = 0; // The amount of ticks in a second
+        //double last_sec_engine_tick; // The time of the last second
 
         float get_delta_time();
 

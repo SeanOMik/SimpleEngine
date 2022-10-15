@@ -1,5 +1,6 @@
 #pragma once
 
+//#include "simpleengine/scene.h"
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
@@ -9,14 +10,18 @@ namespace simpleengine {
      * 
      */
     class TransformComponent {
+    friend class Scene;
+    private:
+        // This is the transform from the last render loop. The renderer uses this for frame interprelation
+        glm::mat4 last_transform_matrix;
     public:
         glm::mat4 transform_matrix;
 
-        TransformComponent() : transform_matrix(glm::mat4(1.f)) {
+        TransformComponent() : transform_matrix(1.f), last_transform_matrix(1.f) {
             
         }
 
-        TransformComponent(glm::mat4 transform_matrix) : transform_matrix(transform_matrix) {
+        TransformComponent(glm::mat4 transform_matrix) : transform_matrix(transform_matrix), last_transform_matrix(1.f) {
 
         }
 

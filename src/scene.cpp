@@ -16,30 +16,37 @@ namespace simpleengine {
     }
 
     void Scene::update(const float& delta_time) {
+        // Rotate the model
+        registry.view<TransformComponent, RotatingComponent>().each([this, &delta_time](TransformComponent& transform, RotatingComponent& rotating) {
+            transform.rotate(rotating.rate * delta_time, rotating.rotation_axis);
+        });
+    }
+
+    void Scene::render(const float& interpolate_alpha, const float& frame_time) {
         // Is there a way these can be grouped?
-        registry.view<const TransformComponent, ModelComponent>().each([this](const TransformComponent& transform, ModelComponent& model_component) {
+        registry.view<TransformComponent, ModelComponent>().each([this](TransformComponent& transform, ModelComponent& model_component) {
             for (auto& mesh : model_component.model.meshes) {
                 auto rendering_type = gfx::RenderingType::RendType_OPAQUE;
                 if (mesh.material) {
                     rendering_type = mesh.material->rendering_type;
                 }
 
-                renderer->queue_job(gfx::RenderingJob(rendering_type, mesh, transform.transform_matrix));
+                renderer->queue_job(gfx::RenderingJob(rendering_type, mesh, transform.last_transform_matrix, transform.transform_matrix));
+                transform.last_transform_matrix = transform.transform_matrix; // Update last transform
             }
         });
 
-        registry.view<const TransformComponent, MeshComponent>().each([this](const TransformComponent& transform, MeshComponent& mesh_component) {
+        registry.view<TransformComponent, MeshComponent>().each([this](TransformComponent& transform, MeshComponent& mesh_component) {
             auto rendering_type = gfx::RenderingType::RendType_OPAQUE;
             if (mesh_component.mesh.material) {
                 rendering_type = mesh_component.mesh.material->rendering_type;
             }
 
-            renderer->queue_job(gfx::RenderingJob(rendering_type, mesh_component.mesh, transform.transform_matrix));
+            renderer->queue_job(gfx::RenderingJob(rendering_type, mesh_component.mesh, transform.last_transform_matrix, transform.transform_matrix));
+            transform.last_transform_matrix = transform.transform_matrix; // Update last transform
         });
 
-        registry.view<TransformComponent, RotatingComponent>().each([this, &delta_time](TransformComponent& transform, RotatingComponent& rotating) {
-            transform.rotate(rotating.rate * delta_time, rotating.rotation_axis);
-        });
+        renderer->render(interpolate_alpha, frame_time);
     }
 
     void Scene::destroy() {

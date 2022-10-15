@@ -70,11 +70,12 @@ int main(int argc, char *argv[]) {
     // Create a renderer
     auto renderer = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader, camera);
     renderer->initialize();
-    game.add_renderable(renderer);
+    //game.add_renderable(renderer);
 
     // Create a Scene and give it the renderer
     auto scene = std::make_shared<se::Scene>(renderer);
-    game.add_event(scene);
+    //game.add_event(scene);
+    game.add_renderable(scene); 
 
     se::ecs::Entity other_e = scene->create_entity();
     other_e.add_component<se::ModelComponent>("examples/dev_testing/resources/transparent_window.fbx",
@@ -95,6 +96,7 @@ int main(int argc, char *argv[]) {
 
     se::ecs::Entity brick_e = scene->create_entity();
     brick_e.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx");
+    brick_e.add_component<se::RotatingComponent>();
     auto &brick_transf = brick_e.add_component<se::TransformComponent>();
     brick_transf.translate(6.f, -0.5f, 1.f);
 

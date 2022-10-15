@@ -35,5 +35,9 @@ CheckOptions:
     value: "NULL"
   - key: readability-magic-numbers
     value: "0"
+  - key: cppcoreguidelines-avoid-magic-numbers
+    value: "0"
+  - key: cppcoreguidelines-non-private-member-variables-in-classes
+    value: "0"
 ---
 

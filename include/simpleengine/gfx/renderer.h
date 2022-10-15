@@ -17,9 +17,10 @@ namespace simpleengine::gfx {
     public:
         RenderingType rendering_type;
         gfx::Mesh* rendering_mesh;
+        glm::mat4 last_transform_mat;
         glm::mat4 transform_mat;
 
-        RenderingJob(RenderingType rendering_type, gfx::Mesh& mesh, glm::mat4 position);
+        RenderingJob(RenderingType rendering_type, gfx::Mesh& mesh, glm::mat4 last_pos, glm::mat4 position);
     };
 
     class Renderer : public simpleengine::Renderable {
@@ -43,7 +44,7 @@ namespace simpleengine::gfx {
         void enable_debug();
 
         virtual void sort_jobs();
-        virtual void queue_job(RenderingType rendering_type, gfx::Mesh& mesh, glm::mat4 position);
+        virtual void queue_job(RenderingType rendering_type, gfx::Mesh& mesh, glm::mat4 last_position, glm::mat4 position);
         virtual void queue_job(RenderingJob job);
         virtual void create_job_buffers(RenderingJob& job);
 
@@ -52,7 +53,7 @@ namespace simpleengine::gfx {
 
         virtual void update(const float& delta_time) override;
         
-        virtual void render() override;
+        virtual void render(const float& interpolate_alpha, const float& frame_time) override;
 
         /**
          * @brief Renders a single job.
@@ -61,8 +62,8 @@ namespace simpleengine::gfx {
          * @return true if the job was rendered successfully.
          * @return false if there was an error when trying to render the job.
          */
-        virtual bool render_job(const RenderingJob& job);
-        virtual void render_job_queue(std::queue<RenderingJob>& queue);
-        virtual void render_job_queue(std::map<float, RenderingJob, std::greater<>>& queue);
+        virtual bool render_job(const float& interpolate_alpha, const RenderingJob& job);
+        virtual void render_job_queue(const float& interpolate_alpha, std::queue<RenderingJob>& queue);
+        virtual void render_job_queue(const float& interpolate_alpha, std::map<float, RenderingJob, std::greater<>>& queue);
     };
 }

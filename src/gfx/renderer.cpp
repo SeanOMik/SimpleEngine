@@ -13,11 +13,13 @@
 #include <glm/geometric.hpp>
 #include <stdexcept>
 
+#include <glm/gtx/string_cast.hpp>
+
 namespace simpleengine::gfx {
     void create_mesh_buffers(simpleengine::gfx::Mesh &mesh);
 
-    RenderingJob::RenderingJob(RenderingType rendering_type, gfx::Mesh &mesh, glm::mat4 position)
-        : rendering_type(rendering_type), rendering_mesh(&mesh), transform_mat(position) {}
+    RenderingJob::RenderingJob(RenderingType rendering_type, gfx::Mesh &mesh, glm::mat4 last_pos, glm::mat4 position)
+        : rendering_type(rendering_type), rendering_mesh(&mesh), last_transform_mat(last_pos), transform_mat(position) {}
 
     Renderer::Renderer(GLFWwindow *window, gfx::Shader shader, std::shared_ptr<Camera> camera)
         : window(window), shader(shader), camera(camera)/* , transparent_render_queue(CameraDistanceComparator(camera)) */ {}
@@ -50,8 +52,8 @@ namespace simpleengine::gfx {
         // std::sort()
     }
 
-    void Renderer::queue_job(RenderingType rendering_type, gfx::Mesh &mesh, glm::mat4 position) {
-        RenderingJob job(rendering_type, mesh, position);
+    void Renderer::queue_job(RenderingType rendering_type, gfx::Mesh &mesh, glm::mat4 last_position, glm::mat4 position) {
+        RenderingJob job(rendering_type, mesh, last_position, position);
 
         this->queue_job(job);
     }
@@ -135,10 +137,37 @@ namespace simpleengine::gfx {
         } */
     }
 
-    bool Renderer::render_job(const RenderingJob &job) {
+    glm::mat4 lerp(glm::mat4 a, glm::mat4 b, float alpha) {
+        //return a * (1.f - alpha) + b * alpha;
+        glm::quat rot0 = glm::quat_cast(a);
+        glm::quat rot1= glm::quat_cast(b);
+
+        glm::quat finalRot = glm::slerp(rot0, rot1, alpha);
+
+        glm::mat4 finalMat = glm::mat4_cast(finalRot);
+
+        finalMat[3] = a[3] * (1 - alpha) + b[3] * alpha;
+        
+        return finalMat;
+    }
+
+    bool Renderer::render_job(const float& interpolate_alpha, const RenderingJob &job) {
         Mesh *mesh = job.rendering_mesh;
 
-        shader.set_uniform_matrix_4f("u_transform_matrix", job.transform_mat);
+        /* glm::mat4 transform_mat = job.transform_mat * interpolate_alpha +
+            job.last_transform_mat * (1.f - interpolate_alpha); */
+
+        //glm::mat4 transform_mat = lerp(job.transform_mat, job.last_transform_mat, interpolate_alpha);
+        glm::mat4 transform_mat = lerp(job.last_transform_mat, job.transform_mat, interpolate_alpha);
+
+        std::cout << "Last transform: " << glm::to_string(job.last_transform_mat) << std::endl <<
+            "Current Transform: " << glm::to_string(job.transform_mat) << std::endl <<
+            "Lerp: " << glm::to_string(transform_mat) << std::endl << std::endl;
+
+        //std::cout << "Current: " << job.transform_mat[3]
+
+        shader.set_uniform_matrix_4f("u_transform_matrix", transform_mat);
+        //shader.set_uniform_matrix_4f("u_transform_matrix", job.transform_mat);
 
         std::optional<Material> &material = mesh->material;
 
@@ -196,12 +225,12 @@ namespace simpleengine::gfx {
         return true;
     }
 
-    void Renderer::render_job_queue(std::queue<RenderingJob> &rendering_queue) {
+    void Renderer::render_job_queue(const float& interpolate_alpha, std::queue<RenderingJob> &rendering_queue) {
         while (!rendering_queue.empty()) {
             // Get the job from the queue, we'll remove it after we render.
             RenderingJob &job = rendering_queue.front();
 
-            bool res = this->render_job(job);
+            bool res = this->render_job(interpolate_alpha, job);
 
             if (res) {
                 // Now we'll remove the job from the queue.
@@ -210,19 +239,19 @@ namespace simpleengine::gfx {
         }
     }
 
-    void Renderer::render_job_queue(std::map<float, RenderingJob, std::greater<>>& rendering_queue) {
+    void Renderer::render_job_queue(const float& interpolate_alpha, std::map<float, RenderingJob, std::greater<>>& rendering_queue) {
         // Render each job then clear the queue
         for (const auto& it : rendering_queue) {
-            this->render_job(it.second);
+            this->render_job(interpolate_alpha, it.second);
         }
         rendering_queue.clear();
     }
 
-    void Renderer::render() {
+    void Renderer::render(const float& interpolate_alpha, const float& frame_time) {
         check_if_initialized();
 
         // Render other (opaque) objects first 
-        render_job_queue(other_render_queue);
+        render_job_queue(interpolate_alpha, other_render_queue);
 
         // Render transparent objects
         std::map<float, RenderingJob, std::greater<>> transparent_jobs;
@@ -235,6 +264,6 @@ namespace simpleengine::gfx {
 
             transparent_render_queue.pop();
         }
-        render_job_queue(transparent_jobs);
+        render_job_queue(interpolate_alpha, transparent_jobs);
     }
 } // namespace simpleengine::gfx

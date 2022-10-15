@@ -14,6 +14,6 @@ namespace simpleengine {
         Renderable() = default;
         virtual ~Renderable() = default;
 
-        virtual void render() = 0;
+        virtual void render(const float& interpolate_alpha, const float& frame_time) = 0;
     };
 }
