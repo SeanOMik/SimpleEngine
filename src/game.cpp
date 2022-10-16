@@ -158,33 +158,31 @@ void simpleengine::Game::limit_framerate(const float& delta_time) const {
 int simpleengine::Game::run() {
     while (!glfwWindowShouldClose(window)) {
         // Get delta time first thing
-        float delta_time = get_delta_time();
-        //std::cout << "Delta time: " << delta_time << std::endl;
+        float frame_time = get_delta_time();
 
         // Poll input events
         glfwPollEvents();
+        input_update(frame_time); // Update input on varying timestep
 
-        const double max_delta_time = 0.25;
+        tps_accumulator += frame_time;
 
-        tps_accumulator += delta_time;
+        // https://gafferongames.com/post/fix_your_timestep/
+        while (tps_accumulator >= fixed_delta_time) {
+            update(fixed_delta_time);
 
-        input_update(delta_time);
-
-        while (tps_accumulator >= max_delta_time) {
-            update(max_delta_time);
-
-            tps_accumulator -= max_delta_time;
+            tps_accumulator -= fixed_delta_time;
         }
-
-        const double interpolate_alpha = tps_accumulator / max_delta_time;
         
-        render_window(interpolate_alpha, delta_time);
+        // Alpha used for interpolating objects in rendering
+        float interpolate_alpha = tps_accumulator / fixed_delta_time;
+
+        render_window(interpolate_alpha, frame_time);
 
         // End draw
         glfwSwapBuffers(window);
         glFlush();
         
-        limit_framerate(delta_time);
+        limit_framerate(frame_time);
     }
 
     return 0;

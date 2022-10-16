@@ -66,10 +66,9 @@ namespace simpleengine {
         int fps_limit = -1;
         bool enable_vsync = true;
 
-        int max_engine_tps = 60; // The maximum engine TPS
-        double tps_accumulator = 0.f;
-        //int engine_ticks_second = 0; // The amount of ticks in a second
-        //double last_sec_engine_tick; // The time of the last second
+        int max_engine_tps = 120; // The maximum engine TPS
+        float fixed_delta_time = 1.f / (float) max_engine_tps; // The delta time from fixed timestep
+        float tps_accumulator = 0.f;
 
         float get_delta_time();
 

@@ -96,7 +96,8 @@ int main(int argc, char *argv[]) {
     brick_e.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx");
     brick_e.add_component<se::RotatingComponent>();
     auto &brick_transf = brick_e.add_component<se::TransformComponent>();
-    brick_transf.translate(6.f, -0.5f, 1.f);
+    brick_transf.translate(6.f, 0.f, 0.f);
+    //brick_transf.translate(6.f, -0.5f, 1.f);
 
     auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
     game.add_event(light);
