@@ -6,6 +6,9 @@
 #include "ecs/entity.h"
 #include "gfx/renderer.h"
 
+#include <glm/gtx/string_cast.hpp>
+#include <stdexcept>
+
 namespace simpleengine {
     Scene::Scene(std::shared_ptr<gfx::Renderer> renderer) : renderer(renderer) {
         
@@ -16,6 +19,11 @@ namespace simpleengine {
     }
 
     void Scene::update(const float& delta_time) {
+        // Update the last transform matrix 
+        registry.view<TransformComponent>().each([this, &delta_time](TransformComponent& transform) {
+            transform.last_transform_matrix = transform.transform_matrix;
+        });
+
         // Rotate the model
         registry.view<TransformComponent, RotatingComponent>().each([this, &delta_time](TransformComponent& transform, RotatingComponent& rotating) {
             transform.rotate(rotating.rate * delta_time, rotating.rotation_axis);
@@ -32,7 +40,6 @@ namespace simpleengine {
                 }
 
                 renderer->queue_job(gfx::RenderingJob(rendering_type, mesh, transform.last_transform_matrix, transform.transform_matrix));
-                transform.last_transform_matrix = transform.transform_matrix; // Update last transform
             }
         });
 
@@ -43,7 +50,6 @@ namespace simpleengine {
             }
 
             renderer->queue_job(gfx::RenderingJob(rendering_type, mesh_component.mesh, transform.last_transform_matrix, transform.transform_matrix));
-            transform.last_transform_matrix = transform.transform_matrix; // Update last transform
         });
 
         renderer->render(interpolate_alpha, frame_time);

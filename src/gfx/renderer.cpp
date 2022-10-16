@@ -154,20 +154,10 @@ namespace simpleengine::gfx {
     bool Renderer::render_job(const float& interpolate_alpha, const RenderingJob &job) {
         Mesh *mesh = job.rendering_mesh;
 
-        /* glm::mat4 transform_mat = job.transform_mat * interpolate_alpha +
-            job.last_transform_mat * (1.f - interpolate_alpha); */
-
-        //glm::mat4 transform_mat = lerp(job.transform_mat, job.last_transform_mat, interpolate_alpha);
+        // Iterpolate between transforms
         glm::mat4 transform_mat = lerp(job.last_transform_mat, job.transform_mat, interpolate_alpha);
 
-        std::cout << "Last transform: " << glm::to_string(job.last_transform_mat) << std::endl <<
-            "Current Transform: " << glm::to_string(job.transform_mat) << std::endl <<
-            "Lerp: " << glm::to_string(transform_mat) << std::endl << std::endl;
-
-        //std::cout << "Current: " << job.transform_mat[3]
-
         shader.set_uniform_matrix_4f("u_transform_matrix", transform_mat);
-        //shader.set_uniform_matrix_4f("u_transform_matrix", job.transform_mat);
 
         std::optional<Material> &material = mesh->material;
 
