@@ -5,24 +5,12 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
 namespace simpleengine {
-    namespace gfx {
-        class Renderer;
-    }
-
     class Camera : public simpleengine::Event {
-    friend gfx::Renderer;
     private:
         GLFWwindow* window;
-
-        glm::vec3 last_position;
-        glm::vec3 last_rotation;
-        glm::mat4 last_view_matrix;
-        glm::vec3 last_camera_front;
     public:
 
         glm::vec3 position;
@@ -40,13 +28,12 @@ namespace simpleengine {
         float movement_speed = 2.5f;
 
         Camera(GLFWwindow* window, gfx::Shader shader, float fov = 70, glm::vec3 position = glm::vec3(0.f), glm::vec3 rotation = glm::vec3(0.f),
-            float near_plane = 0.1f, float far_plane = 1000.f, glm::vec3 world_up = glm::vec3(0.f, 1.f, 0.f), 
-            glm::vec3 cam_front = glm::vec3(0.f, 0.f, -1.f));
+            float near_plane = 0.1f, float far_plane = 1000.f);
 
         Camera(GLFWwindow* window, GLuint shader_prog, float fov = 70, glm::vec3 position = glm::vec3(0.f),
-            glm::vec3 rotation = glm::vec3(0.f), float near_plane = 0.1f, float far_plane = 1000.f, glm::vec3 world_up = glm::vec3(0.f, 1.f, 0.f), 
-            glm::vec3 cam_front = glm::vec3(0.f, 0.f, -1.f));
-        
+            glm::vec3 rotation = glm::vec3(0.f), float near_plane = 0.1f, float far_plane = 1000.f);
+
         virtual void update(const float& delta_time) override;
+        virtual void input_update(const float& delta_time) override;
     };
 }

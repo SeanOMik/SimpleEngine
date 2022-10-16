@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     se::gfx::shaders::Core3dShader core_shader;
 
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
-    game.add_event(camera);
+    //game.add_event(camera);
 
     // Create a renderer
     auto renderer = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader, camera);
@@ -73,11 +73,11 @@ int main(int argc, char *argv[]) {
     //game.add_renderable(renderer);
 
     // Create a Scene and give it the renderer
-    auto scene = std::make_shared<se::Scene>(renderer);
+    auto scene = std::make_shared<se::Scene>(renderer, camera);
     //game.add_event(scene);
     game.add_renderable(scene); 
 
-    se::ecs::Entity other_e = scene->create_entity();
+    /* se::ecs::Entity other_e = scene->create_entity();
     other_e.add_component<se::ModelComponent>("examples/dev_testing/resources/transparent_window.fbx",
         se::gfx::ModelProcessingFlags::MdlProcFlag_TRANSPARENT);
     auto &other_transform = other_e.add_component<se::TransformComponent>();
@@ -86,13 +86,11 @@ int main(int argc, char *argv[]) {
     // Create an Entity in the Scene and add components to it.
     se::ecs::Entity entity = scene->create_entity();
 
-    // entity.add_component<se::ModelComponent>("examples/dev_testing/resources/planks/planks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
-    //entity.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx", simpleengine::gfx::ModelProcessingFlags::MdlProcFlag_CALCULATE_TANGENT_SPACE);
     entity.add_component<se::ModelComponent>("examples/dev_testing/resources/transparent_window.fbx", 
         se::gfx::ModelProcessingFlags::MdlProcFlag_TRANSPARENT);
 
     auto &transform_comp = entity.add_component<se::TransformComponent>();
-    transform_comp.translate(4.f, 0.f, 0.f);
+    transform_comp.translate(4.f, 0.f, 0.f); */
 
     se::ecs::Entity brick_e = scene->create_entity();
     brick_e.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx");

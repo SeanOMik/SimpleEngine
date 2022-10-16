@@ -107,13 +107,15 @@ void simpleengine::Game::update_enabled_vsync() const {
     }
 }
 
-void simpleengine::Game::handle_input(const float& delta_time) {
+void simpleengine::Game::input_update(const float& delta_time) {
     // TODO
+
+    for (const std::shared_ptr<Event>& event : events) {
+        event->input_update(delta_time);
+    }
 }
 
 void simpleengine::Game::update(const float& delta_time) {
-    handle_input(delta_time);
-
     // Update items
     for (const std::shared_ptr<Event>& event : events) {
         event->update(delta_time);
@@ -162,9 +164,11 @@ int simpleengine::Game::run() {
         // Poll input events
         glfwPollEvents();
 
-        const double max_delta_time = 0.5;
+        const double max_delta_time = 0.25;
 
         tps_accumulator += delta_time;
+
+        input_update(delta_time);
 
         while (tps_accumulator >= max_delta_time) {
             update(max_delta_time);

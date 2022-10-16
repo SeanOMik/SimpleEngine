@@ -14,6 +14,7 @@
 #include <stdexcept>
 
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/matrix_interpolation.hpp>
 
 namespace simpleengine::gfx {
     void create_mesh_buffers(simpleengine::gfx::Mesh &mesh);
@@ -47,9 +48,7 @@ namespace simpleengine::gfx {
     }
 
     void Renderer::sort_jobs() {
-        // Sort transparents
-
-        // std::sort()
+        
     }
 
     void Renderer::queue_job(RenderingType rendering_type, gfx::Mesh &mesh, glm::mat4 last_position, glm::mat4 position) {
@@ -63,8 +62,6 @@ namespace simpleengine::gfx {
 
         switch (job.rendering_type) {
         case RenderingType::RendType_TRANSPARENT: {
-            /* glm::vec3 pos = job.transform_mat[3];
-            float distance = glm::distance(pos, camera->position); */
             this->transparent_render_queue.emplace(job);
             break;
         }
@@ -131,24 +128,21 @@ namespace simpleengine::gfx {
         std::cout << "Destroying renderer..." << std::endl;
 
         shader.delete_program();
-
-        /* for (auto& [handle, rendering] : rendering_models) {
-            rendering.destroy_buffers();
-        } */
     }
 
-    glm::mat4 lerp(glm::mat4 a, glm::mat4 b, float alpha) {
+    glm::mat4 lerp(glm::mat4 to, glm::mat4 from, float alpha) {
         //return a * (1.f - alpha) + b * alpha;
-        glm::quat rot0 = glm::quat_cast(a);
-        glm::quat rot1= glm::quat_cast(b);
+        glm::quat rot0 = glm::quat_cast(to);
+        glm::quat rot1 = glm::quat_cast(from);
 
-        glm::quat finalRot = glm::slerp(rot0, rot1, alpha);
+        glm::quat final_rot = glm::slerp(rot0, rot1, alpha);
 
-        glm::mat4 finalMat = glm::mat4_cast(finalRot);
+        glm::mat4 final_mat = glm::mat4_cast(final_rot);
 
-        finalMat[3] = a[3] * (1 - alpha) + b[3] * alpha;
+        // Interpolate position
+        final_mat[3] = glm::mix(to[3], from[3], alpha);
         
-        return finalMat;
+        return final_mat;
     }
 
     bool Renderer::render_job(const float& interpolate_alpha, const RenderingJob &job) {
@@ -239,6 +233,11 @@ namespace simpleengine::gfx {
 
     void Renderer::render(const float& interpolate_alpha, const float& frame_time) {
         check_if_initialized();
+
+        // Set camera related uniforms
+        shader.set_uniform_float_vec3("u_view_pos", camera->position);
+        shader.set_uniform_matrix_4f("u_view_matrix", camera->view_matrix);
+        shader.set_uniform_matrix_4f("u_projection_matrix", camera->projection_matrix);
 
         // Render other (opaque) objects first 
         render_job_queue(interpolate_alpha, other_render_queue);

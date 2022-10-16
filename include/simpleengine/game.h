@@ -41,7 +41,7 @@ namespace simpleengine {
         void set_enable_vsync(const bool& enabled);
 
         void update(const float& delta_time);
-        void handle_input(const float& delta_time);
+        void input_update(const float& delta_time);
         void render_window(const float& interpolate_alpha, const float& delta_time);
         void render_items(const float& interpolate_alpha, const float& delta_time);
         void exit();

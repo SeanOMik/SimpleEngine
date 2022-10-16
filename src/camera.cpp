@@ -1,29 +1,34 @@
 #include "camera.h"
 #include <GLFW/glfw3.h>
+#include <glm/ext/quaternion_common.hpp>
 #include <glm/ext/quaternion_geometric.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <glm/trigonometric.hpp>
 
 namespace simpleengine {
     Camera::Camera(GLFWwindow* window, gfx::Shader shader, float fov, glm::vec3 position, glm::vec3 rotation,
-            float near_plane, float far_plane, glm::vec3 world_up, glm::vec3 cam_front) : window(window), shader(shader),
-            projection_matrix(1.f), view_matrix(1.f), fov(fov), position(position), rotation(rotation), near_plane(near_plane), far_plane(far_plane) {
+            float near_plane, float far_plane) : window(window), shader(shader),
+            projection_matrix(1.f), fov(fov), position(position), rotation(rotation), near_plane(near_plane), far_plane(far_plane) {
         
         // TODO: Update width and height on window resize.
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
 
         projection_matrix = glm::perspective(glm::radians(fov), ((float) width) / height, near_plane, far_plane);
-
-        //rotation = glm::vec3(0.f, 0.f, -1.f);
     }
 
     Camera::Camera(GLFWwindow* window, GLuint shader_prog, float fov, glm::vec3 position, glm::vec3 rotation,
-            float near_plane, float far_plane, glm::vec3 world_up, glm::vec3 cam_front) : Camera(window, gfx::Shader(shader_prog), fov, position,
-            rotation, near_plane, far_plane, world_up, cam_front) {
+            float near_plane, float far_plane) : Camera(window, gfx::Shader(shader_prog), fov, position,
+            rotation, near_plane, far_plane) {
 
     }
     
     void Camera::update(const float& delta_time) {
+
+    }
+
+    void Camera::input_update(const float& delta_time) {
         if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
             movement_speed -= abs(movement_speed - .2f);
         }
@@ -94,11 +99,5 @@ namespace simpleengine {
         camera_front = glm::normalize(direction);
 
         view_matrix = glm::lookAt(position, position + camera_front, camera_up);
-
-        shader.use();
-        shader.set_uniform_float_vec3("u_view_pos", position);
-        shader.set_uniform_matrix_4f("u_view_matrix", view_matrix);
-        shader.set_uniform_matrix_4f("u_projection_matrix", projection_matrix);
-        shader.unuse();
     }
 }

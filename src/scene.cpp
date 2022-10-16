@@ -10,12 +10,16 @@
 #include <stdexcept>
 
 namespace simpleengine {
-    Scene::Scene(std::shared_ptr<gfx::Renderer> renderer) : renderer(renderer) {
+    Scene::Scene(std::shared_ptr<gfx::Renderer> renderer, std::shared_ptr<Camera> camera) : renderer(renderer), camera(camera) {
         
     }
 
     ecs::Entity Scene::create_entity() {
         return ecs::Entity(registry, registry.create());
+    }
+
+    void Scene::input_update(const float& delta_time) {
+        camera->input_update(delta_time); // Update camera input
     }
 
     void Scene::update(const float& delta_time) {
