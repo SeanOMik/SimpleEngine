@@ -9,6 +9,7 @@
 #include "simpleengine/gfx/renderer.h"
 #include "simpleengine/gfx/texture.h"
 #include "simpleengine/vector.h"
+#include <GLFW/glfw3.h>
 #include <simpleengine/ecs/component/model_component.h>
 #include <simpleengine/ecs/component/rotating_component.h>
 #include <simpleengine/event/event.h>
@@ -33,27 +34,67 @@
 
 namespace se = simpleengine;
 
-class FPSCounterEvent : public se::Event {
+class FPSCounterEvent : public se::Renderable {
 public:
-    double last_frame_time;
-    int frame_count;
+    double last_frame_time_input;
+    int frame_count_input;
 
-    FPSCounterEvent() : se::Event() {
-        this->last_frame_time = glfwGetTime();
-        frame_count = 0;
+    double last_frame_time_tps;
+    int frame_count_tps;
+
+    double last_frame_time_render;
+    int frame_count_render;
+
+    FPSCounterEvent() : se::Renderable() {
+        last_frame_time_input = glfwGetTime();
+        frame_count_input = 0;
+
+        last_frame_time_tps = glfwGetTime();
+        frame_count_tps = 0;
+
+        last_frame_time_render = glfwGetTime();
+        frame_count_render = 0;
     }
 
     virtual void update(const float &delta_time) {
         double current_time = glfwGetTime();
-        frame_count++;
+        frame_count_tps++;
 
         // Check if the last print was 1 second ago.
-        if (current_time - last_frame_time >= 1.0) {
-            double ms_per_frame = 1000 / (double)frame_count;
+        if (current_time - last_frame_time_tps >= 1.0) {
+            double ms_per_frame = 1000 / (double)frame_count_tps;
 
-            printf("%d fps, %f ms/frame\n", frame_count, ms_per_frame);
-            frame_count = 0;
-            last_frame_time += 1.0;
+            printf("Fixed update: %d tps, %f ms/frame\n", frame_count_tps, ms_per_frame);
+            frame_count_tps = 0;
+            last_frame_time_tps += 1.0;
+        }
+    }
+
+    virtual void input_update(const float &delta_time) {
+        double current_time = glfwGetTime();
+        frame_count_input++;
+
+        // Check if the last print was 1 second ago.
+        if (current_time - last_frame_time_input >= 1.0) {
+            double ms_per_frame = 1000 / (double)frame_count_input;
+
+            printf("Input:        %d tps, %f ms/frame\n", frame_count_input, ms_per_frame);
+            frame_count_input = 0;
+            last_frame_time_input += 1.0;
+        }
+    }
+
+    virtual void render(const float& interpolate_alpha, const float& frame_time) {
+        double current_time = glfwGetTime();
+        frame_count_render++;
+
+        // Check if the last print was 1 second ago.
+        if (current_time - last_frame_time_render >= 1.0) {
+            double ms_per_frame = 1000 / (double)frame_count_render;
+
+            printf("Render:       %d fps, %f ms/frame\n\n", frame_count_render, ms_per_frame);
+            frame_count_render = 0;
+            last_frame_time_render += 1.0;
         }
     }
 };
@@ -103,11 +144,12 @@ int main(int argc, char *argv[]) {
     game.add_event(light);
 
     auto fps_counter = std::make_shared<FPSCounterEvent>();
-    game.add_event(fps_counter);
+    game.add_renderable(fps_counter);
 
-    game.set_enable_vsync(true);
-    // game.set_fps_limit(120);
+    /* game.set_enable_vsync(false);
+    game.set_fps_limit(100); */
     int res = game.run();
+
     std::cout << "Engine result: " << res << std::endl;
 
     renderer->destroy();

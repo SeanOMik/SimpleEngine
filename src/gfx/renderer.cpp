@@ -47,6 +47,10 @@ namespace simpleengine::gfx {
         glDebugMessageCallback(debug_message_callback, 0);
     }
 
+    void Renderer::enable_gl_option(GLenum option) const {
+        glEnable(option);
+    }
+
     void Renderer::sort_jobs() {
         
     }
@@ -112,9 +116,10 @@ namespace simpleengine::gfx {
     }
 
     void Renderer::initialize() {
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glEnable(GL_CULL_FACE);
+        enable_gl_option(GL_DEPTH_TEST);
+        enable_gl_option(GL_BLEND);
+        enable_gl_option(GL_CULL_FACE);
+        
         glCullFace(GL_BACK);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

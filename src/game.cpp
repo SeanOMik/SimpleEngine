@@ -10,11 +10,9 @@
 #ifdef __linux__
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <GL/gl.h>
 #else
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
-#include <gl/gl.h>
 #endif
 
 simpleengine::Game::Game(int w, int h, const std::string& window_name, const int& gl_profile, const int& major_version,
@@ -44,20 +42,9 @@ simpleengine::Game::Game(int w, int h, const std::string& window_name, const int
         glfwTerminate();
     }
 
-    enable_default_gl_options();
+    update_enabled_vsync();
 
     last_frame_time = std::chrono::high_resolution_clock::now();
-}
-
-void simpleengine::Game::enable_default_gl_options() const {
-    
-    //glFrontFace(GL_CW);
-
-    update_enabled_vsync();
-}
-
-void simpleengine::Game::enable_gl_option(GLenum option) const {
-    glEnable(option);
 }
 
 void simpleengine::Game::initialize(const int& gl_profile, const int& major_version, const int& minor_version,
@@ -162,7 +149,8 @@ int simpleengine::Game::run() {
 
         // Poll input events
         glfwPollEvents();
-        input_update(frame_time); // Update input on varying timestep
+        
+        input_update(frame_time);
 
         tps_accumulator += frame_time;
 

@@ -32,9 +32,6 @@ namespace simpleengine {
             const int& minor_version = 4, const bool& resizeable = false, const int& forward_compat = GL_TRUE);
         virtual ~Game();
 
-        void enable_default_gl_options() const;
-        void enable_gl_option(GLenum option) const;
-
         void add_event(std::shared_ptr<simpleengine::Event> event);
         void add_renderable(std::shared_ptr<simpleengine::Renderable> renderable_event);
         void set_fps_limit(const int& fps_limit);
@@ -66,6 +63,7 @@ namespace simpleengine {
         int fps_limit = -1;
         bool enable_vsync = true;
 
+        // Engine TPS related stuff
         int max_engine_tps = 120; // The maximum engine TPS
         float fixed_delta_time = 1.f / (float) max_engine_tps; // The delta time from fixed timestep
         float tps_accumulator = 0.f;

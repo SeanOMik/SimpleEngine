@@ -42,6 +42,7 @@ namespace simpleengine::gfx {
         Renderer(GLFWwindow* window, GLuint shader_program, std::shared_ptr<Camera> camera);
 
         void enable_debug();
+        void enable_gl_option(GLenum option) const;
 
         virtual void sort_jobs();
         virtual void queue_job(RenderingType rendering_type, gfx::Mesh& mesh, glm::mat4 last_position, glm::mat4 position);
