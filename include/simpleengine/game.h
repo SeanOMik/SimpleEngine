@@ -32,18 +32,15 @@ namespace simpleengine {
             const int& minor_version = 4, const bool& resizeable = false, const int& forward_compat = GL_TRUE);
         virtual ~Game();
 
-        void enable_default_gl_options() const;
-        void enable_gl_option(GLenum option) const;
-
         void add_event(std::shared_ptr<simpleengine::Event> event);
         void add_renderable(std::shared_ptr<simpleengine::Renderable> renderable_event);
         void set_fps_limit(const int& fps_limit);
         void set_enable_vsync(const bool& enabled);
 
         void update(const float& delta_time);
-        void handle_input(const float& delta_time);
-        void render_window(const float& delta_time);
-        void render_items(const float& delta_time);
+        void input_update(const float& delta_time);
+        void render_window(const float& interpolate_alpha, const float& delta_time);
+        void render_items(const float& interpolate_alpha, const float& delta_time);
         void exit();
         int run();
 
@@ -63,8 +60,13 @@ namespace simpleengine {
         // FPS related stuff
         void update_enabled_vsync() const;
         void limit_framerate(const float& delta_time) const; // Triggered at the end of a draw to help limit the FPS to `fps_limit`.
-        int fps_limit;
-        bool enable_vsync;
+        int fps_limit = -1;
+        bool enable_vsync = true;
+
+        // Engine TPS related stuff
+        int max_engine_tps = 120; // The maximum engine TPS
+        float fixed_delta_time = 1.f / (float) max_engine_tps; // The delta time from fixed timestep
+        float tps_accumulator = 0.f;
 
         float get_delta_time();
 

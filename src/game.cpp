@@ -10,16 +10,14 @@
 #ifdef __linux__
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <GL/gl.h>
 #else
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
-#include <gl/gl.h>
 #endif
 
 simpleengine::Game::Game(int w, int h, const std::string& window_name, const int& gl_profile, const int& major_version,
         const int& minor_version, const bool& resizeable, const int& forward_compat) : window_resizeable(resizeable),
-        enable_vsync(true), fps_limit(-1) {
+        tps_accumulator(0.f) {
     initialize(gl_profile, major_version, minor_version, window_resizeable, forward_compat);
 
     // Create a window
@@ -44,18 +42,9 @@ simpleengine::Game::Game(int w, int h, const std::string& window_name, const int
         glfwTerminate();
     }
 
-    enable_default_gl_options();
-}
-
-void simpleengine::Game::enable_default_gl_options() const {
-    
-    //glFrontFace(GL_CW);
-
     update_enabled_vsync();
-}
 
-void simpleengine::Game::enable_gl_option(GLenum option) const {
-    glEnable(option);
+    last_frame_time = std::chrono::high_resolution_clock::now();
 }
 
 void simpleengine::Game::initialize(const int& gl_profile, const int& major_version, const int& minor_version,
@@ -105,28 +94,30 @@ void simpleengine::Game::update_enabled_vsync() const {
     }
 }
 
-void simpleengine::Game::update(const float& delta_time) {
-    handle_input(delta_time);
+void simpleengine::Game::input_update(const float& delta_time) {
+    // TODO
 
+    for (const std::shared_ptr<Event>& event : events) {
+        event->input_update(delta_time);
+    }
+}
+
+void simpleengine::Game::update(const float& delta_time) {
     // Update items
     for (const std::shared_ptr<Event>& event : events) {
         event->update(delta_time);
     }
 }
 
-void simpleengine::Game::handle_input(const float& delta_time) {
-    // TODO
-}
-
-void simpleengine::Game::render_window(const float& delta_time) {
+void simpleengine::Game::render_window(const float& interpolate_alpha, const float& delta_time) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    render_items(delta_time);
+    render_items(interpolate_alpha, delta_time);
 }
 
-void simpleengine::Game::render_items(const float& delta_time) {
+void simpleengine::Game::render_items(const float& interpolate_alpha, const float& delta_time) {
     for (const std::shared_ptr<Renderable>& renderable : renderable_events) {
-        renderable->render();
+        renderable->render(interpolate_alpha, delta_time);
     }
 }
 
@@ -154,19 +145,32 @@ void simpleengine::Game::limit_framerate(const float& delta_time) const {
 int simpleengine::Game::run() {
     while (!glfwWindowShouldClose(window)) {
         // Get delta time first thing
-        float delta_time = get_delta_time();
+        float frame_time = get_delta_time();
 
         // Poll input events
         glfwPollEvents();
+        
+        input_update(frame_time);
 
-        update(delta_time);
-        render_window(delta_time);
+        tps_accumulator += frame_time;
+
+        // https://gafferongames.com/post/fix_your_timestep/
+        while (tps_accumulator >= fixed_delta_time) {
+            update(fixed_delta_time);
+
+            tps_accumulator -= fixed_delta_time;
+        }
+        
+        // Alpha used for interpolating objects in rendering
+        float interpolate_alpha = tps_accumulator / fixed_delta_time;
+
+        render_window(interpolate_alpha, frame_time);
 
         // End draw
         glfwSwapBuffers(window);
         glFlush();
         
-        limit_framerate(delta_time);
+        limit_framerate(frame_time);
     }
 
     return 0;

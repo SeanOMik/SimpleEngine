@@ -23,7 +23,7 @@ namespace simpleengine::gfx {
             shader.unuse();
         }
 
-        virtual void render() override {
+        virtual void render(const float& interpolate_alpha, const float& frame_time) override {
 
         }
     };
