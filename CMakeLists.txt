@@ -21,11 +21,15 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 
 # Link sources
 file(GLOB_RECURSE source_list src/*.cpp)
 add_library(simpleengine STATIC ${source_list})
+
+target_compile_definitions(simpleengine PUBLIC SPDLOG_FMT_EXTERNAL)
 
 # Link headers
 target_include_directories(simpleengine PUBLIC include PRIVATE include/simpleengine)
@@ -43,6 +47,8 @@ cmrc_add_resource_library(
 # Link dependencies
 target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
+target_link_libraries(simpleengine PUBLIC fmt)
+target_link_libraries(simpleengine PUBLIC spdlog)
 target_link_libraries(simpleengine PUBLIC ${GLM_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
 if(WIN32)

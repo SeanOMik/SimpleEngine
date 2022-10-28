@@ -1,6 +1,7 @@
 #include "game.h"
 #include "event/event.h"
 #include "renderable.h"
+#include "log/logger.h"
 
 #include <chrono>
 #include <iostream>
@@ -45,6 +46,8 @@ simpleengine::Game::Game(int w, int h, const std::string& window_name, const int
     update_enabled_vsync();
 
     last_frame_time = std::chrono::high_resolution_clock::now();
+
+    log::LoggerManager::init();
 }
 
 void simpleengine::Game::initialize(const int& gl_profile, const int& major_version, const int& minor_version,

@@ -21,6 +21,7 @@
 #include <simpleengine/scene.h>
 #include <simpleengine/shader_program.h>
 #include <simpleengine/vertex.h>
+#include <simpleengine/log/logger.h>
 
 #include <assimp/material.h>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -29,6 +30,7 @@
 #include <chrono>
 #include <iostream>
 #include <memory>
+#include <spdlog/common.h>
 #include <sstream>
 #include <stdint.h>
 
@@ -102,6 +104,11 @@ public:
 int main(int argc, char *argv[]) {
     se::Game game(640, 480, "SimpleEngine 3D OpenGL - Developer Testing", GLFW_OPENGL_CORE_PROFILE, 4, 4, false);
 
+    se::log::LoggerManager::set_level(spdlog::level::trace);
+
+    se::log::LoggerPtr logger = se::log::LoggerManager::get_core_logger();
+    logger->info("Hmmmm very cool");
+
     // Load core shaders from SimpleEngine resources
     se::gfx::shaders::Core3dShader core_shader;
 
@@ -112,6 +119,8 @@ int main(int argc, char *argv[]) {
     auto renderer = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader, camera);
     renderer->initialize();
     //game.add_renderable(renderer);
+
+    logger->error("AHHHHH SOMETHING BAD!");
 
     // Create a Scene and give it the renderer
     auto scene = std::make_shared<se::Scene>(renderer, camera);
