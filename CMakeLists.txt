@@ -21,8 +21,8 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(fmt REQUIRED)
-find_package(spdlog REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 
 # Link sources
@@ -47,14 +47,16 @@ cmrc_add_resource_library(
 # Link dependencies
 target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
-target_link_libraries(simpleengine PUBLIC fmt)
-target_link_libraries(simpleengine PUBLIC spdlog)
 target_link_libraries(simpleengine PUBLIC ${GLM_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
 if(WIN32)
     target_link_libraries(simpleengine PUBLIC assimp::assimp)
+    target_link_libraries(simpleengine PUBLIC fmt::fmt)
+    target_link_libraries(simpleengine PUBLIC spdlog::spdlog)
 else()
     target_link_libraries(simpleengine PUBLIC assimp)
+    target_link_libraries(simpleengine PUBLIC fmt)
+    target_link_libraries(simpleengine PUBLIC spdlog)
 endif()
 
 # Link resources

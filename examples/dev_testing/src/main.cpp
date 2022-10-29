@@ -107,7 +107,10 @@ int main(int argc, char *argv[]) {
     se::log::LoggerManager::set_level(spdlog::level::trace);
 
     se::log::LoggerPtr logger = se::log::LoggerManager::get_core_logger();
-    logger->info("Hmmmm very cool");
+    logger->info("Hmmmm very cool. {}", "Yeah, I guess...");
+
+    SE_CLOG(spdlog::level::info, "This is a test. {}", "Did it work?");
+    SE_CINFO("This is a 2nd test. {}!", "Did it work?");
 
     // Load core shaders from SimpleEngine resources
     se::gfx::shaders::Core3dShader core_shader;
