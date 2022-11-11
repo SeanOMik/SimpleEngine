@@ -1,4 +1,6 @@
 #include "gfx/texture.h"
+#include "log/logger.h"
+
 #include <stdexcept>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -27,10 +29,11 @@ namespace simpleengine::gfx {
         unsigned char*img_data = stbi_load(path, &width, &height, &channels, 0);
         if(!img_data) {
             const char* failure = stbi_failure_reason();
-            std::cerr << "Failed to load texture! (" << failure << ")" << std::endl;
+
+            SE_CERROR("Failed to load texture! Reason: {}", failure);
             throw std::runtime_error("Failed to load texture from memory!");
         }
-        std::cout << "Loaded image with a width of " << width << "px, a height of " << height << "px and " << channels << " channels" << std::endl;
+        SE_CDEBUG("Loading image! Width = {}px, height = {}px, channel count = {}", width, height, channels);
 
         // Get the color type
         int color_format = 0;
@@ -41,7 +44,7 @@ namespace simpleengine::gfx {
         } else if (channels == 4) {
             color_format = GL_RGBA;
         } else {
-            std::cerr << "Unknown texture color format with " << channels << " channels!" << std::endl;
+            SE_CERROR("Unknown texture color format with {} channels!", channels);
             throw std::runtime_error("Unknown texture color format!");
         }
 
@@ -79,10 +82,11 @@ namespace simpleengine::gfx {
         unsigned char* img_data = stbi_load_from_memory(buffer, buffer_length, &width, &height, &channels, 0);
         if(!img_data) {
             const char* failure = stbi_failure_reason();
-            std::cerr << "Failed to load texture! (" << failure << ")" << std::endl;
+            
+            SE_CERROR("Failed to load texture! Reason: ", failure);
             throw std::runtime_error("Failed to load texture from memory!");
         }
-        std::cout << "Loaded image with a width of " << width << "px, a height of " << height << "px and " << channels << " channels" << std::endl;
+        SE_CDEBUG("Loading image! Width = {}px, height = {}px, channel count = {}", width, height, channels);
 
         // Get the color type
         int color_format = 0;
@@ -93,7 +97,7 @@ namespace simpleengine::gfx {
         } else if (channels == 4) {
             color_format = GL_RGBA;
         } else {
-            std::cerr << "Unknown texture color format with " << channels << " channels!" << std::endl;
+            SE_CERROR("Unknown texture color format with {} channels!", channels);
             throw std::runtime_error("Unknown texture color format!");
         }
 

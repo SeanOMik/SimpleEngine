@@ -5,6 +5,7 @@
 #include "ecs/component/rotating_component.h"
 #include "ecs/entity.h"
 #include "gfx/renderer.h"
+#include "log/logger.h"
 
 #include <glm/gtx/string_cast.hpp>
 #include <stdexcept>
@@ -60,7 +61,7 @@ namespace simpleengine {
     }
 
     void Scene::destroy() {
-        std::cout << "Destroying Scene..." << std::endl;
+        SE_DEBUG("scene", "Destroying Scene...");
         registry.view<ModelComponent>().each([this](ModelComponent& model_component) {
             for (auto& mesh : model_component.model.meshes) {
                 mesh.destroy();

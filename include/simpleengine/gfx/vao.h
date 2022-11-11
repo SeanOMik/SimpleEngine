@@ -22,16 +22,13 @@ namespace simpleengine::gfx {
         }
 
         ~VAO() {
-            std::cout << "~vao(" << handle << ")" << std::endl;
+            // TODO: Anything to do here?
         }
 
         VAO& operator=(const VAO& other) {
             if (this != &other) {
                 handle = other.handle;
             }
-
-
-            std::cout << "Copied " << handle << std::endl;
 
             return *this;
         }

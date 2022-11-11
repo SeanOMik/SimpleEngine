@@ -106,24 +106,14 @@ int main(int argc, char *argv[]) {
 
     se::log::LoggerManager::set_level(spdlog::level::trace);
 
-    se::log::LoggerPtr logger = se::log::LoggerManager::get_core_logger();
-    logger->info("Hmmmm very cool. {}", "Yeah, I guess...");
-
-    SE_CLOG(spdlog::level::info, "This is a test. {}", "Did it work?");
-    SE_CINFO("This is a 2nd test. {}!", "Did it work?");
-
     // Load core shaders from SimpleEngine resources
     se::gfx::shaders::Core3dShader core_shader;
 
     auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
-    //game.add_event(camera);
 
     // Create a renderer
     auto renderer = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader, camera);
     renderer->initialize();
-    //game.add_renderable(renderer);
-
-    logger->error("AHHHHH SOMETHING BAD!");
 
     // Create a Scene and give it the renderer
     auto scene = std::make_shared<se::Scene>(renderer, camera);
@@ -162,7 +152,7 @@ int main(int argc, char *argv[]) {
     game.set_fps_limit(100); */
     int res = game.run();
 
-    std::cout << "Engine result: " << res << std::endl;
+    SE_CINFO("Engine result: {}", res);
 
     renderer->destroy();
     scene->destroy();

@@ -1,4 +1,4 @@
-//#define SPDLOG_FMT_EXTERNAL
+#pragma once
 
 #include <memory>
 #include <string>
@@ -223,7 +223,7 @@ namespace simpleengine::log {
 
     class LoggerManager {
     private:
-        const static std::shared_ptr<Logger> core_logger;
+        static std::shared_ptr<Logger> core_logger;
     public:
         /**
          * @brief Initialize the logger.
@@ -308,7 +308,7 @@ namespace simpleengine::log {
  * @param message The (to be) formatted message to log.
  * @param ... The variables that will be formatted in the text.
  */
-#define SE_ERROR(logger_name, message, ...) SE_LOG(logger_name, spdlog::level::error, message, ##__VA_ARGS__);
+#define SE_ERROR(logger_name, message, ...) SE_LOG(logger_name, spdlog::level::err, message, ##__VA_ARGS__);
 
 /**
  * @brief Log an error message to the core logger.
@@ -316,7 +316,7 @@ namespace simpleengine::log {
  * @param message The (to be) formatted message to log.
  * @param ... The variables that will be formatted in the text.
  */
-#define SE_CERROR(message, ...) SE_CLOG(spdlog::level::error, message, ##__VA_ARGS__);
+#define SE_CERROR(message, ...) SE_CLOG(spdlog::level::err, message, ##__VA_ARGS__);
 
 /**
  * @brief Log a warning message to a logger.

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../camera.h"
+#include "../log/logger.h"
 #include "shader.h"
 #include "../renderable.h"
 #include "rendering_type.h"
@@ -30,7 +31,7 @@ namespace simpleengine::gfx {
         bool is_initialized = false;
 
         void check_if_initialized();
-
+        simpleengine::log::Logger logger;
     public:
         std::queue<RenderingJob> transparent_render_queue;
         std::queue<RenderingJob> other_render_queue;

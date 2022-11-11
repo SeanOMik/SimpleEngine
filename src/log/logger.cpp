@@ -3,6 +3,8 @@
 #include <spdlog/spdlog.h>
 
 namespace simpleengine::log {
+    std::shared_ptr<Logger> LoggerManager::core_logger;
+    
     void LoggerManager::init() {
         spdlog::set_pattern("[%T %D] [thread %t] [%n] [%l] %v");
 
@@ -15,8 +17,6 @@ namespace simpleengine::log {
     void LoggerManager::set_level(spdlog::level::level_enum lvl) {
         spdlog::set_level(lvl);
     }
-
-    std::shared_ptr<Logger> LoggerManager::core_logger;
 
     std::shared_ptr<Logger> LoggerManager::get_core_logger() {
         return core_logger;
