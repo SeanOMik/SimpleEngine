@@ -1,7 +1,10 @@
 #include "BulletCollision/CollisionShapes/btCollisionShape.h"
-#include "ecs/component/box_collision_component.h"
+#include "ecs/component/box_collider_component.h"
+#include "ecs/component/sphere_collider_component.h"
+#include "ecs/component/cylinder_collider_component.h"
+#include "ecs/component/cone_collider_component.h"
+#include "ecs/component/capsule_collider_component.h"
 #include "ecs/component/rigid_body_component.h"
-#include "ecs/component/sphere_collision_component.h"
 #include "ecs/system/system.h"
 #include "entt/entity/fwd.hpp"
 #include "physics/physics_system.h"
@@ -66,11 +69,16 @@ namespace simpleengine::physics {
     }
 
     btCollisionShape* PhysicsSystem::try_get_collision_shape(const entt::entity& entity) {
-        btCollisionShape* collision_shape;
         if (auto box_col = entity_registry->get_inner().try_get<simpleengine::ecs::BoxColliderComponent>(entity)) {
             return box_col->box_shape.get_inner_ptr();
         } else if (auto sphere_col = entity_registry->get_inner().try_get<simpleengine::ecs::SphereColliderComponent>(entity)) {
             return sphere_col->sphere_shape.get_inner_ptr();
+        } else if (auto cylinder_col = entity_registry->get_inner().try_get<simpleengine::ecs::CylinderColliderComponent>(entity)) {
+            return cylinder_col->cylinder_shape.get_inner_ptr();
+        } else if (auto cone_col = entity_registry->get_inner().try_get<simpleengine::ecs::ConeColliderComponent>(entity)) {
+            return cone_col->cone_shape.get_inner_ptr();
+        } else if (auto capsule_col = entity_registry->get_inner().try_get<simpleengine::ecs::CapsuleColliderComponent>(entity)) {
+            return capsule_col->capsule_shape.get_inner_ptr();
         }
         
         return nullptr;

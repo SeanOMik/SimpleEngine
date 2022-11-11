@@ -1,5 +1,5 @@
 #include "simpleengine/camera.h"
-#include "simpleengine/ecs/component/box_collision_component.h"
+#include "simpleengine/ecs/component/box_collider_component.h"
 #include "simpleengine/ecs/component/mesh_component.h"
 #include "simpleengine/ecs/component/rigid_body_component.h"
 #include "simpleengine/ecs/component/transform_component.h"

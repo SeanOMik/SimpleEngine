@@ -18,8 +18,22 @@ namespace simpleengine::physics::collision {
             
         }
 
-        btConeShape* get_inner() {
+        /**
+         * @brief Get the inner bullet cone shape object as a pointer.
+         * 
+         * @return btConeShape* 
+         */
+        btConeShape* get_inner_ptr() {
             return &inner;
+        }
+
+        /**
+         * @brief Get the inner bullet cone shape object as a reference.
+         * 
+         * @return btConeShape&
+         */
+        btConeShape& get_inner() {
+            return inner;
         }
     };
 }
