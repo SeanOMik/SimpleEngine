@@ -1,14 +1,12 @@
 #pragma once
 
 #include "../../vector.h"
-#include <BulletCollision/CollisionShapes/btBoxShape.h>
+#include <bullet/BulletCollision/CollisionShapes/btBoxShape.h>
 
 namespace simpleengine::physics::collision {
     class BoxShape {
         btBoxShape inner;
     public:
-        BoxShape() = default;
-
         BoxShape(btBoxShape inner) : inner(inner) {
 
         }

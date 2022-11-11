@@ -1,13 +1,11 @@
 #pragma once
 
-#include "BulletCollision/CollisionShapes/btCapsuleShape.h"
+#include <bullet/BulletCollision/CollisionShapes/btCapsuleShape.h>
 
 namespace simpleengine::physics::collision {
     class CapsuleShape {
         btCapsuleShape inner;
     public:
-        CapsuleShape() = default; 
-
         CapsuleShape(btCapsuleShape inner) : inner(inner) {
 
         }

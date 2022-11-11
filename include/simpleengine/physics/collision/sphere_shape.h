@@ -1,13 +1,11 @@
 #pragma once
 
-#include "BulletCollision/CollisionShapes/btSphereShape.h"
+#include <bullet/BulletCollision/CollisionShapes/btSphereShape.h>
 
 namespace simpleengine::physics::collision {
     class SphereShape {
         btSphereShape inner;
     public:
-        SphereShape() = default; 
-
         SphereShape(btSphereShape inner) : inner(inner) {
 
         }

@@ -1,14 +1,12 @@
 #pragma once
 
-#include "BulletCollision/CollisionShapes/btCylinderShape.h"
+#include <bullet/BulletCollision/CollisionShapes/btCylinderShape.h>
 #include "vector.h"
 
 namespace simpleengine::physics::collision {
     class CylinderShape {
         btCylinderShape inner;
     public:
-        CylinderShape() = default; 
-
         CylinderShape(btCylinderShape inner) : inner(inner) {
 
         }

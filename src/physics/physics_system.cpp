@@ -1,4 +1,3 @@
-#include "BulletCollision/CollisionShapes/btCollisionShape.h"
 #include "ecs/component/box_collider_component.h"
 #include "ecs/component/sphere_collider_component.h"
 #include "ecs/component/cylinder_collider_component.h"
@@ -14,13 +13,14 @@
 #include "game.h"
 
 #include <bullet/btBulletDynamicsCommon.h>
-#include <BulletCollision/CollisionDispatch/btCollisionDispatcher.h>
-#include <BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h>
+#include <bullet/BulletCollision/CollisionDispatch/btCollisionDispatcher.h>
+#include <bullet/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h>
 #include <bullet/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h>
 #include <bullet/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
 #include <bullet/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
 #include <bullet/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
-#include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <bullet/BulletDynamics/Dynamics/btRigidBody.h>
+#include <bullet/BulletCollision/CollisionShapes/btCollisionShape.h>
 
 #include <memory>
 

@@ -2,14 +2,12 @@
 
 #include <utility>
 
-#include "BulletCollision/CollisionShapes/btConeShape.h"
+#include <bullet/BulletCollision/CollisionShapes/btConeShape.h>
 
 namespace simpleengine::physics::collision {
     class ConeShape {
         btConeShape inner;
     public:
-        ConeShape() = default; 
-
         ConeShape(btConeShape inner) : inner(std::move(inner)) {
 
         }
