@@ -2,6 +2,7 @@
 #include "gfx/mesh.h"
 #include "gfx/vao.h"
 #include "renderable.h"
+#include "gfx/shader.h"
 
 #include "ecs/component/mesh_component.h"
 #include "ecs/component/model_component.h"

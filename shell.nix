@@ -13,5 +13,6 @@ pkgs.mkShell {
     glm
     assimp
     spdlog
+    bullet
   ];
 }

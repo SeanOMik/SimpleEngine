@@ -1,7 +1,9 @@
 #include "simpleengine/camera.h"
 #include "simpleengine/ecs/component/mesh_component.h"
+#include "simpleengine/ecs/component/rigid_body_component.h"
 #include "simpleengine/ecs/component/transform_component.h"
 #include "simpleengine/ecs/entity.h"
+#include "simpleengine/ecs/registry.h"
 #include "simpleengine/gfx/light.h"
 #include "simpleengine/gfx/material.h"
 #include "simpleengine/gfx/mesh.h"
@@ -9,7 +11,6 @@
 #include "simpleengine/gfx/renderer.h"
 #include "simpleengine/gfx/texture.h"
 #include "simpleengine/vector.h"
-#include <GLFW/glfw3.h>
 #include <simpleengine/ecs/component/model_component.h>
 #include <simpleengine/ecs/component/rotating_component.h>
 #include <simpleengine/event/event.h>
@@ -18,14 +19,19 @@
 #include <simpleengine/gfx/shader.h>
 #include <simpleengine/gfx/shaders/core_3d_shader.h>
 #include <simpleengine/renderable.h>
-#include <simpleengine/scene.h>
 #include <simpleengine/shader_program.h>
+#include <simpleengine/ecs/system/scene_system.h>
 #include <simpleengine/vertex.h>
 #include <simpleengine/log/logger.h>
+#include <simpleengine/physics/physics_system.h>
+
+#include "entt/entity/fwd.hpp"
 
 #include <assimp/material.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/fwd.hpp>
+
+#include <GLFW/glfw3.h>
 
 #include <chrono>
 #include <iostream>
@@ -33,6 +39,8 @@
 #include <spdlog/common.h>
 #include <sstream>
 #include <stdint.h>
+
+#include <bullet/BulletCollision/CollisionShapes/btStaticPlaneShape.h>
 
 namespace se = simpleengine;
 
@@ -107,25 +115,27 @@ int main(int argc, char *argv[]) {
     se::log::LoggerManager::set_level(spdlog::level::trace);
 
     se::log::LoggerPtr logger = se::log::LoggerManager::get_core_logger();
-    logger->info("Hmmmm very cool");
 
     // Load core shaders from SimpleEngine resources
     se::gfx::shaders::Core3dShader core_shader;
 
-    auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(0, 0, 0));
+    // Create an entity registry
+    auto registry = std::make_shared<se::ecs::Registry>();
+
+    auto camera = std::make_shared<se::Camera>(game.get_window(), core_shader, 70, glm::vec3(-6, 0, 0));
     //game.add_event(camera);
 
     // Create a renderer
     auto renderer = std::make_shared<se::gfx::Renderer>(game.get_window(), core_shader, camera);
     renderer->initialize();
-    //game.add_renderable(renderer);
-
-    logger->error("AHHHHH SOMETHING BAD!");
 
     // Create a Scene and give it the renderer
-    auto scene = std::make_shared<se::Scene>(renderer, camera);
-    //game.add_event(scene);
+    auto scene = std::make_shared<se::ecs::system::SceneSystem>(registry, renderer, camera);
     game.add_renderable(scene); 
+
+    // Create a Physics System for handling the physics
+    auto physics_sys = std::make_shared<se::physics::PhysicsSystem>(registry);
+    game.add_event(physics_sys);
 
     /* se::ecs::Entity other_e = scene->create_entity();
     other_e.add_component<se::ModelComponent>("examples/dev_testing/resources/transparent_window.fbx",
@@ -142,12 +152,25 @@ int main(int argc, char *argv[]) {
     auto &transform_comp = entity.add_component<se::TransformComponent>();
     transform_comp.translate(4.f, 0.f, 0.f); */
 
+    //brick_e.add_component<se::RotatingComponent>();
+
     se::ecs::Entity brick_e = scene->create_entity();
-    brick_e.add_component<se::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx");
-    brick_e.add_component<se::RotatingComponent>();
-    auto &brick_transf = brick_e.add_component<se::TransformComponent>();
-    brick_transf.translate(6.f, 0.f, 0.f);
-    //brick_transf.translate(6.f, -0.5f, 1.f);
+    brick_e.add_component<se::ecs::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx");
+    auto& brick_transf = brick_e.add_component<se::ecs::TransformComponent>(glm::vec3(6.f, 6.f, 0.f));
+
+    btCollisionShape* brick_shape = new btBoxShape(btVector3(btScalar(1.f), btScalar(1.f), btScalar(1.f)));
+    auto& brick_rigid = brick_e.add_component<simpleengine::ecs::RigidBodyComponent>(1.f, se::Vectorf(6.f, 6.f, 0.1f), brick_shape);
+
+
+
+    se::ecs::Entity floor = scene->create_entity();
+    floor.add_component<se::ecs::ModelComponent>("examples/dev_testing/resources/ground/ground.fbx");
+    auto& floor_transf = floor.add_component<se::ecs::TransformComponent>(glm::vec3(6.f, -6.f, 0.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
+
+    btCollisionShape* floor_shape = new btBoxShape(btVector3(btScalar(1.f), btScalar(1.f), btScalar(1.f)));
+    auto& floor_rigid = floor.add_component<simpleengine::ecs::RigidBodyComponent>(0.f, se::Vectorf(6.f, -6.f, 0.f), floor_shape);
+
+
 
     auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
     game.add_event(light);

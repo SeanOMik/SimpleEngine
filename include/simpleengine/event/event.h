@@ -7,9 +7,6 @@
 namespace simpleengine {
     class Event : public simpleengine::Destructable {
     public:
-        Event() = default;
-        virtual ~Event() = default;
-        
         /**
          * @brief The update function with fixed-timestep.
          * 

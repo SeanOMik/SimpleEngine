@@ -1,4 +1,4 @@
-//#define SPDLOG_FMT_EXTERNAL
+#pragma once
 
 #include <memory>
 #include <string>
