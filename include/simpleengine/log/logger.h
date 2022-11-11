@@ -17,7 +17,7 @@ namespace simpleengine::log {
         /**
          * @brief Construct a new Logger object from a name
          * 
-         * This will first check if the logger exists, if it does not it will create a new `color_mt` logger
+         * This will first check if the spdlog logger exists, if it does not it will create a new `color_mt` logger
          * 
          * @param name The name of the logger.
          */
@@ -63,7 +63,7 @@ namespace simpleengine::log {
          * @param msg The message to log
          */
         void log(spdlog::level::level_enum lvl, spdlog::string_view_t msg) {
-            inner->log(spdlog::source_loc{}, lvl, msg);
+            inner->log(lvl, msg);
         }
 
         /**
@@ -77,7 +77,7 @@ namespace simpleengine::log {
         template<typename... Args>
         void log(spdlog::level::level_enum lvl, fmt::format_string<Args...> fmt, Args &&...args)
         {
-            inner->log(spdlog::source_loc{}, lvl, fmt, std::forward<Args>(args)...);
+            inner->log(lvl, fmt, std::forward<Args>(args)...);
         }
 
         /**
@@ -219,11 +219,9 @@ namespace simpleengine::log {
         }
     };
 
-    using LoggerPtr = std::shared_ptr<Logger>;
-
     class LoggerManager {
     private:
-        static std::shared_ptr<Logger> core_logger;
+        static Logger core_logger;
     public:
         /**
          * @brief Initialize the logger.
@@ -241,9 +239,9 @@ namespace simpleengine::log {
         /**
          * @brief Get the core logger.
          * 
-         * @return std::shared_ptr<Logger> 
+         * @return Logger&
          */
-        static std::shared_ptr<Logger> get_core_logger();
+        static Logger& get_core_logger();
 
         /**
          * @brief Create a new logger.
@@ -282,7 +280,7 @@ namespace simpleengine::log {
  * @param message The (to be) formatted message to log.
  * @param ... The variables that will be formatted in the text.
  */
-#define SE_CLOG(level, message, ...) simpleengine::log::LoggerManager::get_core_logger()->log(level, fmt::format(message, ##__VA_ARGS__));
+#define SE_CLOG(level, message, ...) simpleengine::log::LoggerManager::get_core_logger().log(level, fmt::format(message, ##__VA_ARGS__));
 
 /**
  * @brief Log a critical message to a logger.

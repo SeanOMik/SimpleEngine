@@ -8,6 +8,7 @@
 #include "log/logger.h"
 
 #include <glm/gtx/string_cast.hpp>
+#include <spdlog/common.h>
 #include <stdexcept>
 
 namespace simpleengine {

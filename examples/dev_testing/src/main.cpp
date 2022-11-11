@@ -64,9 +64,7 @@ public:
 
         // Check if the last print was 1 second ago.
         if (current_time - last_frame_time_tps >= 1.0) {
-            double ms_per_frame = 1000 / (double)frame_count_tps;
-
-            printf("Fixed update: %d tps, %f ms/frame\n", frame_count_tps, ms_per_frame);
+            SE_DEBUG("performance", "Fixed update: {}tps", frame_count_tps);
             frame_count_tps = 0;
             last_frame_time_tps += 1.0;
         }
@@ -78,11 +76,10 @@ public:
 
         // Check if the last print was 1 second ago.
         if (current_time - last_frame_time_input >= 1.0) {
-            double ms_per_frame = 1000 / (double)frame_count_input;
-
-            printf("Input:        %d tps, %f ms/frame\n", frame_count_input, ms_per_frame);
+            SE_DEBUG("performance", "Input:        {}tps", frame_count_input);
             frame_count_input = 0;
             last_frame_time_input += 1.0;
+
         }
     }
 
@@ -94,7 +91,8 @@ public:
         if (current_time - last_frame_time_render >= 1.0) {
             double ms_per_frame = 1000 / (double)frame_count_render;
 
-            printf("Render:       %d fps, %f ms/frame\n\n", frame_count_render, ms_per_frame);
+            SE_DEBUG("performance", "Render:       {}fps, {}ms/frame", frame_count_render, ms_per_frame);
+            SE_DEBUG("performance", "-------------------------------");
             frame_count_render = 0;
             last_frame_time_render += 1.0;
         }
@@ -145,6 +143,7 @@ int main(int argc, char *argv[]) {
     auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
     game.add_event(light);
 
+    // TODO: Fix, for some reason it crashes
     auto fps_counter = std::make_shared<FPSCounterEvent>();
     game.add_renderable(fps_counter);
 
