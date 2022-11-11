@@ -31,11 +31,11 @@ namespace simpleengine::ecs {
         btDefaultMotionState* motion_state;
         btCollisionShape* col_shape;
     public:
-        bool initialized = false;
+        //bool initialized = false;
         btRigidBody* rigid_body;
 
-        RigidBodyComponent(float mass, simpleengine::Vectorf start_origin, btCollisionShape* col_shape) : mass(mass), is_dynamic(mass != 0.f), 
-                col_shape(col_shape) {
+        RigidBodyComponent(float mass, simpleengine::Vectorf start_origin) : mass(mass), is_dynamic(mass != 0.f), rigid_body(nullptr) {
+
         }
     };
 }

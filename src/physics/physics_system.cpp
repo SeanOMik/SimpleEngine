@@ -1,5 +1,9 @@
+#include "BulletCollision/CollisionShapes/btCollisionShape.h"
+#include "ecs/component/box_collision_component.h"
 #include "ecs/component/rigid_body_component.h"
+#include "ecs/component/sphere_collision_component.h"
 #include "ecs/system/system.h"
+#include "entt/entity/fwd.hpp"
 #include "physics/physics_system.h"
 #include "ecs/component/transform_component.h"
 #include "ecs/entity.h"
@@ -45,46 +49,74 @@ namespace simpleengine::physics {
         if (should_simulate) {
             dynamics_world->stepSimulation(delta_time, 10);
 
-            entity_registry->get_inner().view<simpleengine::ecs::TransformComponent, simpleengine::ecs::RigidBodyComponent>().each([this](simpleengine::ecs::TransformComponent& transform_comp, simpleengine::ecs::RigidBodyComponent& rigid_body_comp) {
-                
-                //transform_comp
-                if (!rigid_body_comp.initialized) {
-                    btTransform start_transform;
-                    start_transform.setIdentity();
+            entity_registry->get_inner().view<simpleengine::ecs::TransformComponent, simpleengine::ecs::RigidBodyComponent>()
+                .each([this](const entt::entity& entity, simpleengine::ecs::TransformComponent& transform_comp, simpleengine::ecs::RigidBodyComponent& rigid_body_comp) {
+                    // Initialize the rigid body component if it hasn't already been initialized.
+                    init_rigid_body_component(entity, transform_comp, rigid_body_comp);
 
-                    glm::vec3 origin = transform_comp.get_pos();
-                    start_transform.setOrigin(btVector3(origin.x, origin.y, origin.z));
-
-                    glm::quat rot = transform_comp.get_rotation_quat();
-                    start_transform.setRotation(btQuaternion(rot.x, rot.y, rot.z, rot.w));
-
-                    btScalar mass_scalar(rigid_body_comp.mass);
-
-                    btVector3 local_inertia;
-                    if (rigid_body_comp.is_dynamic) {
-                        // update collision shape
-                        rigid_body_comp.col_shape->calculateLocalInertia(rigid_body_comp.mass, local_inertia);
+                    btRigidBody* rigid_body = rigid_body_comp.rigid_body;
+                    btTransform trans;
+                    if (rigid_body_comp.rigid_body->getMotionState()) {
+                        rigid_body->getMotionState()->getWorldTransform(trans);
+                        
+                        trans.getOpenGLMatrix(glm::value_ptr(transform_comp.transform_matrix));
                     }
-
-                    rigid_body_comp.motion_state = new btDefaultMotionState(start_transform);
-                    btRigidBody::btRigidBodyConstructionInfo rb_info(rigid_body_comp.mass, rigid_body_comp.motion_state, rigid_body_comp.col_shape, local_inertia);
-                    rigid_body_comp.rigid_body = new btRigidBody(rb_info);
-                    
-                    this->add_rigid_body(rigid_body_comp.rigid_body);
-                    rigid_body_comp.initialized = true;
-
-                    logger.debug("Initialized rigid body component");
-                    return;
-                }
-
-                btRigidBody* rigid_body = rigid_body_comp.rigid_body;
-                btTransform trans;
-                if (rigid_body_comp.rigid_body->getMotionState()) {
-                    rigid_body->getMotionState()->getWorldTransform(trans);
-                    
-                    trans.getOpenGLMatrix(glm::value_ptr(transform_comp.transform_matrix));
-                }
             });
         }
+    }
+
+    btCollisionShape* PhysicsSystem::try_get_collision_shape(const entt::entity& entity) {
+        btCollisionShape* collision_shape;
+        if (auto box_col = entity_registry->get_inner().try_get<simpleengine::ecs::BoxColliderComponent>(entity)) {
+            return box_col->box_shape.get_inner_ptr();
+        } else if (auto sphere_col = entity_registry->get_inner().try_get<simpleengine::ecs::SphereColliderComponent>(entity)) {
+            return sphere_col->sphere_shape.get_inner_ptr();
+        }
+        
+        return nullptr;
+    }
+
+    bool PhysicsSystem::init_rigid_body_component(const entt::entity& entity, simpleengine::ecs::TransformComponent& transform_comp, simpleengine::ecs::RigidBodyComponent& rigid_body_comp) {
+        if (!rigid_body_comp.rigid_body) {
+            // Try to get the collision shape
+            btCollisionShape* collision_shape = try_get_collision_shape(entity);
+            if (!collision_shape) {
+                logger.warn("Entity with a rigid body component is missing a collider! The entities rigid body component will be removed!");
+
+                if (entity_registry->get_inner().remove<simpleengine::ecs::RigidBodyComponent>(entity) == 0) {
+                    logger.warn("Failed to remove rigid body component from the entity!");
+                }
+
+                return true;
+            }
+
+            btTransform start_transform;
+            start_transform.setIdentity();
+
+            glm::vec3 origin = transform_comp.get_pos();
+            start_transform.setOrigin(btVector3(origin.x, origin.y, origin.z));
+
+            glm::quat rot = transform_comp.get_rotation_quat();
+            start_transform.setRotation(btQuaternion(rot.x, rot.y, rot.z, rot.w));
+
+            rigid_body_comp.col_shape = collision_shape;
+
+            btVector3 local_inertia;
+            if (rigid_body_comp.is_dynamic) {
+                // update collision shape
+                rigid_body_comp.col_shape->calculateLocalInertia(rigid_body_comp.mass, local_inertia);
+            }
+
+            rigid_body_comp.motion_state = new btDefaultMotionState(start_transform);
+            btRigidBody::btRigidBodyConstructionInfo rb_info(rigid_body_comp.mass, rigid_body_comp.motion_state, rigid_body_comp.col_shape, local_inertia);
+            rigid_body_comp.rigid_body = new btRigidBody(rb_info);
+            
+            this->add_rigid_body(rigid_body_comp.rigid_body);
+
+            logger.debug("Initialized rigid body component");
+            return true;
+        }
+
+        return false;
     }
 }

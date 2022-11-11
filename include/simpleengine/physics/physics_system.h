@@ -16,10 +16,13 @@ class btBroadphaseInterface;
 class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 class btRigidBody;
+class btCollisionShape;
 
 namespace simpleengine {
     namespace ecs {
         class Registry;
+        class TransformComponent;
+        class RigidBodyComponent;
     }
 
     namespace physics {
@@ -56,6 +59,11 @@ namespace simpleengine {
             virtual void input_update(const float& delta_time) override {}
             virtual void render(const float& interpolate_alpha, const float& frame_time) override {}
             virtual void destroy() override {}
+        protected:
+            // Try get a collision shape from an entities components.
+            btCollisionShape* try_get_collision_shape(const entt::entity& entity);
+            /// Initialize a rigid body component.
+            inline bool init_rigid_body_component(const entt::entity& entity, simpleengine::ecs::TransformComponent& transform_comp, simpleengine::ecs::RigidBodyComponent& rigid_body_comp);
         };
     }
 }

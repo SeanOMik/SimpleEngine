@@ -1,4 +1,5 @@
 #include "simpleengine/camera.h"
+#include "simpleengine/ecs/component/box_collision_component.h"
 #include "simpleengine/ecs/component/mesh_component.h"
 #include "simpleengine/ecs/component/rigid_body_component.h"
 #include "simpleengine/ecs/component/transform_component.h"
@@ -11,6 +12,7 @@
 #include "simpleengine/gfx/renderer.h"
 #include "simpleengine/gfx/texture.h"
 #include "simpleengine/vector.h"
+#include <semaphore.h>
 #include <simpleengine/ecs/component/model_component.h>
 #include <simpleengine/ecs/component/rotating_component.h>
 #include <simpleengine/event/event.h>
@@ -152,25 +154,17 @@ int main(int argc, char *argv[]) {
     auto &transform_comp = entity.add_component<se::TransformComponent>();
     transform_comp.translate(4.f, 0.f, 0.f); */
 
-    //brick_e.add_component<se::RotatingComponent>();
-
     se::ecs::Entity brick_e = scene->create_entity();
     brick_e.add_component<se::ecs::ModelComponent>("examples/dev_testing/resources/bricks/bricks.fbx");
-    auto& brick_transf = brick_e.add_component<se::ecs::TransformComponent>(glm::vec3(6.f, 6.f, 0.f));
-
-    btCollisionShape* brick_shape = new btBoxShape(btVector3(btScalar(1.f), btScalar(1.f), btScalar(1.f)));
-    auto& brick_rigid = brick_e.add_component<simpleengine::ecs::RigidBodyComponent>(1.f, se::Vectorf(6.f, 6.f, 0.1f), brick_shape);
-
-
+    brick_e.add_component<se::ecs::TransformComponent>(glm::vec3(6.f, 6.f, 0.f));
+    brick_e.add_component<se::ecs::BoxColliderComponent>(1.f, 1.f, 1.f);
+    brick_e.add_component<se::ecs::RigidBodyComponent>(1.f, se::Vectorf(6.f, 6.f, 0.1f));
 
     se::ecs::Entity floor = scene->create_entity();
     floor.add_component<se::ecs::ModelComponent>("examples/dev_testing/resources/ground/ground.fbx");
-    auto& floor_transf = floor.add_component<se::ecs::TransformComponent>(glm::vec3(6.f, -6.f, 0.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
-
-    btCollisionShape* floor_shape = new btBoxShape(btVector3(btScalar(1.f), btScalar(1.f), btScalar(1.f)));
-    auto& floor_rigid = floor.add_component<simpleengine::ecs::RigidBodyComponent>(0.f, se::Vectorf(6.f, -6.f, 0.f), floor_shape);
-
-
+    floor.add_component<se::ecs::TransformComponent>(glm::vec3(6.f, -6.f, 0.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
+    floor.add_component<se::ecs::BoxColliderComponent>(1.f, 1.f, 1.f);
+    floor.add_component<se::ecs::RigidBodyComponent>(0.f, se::Vectorf(6.f, -6.f, 0.f));
 
     auto light = std::make_shared<se::gfx::Light>(core_shader, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
     game.add_event(light);
