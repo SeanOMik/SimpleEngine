@@ -12,5 +12,6 @@ pkgs.mkShell {
     glfw
     glm
     assimp
+    spdlog
   ];
 }

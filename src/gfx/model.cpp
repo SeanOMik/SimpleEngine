@@ -3,6 +3,7 @@
 #include "gfx/rendering_type.h"
 #include "gfx/texture.h"
 #include "vector.h"
+#include "log/logger.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/material.h>
@@ -38,7 +39,7 @@ namespace simpleengine::gfx {
         const aiScene *scene = importer.ReadFile(path, aiProcess_GenNormals | aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+            SE_CERROR("Assimp error when attempting to import \"{}\"", importer.GetErrorString());
             return;
         }
 
@@ -117,8 +118,6 @@ namespace simpleengine::gfx {
         gfx::Material mat(default_textures, rendering_type);
 
         if (mesh->mMaterialIndex >= 0) {
-            std::cout << "TODO: Process model materials!" << std::endl;
-
             std::unordered_map<aiTextureType, std::vector<std::shared_ptr<Texture>>> textures;
             aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
@@ -217,7 +216,7 @@ namespace simpleengine::gfx {
             texture.path = texture_path;
             textures.emplace_back(std::make_shared<Texture>(texture));
 
-            std::cout << "Texture full path: " << full_path << ", texture_path: " << texture_path << std::endl;
+            SE_CDEBUG("Loaded texture! Full path: {}, relative path: {}", full_path, texture_path);
         }
 
         return textures;

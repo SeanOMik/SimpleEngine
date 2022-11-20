@@ -22,7 +22,7 @@ namespace simpleengine::gfx {
         }
 
         ~VBO() {
-            std::cout << "~vbo(" << handle << ")" << std::endl;
+            // TODO: Anything to do here?
         }
 
         static VBO init(GLint type, bool dynamic) {

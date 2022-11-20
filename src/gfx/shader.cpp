@@ -1,4 +1,5 @@
 #include "gfx/shader.h"
+#include "log/logger.h"
 
 #include <glm/fwd.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -40,7 +41,7 @@ namespace simpleengine::gfx {
             char log[512];
             glGetShaderInfoLog(shd.shader, 512, NULL, log);
 
-            std::cerr << "Failed to load shader from source:" << std::endl << log << std::endl;
+            SE_CERROR("Failed to load shader from source:\n{}", log);
             throw ShaderException("Failed to compile shader!");
         }
 
@@ -63,7 +64,7 @@ namespace simpleengine::gfx {
         std::ifstream fstream(shader_path, std::ios::in);
 
         if (!fstream.is_open()) {
-            std::cerr << "Failed to open shader file: " << shader_path << std::endl;
+            SE_CERROR("Failed to open shader file: {}", shader_path);
             throw ShaderException("Failed to open shader file!");
         }
 
@@ -91,7 +92,7 @@ namespace simpleengine::gfx {
         glGetProgramiv(program, GL_LINK_STATUS, &success);
 
         if (!success) {
-            std::cerr << "Failed to link shader program!" << std::endl;
+            SE_CERROR("Failed to link shader program!");
             throw ShaderException("Failed to link shader program!");
         }
     }
