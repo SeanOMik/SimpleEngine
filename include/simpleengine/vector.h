@@ -29,15 +29,15 @@ namespace simpleengine {
             return inner_vec;
         }
 
-        VectorType& x() {
+        const VectorType& x() const {
             return inner_vec.x;
         }
 
-        VectorType& y() {
+        const VectorType& y() const {
             return inner_vec.y;
         }
 
-        VectorType& z() {
+        const VectorType& z() const {
             return inner_vec.z;
         }
 

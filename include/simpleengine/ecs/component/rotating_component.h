@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-namespace simpleengine {
+namespace simpleengine::ecs {
     /**
      * @brief A component that will rotate the transform every frame.
      * 

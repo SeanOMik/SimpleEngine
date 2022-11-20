@@ -24,6 +24,7 @@ find_package(OpenGL REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
+find_package(Bullet REQUIRED)
 
 # Link sources
 file(GLOB_RECURSE source_list src/*.cpp)
@@ -49,6 +50,7 @@ target_link_libraries(simpleengine PUBLIC GLEW::GLEW)
 target_link_libraries(simpleengine PUBLIC glfw)
 target_link_libraries(simpleengine PUBLIC ${GLM_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
+target_link_libraries(simpleengine PUBLIC ${BULLET_LIBRARIES})
 if(WIN32)
     target_link_libraries(simpleengine PUBLIC assimp::assimp)
     target_link_libraries(simpleengine PUBLIC fmt::fmt)
@@ -68,6 +70,7 @@ target_include_directories(simpleengine PUBLIC ${OPENGL_INCLUDE_DIR})
 target_include_directories(simpleengine PUBLIC ${GLM_INCLUDE_DIRS})
 target_include_directories(simpleengine PUBLIC ${STB_INCLUDE_DIR})
 target_include_directories(simpleengine PUBLIC ${ENTT_INCLUDE_DIR})
+target_include_directories(simpleengine PUBLIC ${BULLET_INCLUDE_DIRS})
 
 # Add examples as a target if the user has them enabled
 if (SIMPLE_ENGINE_BUILD_EXAMPLES)

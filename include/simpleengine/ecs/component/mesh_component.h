@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-namespace simpleengine {
+namespace simpleengine::ecs {
     /**
      * @brief A component that contains a Mesh that will be rendered.
      * 
