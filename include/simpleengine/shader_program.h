@@ -12,6 +12,7 @@
 
 #include "event/event.h"
 #include "gfx/shader.h"
+#include "log/logger.h"
 
 #include <exception>
 #include <fstream>
@@ -99,7 +100,7 @@ namespace simpleengine {
             glGetProgramiv(program, GL_LINK_STATUS, &success);
 
             if (!success) {
-                std::cerr << "Failed to link shader program!" << std::endl;
+                SE_CERROR("Failed to link shader program!");
                 throw gfx::ShaderException("Failed to link shader program!");
             }
 

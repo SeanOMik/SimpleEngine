@@ -24,7 +24,7 @@ namespace simpleengine::gfx {
         : rendering_type(rendering_type), rendering_mesh(&mesh), last_transform_mat(last_pos), transform_mat(position) {}
 
     Renderer::Renderer(GLFWwindow *window, gfx::Shader shader, std::shared_ptr<Camera> camera)
-        : window(window), shader(shader), camera(camera)/* , transparent_render_queue(CameraDistanceComparator(camera)) */ {}
+        : window(window), shader(shader), camera(camera), logger(log::LoggerManager::create_logger("render")) {}
 
     Renderer::Renderer(GLFWwindow *window, GLuint shader_program, std::shared_ptr<Camera> camera)
         : Renderer(window, gfx::Shader(shader_program), camera) {}
@@ -32,13 +32,13 @@ namespace simpleengine::gfx {
     void debug_message_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam) {
 
-        fprintf(stderr, "%s type = 0x%x, severity = 0x%x, message = %s\n",
-                (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
+        SE_ERROR("render", "{} type = 0x%x, severity = 0x%x, message = {}",
+            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
     }
 
     void Renderer::check_if_initialized() {
         if (!is_initialized) {
-            std::cerr << "Renderer is not initialized!" << std::endl;
+            logger.critical("Renderer not initialized!"); // TODO: Automatic initialization
             throw std::runtime_error("Renderer is not initialized!");
         }
     }
@@ -108,7 +108,7 @@ namespace simpleengine::gfx {
 
             rendering_mesh->are_buffers_created = true;
 
-            std::cout << "Created render job buffers" << std::endl;
+            logger.debug("Created render job buffers");
         }
     }
 
@@ -127,11 +127,11 @@ namespace simpleengine::gfx {
 
         this->is_initialized = true;
 
-        std::cout << "Base Renderer initialized" << std::endl;
+        logger.debug("Base renderer initialized");
     }
 
     void Renderer::destroy() {
-        std::cout << "Destroying renderer..." << std::endl;
+        logger.debug("Destroying renderer");
 
         shader.delete_program();
     }

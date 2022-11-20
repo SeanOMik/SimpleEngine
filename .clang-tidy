@@ -1,6 +1,6 @@
 ---
 Checks: "clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,modernize-*,-modernize-use-trailing-return-type,
-  -*-non-private-member-variables-in-classes,-*-magic-numbers"
+  -*-non-private-member-variables-in-classes,-*-magic-numbers,-*-macro-usage"
 WarningsAsErrors: true
 HeaderFilterRegex: ""
 AnalyzeTemporaryDtors: false

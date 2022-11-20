@@ -39,7 +39,7 @@ simpleengine::Game::Game(int w, int h, const std::string& window_name, const int
     glewExperimental = GL_TRUE;
 
     if (glewInit() != GLEW_OK) {
-        std::cout << "Failed to initialize glew!" << std::endl;
+        SE_CERROR("Failed to initialize glew!");
         glfwTerminate();
     }
 
