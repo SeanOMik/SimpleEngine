@@ -3,14 +3,14 @@
 #include "../../gfx/model.h"
 #include "simpleengine/vector.h"
 
-#include <bullet/BulletCollision/CollisionDispatch/btCollisionWorld.h>
-#include <bullet/BulletDynamics/Dynamics/btRigidBody.h>
-#include <bullet/LinearMath/btDefaultMotionState.h>
-#include <bullet/LinearMath/btScalar.h>
-#include <bullet/LinearMath/btTransform.h>
-#include <bullet/LinearMath/btVector3.h>
+#include <BulletCollision/CollisionDispatch/btCollisionWorld.h>
+#include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <LinearMath/btDefaultMotionState.h>
+#include <LinearMath/btScalar.h>
+#include <LinearMath/btTransform.h>
+#include <LinearMath/btVector3.h>
 
-#include <bullet/btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
 
 namespace simpleengine::physics {
     class PhysicsSystem;

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include <bullet/BulletCollision/CollisionShapes/btConeShape.h>
+#include <BulletCollision/CollisionShapes/btConeShape.h>
 
 namespace simpleengine::physics::collision {
     class ConeShape {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../vector.h"
-#include <bullet/BulletCollision/CollisionShapes/btBoxShape.h>
+#include <BulletCollision/CollisionShapes/btBoxShape.h>
 
 namespace simpleengine::physics::collision {
     class BoxShape {

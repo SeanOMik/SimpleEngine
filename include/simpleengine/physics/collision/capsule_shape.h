@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bullet/BulletCollision/CollisionShapes/btCapsuleShape.h>
+#include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 
 namespace simpleengine::physics::collision {
     class CapsuleShape {

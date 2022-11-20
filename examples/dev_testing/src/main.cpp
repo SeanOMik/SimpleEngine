@@ -42,7 +42,7 @@
 #include <sstream>
 #include <stdint.h>
 
-#include <bullet/BulletCollision/CollisionShapes/btStaticPlaneShape.h>
+#include <BulletCollision/CollisionShapes/btStaticPlaneShape.h>
 
 namespace se = simpleengine;
 
