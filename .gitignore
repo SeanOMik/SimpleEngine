@@ -1,15 +1,14 @@
 # Don't track content of these folders
-.vscode/*
+.vscode
 .VSCodeCounter
-CMakeFiles/*
-.vs/*
-out/*
-.idea/*
-cmake-build-cmake-build-w10-msvc-debug/*
-cmake-build-debug-wsl/*
-build/*
-.cache/*
-c/*
+CMakeFiles
+.vs
+out
+.idea
+build
+.cache
+#idk what this is
+c
 
 # Compiled source #
 ###################
