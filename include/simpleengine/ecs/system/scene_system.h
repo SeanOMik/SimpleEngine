@@ -2,6 +2,8 @@
 
 #include "system.h"
 
+#include <rttr/rttr_enable.h>
+
 namespace simpleengine {
     // fwd decl
     class Camera;
@@ -15,6 +17,7 @@ namespace simpleengine {
 
         namespace system {
             class SceneSystem : public System {
+                RTTR_ENABLE()
             protected:
                 std::shared_ptr<gfx::Renderer> renderer;
                 std::shared_ptr<Camera> camera;

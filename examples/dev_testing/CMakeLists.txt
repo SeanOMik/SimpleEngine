@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.6)
 project(DevTesting DESCRIPTION "A testing project for engine developers.")
 
+set(CMAKE_CXX_FLAGS "-Og")
+
 add_executable(dev_testing src/main.cpp)
 
 # Link headers and source files.

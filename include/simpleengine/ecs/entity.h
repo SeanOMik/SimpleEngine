@@ -1,12 +1,16 @@
 #pragma once
 
-#include "entt/entity/fwd.hpp"
+#include <entt/entity/fwd.hpp>
 #include <cstddef>
 #include <entt/entt.hpp>
+#include <rttr/registration.h>
 #include <utility>
+
+#include <rttr/registration>
 
 namespace simpleengine::ecs {
     class Entity {
+        RTTR_ENABLE()
     private:
         entt::registry& registry;
         entt::entity inner;
@@ -17,6 +21,10 @@ namespace simpleengine::ecs {
 
         Entity(entt::registry& registry, entt::entity entity) : registry(registry), inner(entity) {
 
+        }
+
+        entt::entity& get_inner() {
+            return inner;
         }
 
         /**
@@ -114,7 +122,12 @@ namespace simpleengine::ecs {
          */
         template<typename Component, typename... Args>
         decltype(auto) add_component(Args&&... args) {
-            return registry.emplace<Component>(inner, std::forward<Args>(args)...);
+            return registry.emplace<Component>(inner, std::forward<Args&&>(args)...);
+        }
+
+        template<typename Component>
+        Component& add_component_copy(Component comp) {
+            return registry.emplace<Component>(inner, comp);
         }
 
         /**
@@ -135,7 +148,7 @@ namespace simpleengine::ecs {
          */
         template<typename Component, typename... Args>
         decltype(auto) add_or_replace_component(Args&&... args) {
-            return registry.emplace_or_replace<Component>(inner, std::forward<Args>(args)...);
+            return registry.emplace_or_replace<Component>(inner, std::forward<Args&&>(args)...);
         }
 
         /**
@@ -156,7 +169,7 @@ namespace simpleengine::ecs {
          */
         template<typename Component, typename... Args>
         decltype(auto) replace_component(Args&&... args) {
-            return registry.replace<Component>(inner, std::forward<Args>(args)...);
+            return registry.replace<Component>(inner, std::forward<Args&&>(args)...);
         }
 
         /**
@@ -263,4 +276,40 @@ namespace simpleengine::ecs {
             return registry.orphan(inner);
         }
     };
+}
+
+RTTR_REGISTRATION {
+    using simpleengine::ecs::Entity;
+    rttr::registration::class_<Entity>("Entity")
+        .constructor<entt::registry&, entt::entity>()
+        .method("is_valid", &Entity::is_valid)
+        .method("current_version", &Entity::current_version)
+
+        // TODO: This version_type needs to be changed to something the scripting system could access
+        .method("release", static_cast<entt::registry::version_type (Entity::*)()>(&Entity::release))
+        .method("release", static_cast<entt::registry::version_type (Entity::*)(entt::registry::version_type version)>(&Entity::release))
+        .method("destroy", static_cast<entt::registry::version_type (Entity::*)()>(&Entity::destroy))
+        .method("destroy", static_cast<entt::registry::version_type (Entity::*)(entt::registry::version_type version)>(&Entity::destroy))
+
+        // TODO: implement
+        //.method("add_component", &Entity::add_component<simpleengine::ecs::BoxColliderComponent>)
+        //.method("add_component", &Entity::add_component_copy)
+        //.method("add_or_replace_component", &Entity::add_or_replace_component)
+        //.method("replace_component", &Entity::replace_component)
+        //.method("patch", &Entity::patch)
+        //.method("remove_components", &Entity::remove_components)
+        //.method("erase", &Entity::erase)
+        //.method("has_all_of", &Entity::has_all_of)
+        //.method("has_any_of", &Entity::has_any_of)
+
+        .method("has_any_components", &Entity::has_any_components)
+
+        ;
+
+    /* rttr::registration::class_<Sprite>("Sprite")
+        .constructor()
+        .method("Move", &Sprite::move)
+        .method("Draw", &Sprite::draw)
+        .property("x", &Sprite::x)
+        .property("y", &Sprite::y); */
 }

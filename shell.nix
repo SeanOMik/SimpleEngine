@@ -14,5 +14,8 @@ pkgs.mkShell {
     assimp
     spdlog
     bullet
+    rttr
+    lua5_4
+    (callPackage ./sol2.nix { })
   ];
 }

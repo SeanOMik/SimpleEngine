@@ -8,6 +8,7 @@ include(CMake/GetEnTT.cmake)
 
 # Add some CMake options:
 option(SIMPLE_ENGINE_BUILD_EXAMPLES "Build example projects" ON)
+option(SIMPLE_ENGINE_DOWNLOAD_SOL2 "Download sol2 from github. I fits off, SimpleEngine will try to find it in the system." ON)
 
 # By default use OpenGL GLVND
 option(SIMPLE_ENGINE_USE_GL_LEGACY "Use OpenGL legacy, or use BLVND" OFF)
@@ -15,6 +16,16 @@ if (SIMPLE_ENGINE_USE_GL_LEGACY)
     set(OpenGL_GL_PREFERENCE "LEGACY")
 else()
     set(OpenGL_GL_PREFERENCE "GLVND")
+endif()
+
+# Download sol2 or search the system. We also search for lua since we have to include it for the linker
+find_package(Lua 5.4 REQUIRED)
+if (SIMPLE_ENGINE_DOWNLOAD_SOL2)
+    set(SOL2_BUILD_LUA FALSE)
+    set(SOL2_LUA_VERSION 5.4.4)
+    include(CMake/Getsol2.cmake)
+else()
+    find_package(sol2 REQUIRED)
 endif()
 
 find_package(GLEW REQUIRED)
@@ -25,6 +36,7 @@ find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(Bullet REQUIRED)
+find_package(RTTR CONFIG REQUIRED Core)
 
 # Link sources
 file(GLOB_RECURSE source_list src/*.cpp)
@@ -51,6 +63,9 @@ target_link_libraries(simpleengine PUBLIC glfw)
 target_link_libraries(simpleengine PUBLIC ${GLM_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC ${OPENGL_LIBRARIES})
 target_link_libraries(simpleengine PUBLIC ${BULLET_LIBRARIES})
+target_link_libraries(simpleengine PUBLIC ${LUA_LIBRARIES})
+target_link_libraries(simpleengine PUBLIC RTTR::Core)
+target_link_libraries(simpleengine PUBLIC sol2::sol2)
 if(WIN32)
     target_link_libraries(simpleengine PUBLIC assimp::assimp)
     target_link_libraries(simpleengine PUBLIC fmt::fmt)

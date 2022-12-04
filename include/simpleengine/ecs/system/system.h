@@ -2,12 +2,15 @@
 
 #include "../../renderable.h"
 
+#include <rttr/rttr_enable.h>
+
 namespace simpleengine::ecs {
     class Entity;
     class Registry;
 
     namespace system {
         class System : public simpleengine::Renderable {
+            RTTR_ENABLE()
         protected:
             std::shared_ptr<Registry> entity_registry;
         public:
