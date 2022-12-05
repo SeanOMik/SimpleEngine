@@ -125,8 +125,14 @@ namespace simpleengine::ecs {
             return rotation_matrix(degrees, glm::vec3(0, 0, 1));
         }
 
-        virtual void rotate(float degrees, glm::vec3 rotation_axis) {
+        virtual void rotate_axis(float degrees, glm::vec3 rotation_axis) {
             transform_matrix = rotation_matrix(degrees, rotation_axis);
+        }
+
+        virtual void rotate(float x_degrees, float y_degrees, float z_degrees) {
+            transform_matrix = rotation_x_matrix(x_degrees);
+            transform_matrix = rotation_y_matrix(y_degrees);
+            transform_matrix = rotation_z_matrix(z_degrees);
         }
 
         virtual void rotate_x(float degrees) {
