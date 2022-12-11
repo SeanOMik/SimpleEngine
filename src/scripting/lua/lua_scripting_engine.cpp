@@ -6,6 +6,7 @@
 
 #include "ecs/component/transform_component.h"
 #include "scripting/lua/ecs_bindings.h"
+#include "scripting/lua/engine_bindings.h"
 
 #include <iostream>
 
@@ -107,16 +108,15 @@ namespace simpleengine::scripting::lua {
         // Make registry available to lua
         lua["registry"] = std::ref(entity_registry->get_inner());
 
-        // Registry TransformComponent
-        //bindings::bind_registry();
-        lua.require("ecs", sol::c_call<AUTO_ARG(&simpleengine::scripting::lua::ECSBindings::bind_full_ecs)>, false); // create registry type
-        //lua.require("registry", sol::c_call<AUTO_ARG(&simpleengine::scripting::lua::bindings::bind_registry)>, false); // create registry type
-
+        lua.require("engine", sol::c_call<AUTO_ARG(&simpleengine::scripting::lua::EngineBindings::bind_full_engine)>, false);
+        lua.require("ecs", sol::c_call<AUTO_ARG(&simpleengine::scripting::lua::ECSBindings::bind_full_ecs)>, false); // Bind all of the ECS
 
         entt::entity en = entity_registry->get_inner().create();
         lua["dog"] = en;
 
         run_script(R"LUA(
+            local component = ecs.component
+
             print('start')
             --local dog = registry:create()
             local cat = registry:create()
@@ -125,16 +125,16 @@ namespace simpleengine::scripting::lua {
             print('Dog is ' .. dog .. ', and registry size is ' .. registry:size())
             print('Cat is ' .. cat .. ', and cat size is ' .. registry:size())
 
-            registry:emplace(dog, ecs.component.TransformComponent(5, 6, 3))
+            registry:emplace(dog, component.TransformComponent(5, 6, 3))
 
-            assert(registry:has(dog, ecs.component.TransformComponent))
-            assert(registry:has(dog, ecs.component.TransformComponent.type_id()))
+            assert(registry:has(dog, component.TransformComponent))
+            assert(registry:has(dog, component.TransformComponent.type_id()))
 
             assert(not registry:any_of(dog, -1, -2, -3))
 
             function update(delta_time)
-                transform = registry:get(dog, ecs.component.TransformComponent)
-                print('Dog position = ' .. tostring(transform))
+                transform = registry:get(dog, component.TransformComponent)
+                print('Dog position = ' .. tostring(transform:get_pos()))
                 transform:translate(0, 0, 1)
             end
 

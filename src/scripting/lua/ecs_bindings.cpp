@@ -45,8 +45,7 @@ namespace simpleengine::scripting::lua {
             "create", [](entt::registry& self) { return self.create(); },
             "destroy", [](entt::registry& self, entt::entity entity) { return self.destroy(entity); },
 
-            "emplace",
-            [](entt::registry& self, entt::entity entity, const sol::table& comp, sol::this_state s) -> sol::object {
+            "emplace", [](entt::registry& self, entt::entity entity, const sol::table& comp, sol::this_state s) -> sol::object {
                 if (!comp.valid())
                     return sol::lua_nil_t{};
 
@@ -54,41 +53,38 @@ namespace simpleengine::scripting::lua {
                 return maybe_any ? maybe_any.cast<sol::reference>() : sol::lua_nil_t{};
             },
     
-            "remove",
-            [](entt::registry& self, entt::entity entity, const sol::object& type_or_id) {
+            "remove", [](entt::registry& self, entt::entity entity, const sol::object& type_or_id) {
                 const auto maybe_any = EnttMetaHelper::invoke_meta_func(EnttMetaHelper::deduce_type(type_or_id), "remove"_hs, &self, entity);
                 return maybe_any ? maybe_any.cast<size_t>() : 0;
             },
 
-            "has",
-            [](entt::registry& self, entt::entity entity, const sol::object& type_or_id) {
+            "has", [](entt::registry& self, entt::entity entity, const sol::object& type_or_id) {
                 const auto maybe_any = EnttMetaHelper::invoke_meta_func(EnttMetaHelper::deduce_type(type_or_id), "has"_hs, &self, entity);
                 return maybe_any ? maybe_any.cast<bool>() : false;
             },
 
-            "any_of",
-            [](const sol::table& self, entt::entity entity, const sol::variadic_args& va) {
+            "any_of", [](const sol::table& self, entt::entity entity, const sol::variadic_args& va) {
                 const auto types = collect_types(va);
                 const auto has = self["has"].get<sol::function>();
                 return std::any_of(types.cbegin(), types.cend(),
                     [&](auto type_id) { return has(self, entity, type_id).template get<bool>(); });
             },
 
-            "get",
-            [](entt::registry& self, entt::entity entity, const sol::object& type_or_id, sol::this_state s) {
+            "get", [](entt::registry& self, entt::entity entity, const sol::object& type_or_id, sol::this_state s) {
                 const auto maybe_any = EnttMetaHelper::invoke_meta_func(EnttMetaHelper::deduce_type(type_or_id), "get"_hs, &self, entity, s);
                 return maybe_any ? maybe_any.cast<sol::reference>() : sol::lua_nil_t{};
             },
             
-            "clear",
-            sol::overload(&entt::registry::clear<>, [](entt::registry& self, sol::object type_or_id) {
-                EnttMetaHelper::invoke_meta_func(EnttMetaHelper::deduce_type(type_or_id), "clear"_hs, &self);
-            }),
+            "clear", sol::overload(
+                &entt::registry::clear<>,
+                [](entt::registry& self, sol::object type_or_id) {
+                    EnttMetaHelper::invoke_meta_func(EnttMetaHelper::deduce_type(type_or_id), "clear"_hs, &self);
+                }
+            ),
 
             "orphan", &entt::registry::orphan,
 
-            "runtime_view",
-            [](entt::registry& self, const sol::variadic_args& va) {
+            "runtime_view", [](entt::registry& self, const sol::variadic_args& va) {
                 const std::set<uint32_t> types = collect_types(va);
 
                 entt::runtime_view view{};
@@ -135,27 +131,41 @@ namespace simpleengine::scripting::lua {
                 return std::tuple(pos, rot, scale);
             },
 
-            // TODO: Implement glm::vec3
-            /* "get_pos", &ecs::TransformComponent::get_pos,
+            "get_pos", &ecs::TransformComponent::get_pos,
             "get_scale", &ecs::TransformComponent::get_scale,
-            "get_rotation_quat", &ecs::TransformComponent::get_rotation_quat, */
-            // combine_transform(const glm::mat4& transform_matrix)
-            // combine_transform(const TransformComponent& transformable)
+            "get_rotation_quat", &ecs::TransformComponent::get_rotation_quat,
+            "combine_transform", sol::overload(
+                [](ecs::TransformComponent& self, const glm::mat4& transform_matrix) {
+                    self.combine_transform(transform_matrix);
+                },
+                [](ecs::TransformComponent& self, const ecs::TransformComponent& transformable) {
+                    self.combine_transform(transformable);
+                }
+            ),
 
-            "translate", sol::overload([](ecs::TransformComponent& self, float x, float y, float z) {
-                self.translate(x, y, z);
-            }), // TODO: Implement glm::vec3 translate
+            "translate", sol::overload(
+                [](ecs::TransformComponent& self, const glm::vec3& vec) {
+                    self.translate(vec);
+                },
+                [](ecs::TransformComponent& self, float x, float y, float z) {
+                    self.translate(x, y, z);
+                }
+            ),
             
             "rotate", &ecs::TransformComponent::rotate,
             "rotate_x", &ecs::TransformComponent::rotate_x,
             "rotate_y", &ecs::TransformComponent::rotate_y,
             "rotate_z", &ecs::TransformComponent::rotate_z,
 
-            "scale", sol::overload([](ecs::TransformComponent& self, float scalar) {
-                self.scale(scalar);
-            }, [](ecs::TransformComponent& self, float x_scalar, float y_scalar, float z_scalar) {
-                self.scale(glm::vec3(x_scalar, y_scalar, z_scalar));
-            }), // TODO: Implement glm::vec3 scale
+            "scale", sol::overload(
+                [](ecs::TransformComponent& self, float scalar) {
+                    self.scale(scalar);
+                }, [](ecs::TransformComponent& self, float x_scalar, float y_scalar, float z_scalar) {
+                    self.scale(glm::vec3(x_scalar, y_scalar, z_scalar));
+                }, [](ecs::TransformComponent& self, const glm::vec3& vec) {
+                    self.scale(vec);
+                }
+            ),
 
             sol::meta_function::to_string, [](const ecs::TransformComponent& self) {
                 return glm::to_string(self.transform_matrix);
